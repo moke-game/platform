@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package analytics.pb;
+option go_package = "analytics/api;pb";
+
+// AnalyticsService is the service that allows clients to send analytics events to the analytics service.
+// 统计服务: 允许客户端将分析事件发送到分析服务的服务。
+service AnalyticsService {
+  // Analytics send a batch of analytics events to the analytics service，return Nothing
+  // 发送一批分析事件到分析服务，返回Nothing
+  rpc Analytics(AnalyticsEvents) returns (Nothing) {}
+}
+
+message AnalyticsEvents {
+  repeated Event events = 1;
+}
+
+enum DeliveryType {
+  // Deliver to the local file
+  Local = 0;
+
+  // Deliver to the sdk
+  SDK = 1;
+
+  //Deliver to clickhouse
+  ClickHouse = 2;
+
+}
+
+// AnalyticsEvent is a single analytics event to capture.
+message Event {
+  // The unique name for this event.  Be pragmatic with event names and store additional properties in the
+  // properties field.
+  //NOTE: only contain: number,letter(ignoring case) and underscore"_" ,no spaces in the configuration
+  string event = 1;
+
+  // Generic JSON property key/value pairs. {"id":"fun","age":10}
+  bytes properties = 2;
+
+  // Where to deliver this event to.  Default is GM.
+  DeliveryType deliver_to = 3;
+}
+
+// Nothing is an empty message.  Used when there's nothing to send.
+message Nothing {}

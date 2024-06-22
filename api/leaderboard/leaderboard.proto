@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package leaderboard.pb;
+
+option go_package = "leaderboard/api;leaderboard";
+
+// LeaderboardService is a service for leaderboard
+// 排行榜服务
+service LeaderboardService {
+  //GetLeaderboard get leaderboard entries
+  // 获取排行榜
+  rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse);
+  // GetRank get player rank
+  // 获取玩家排名
+  rpc GetRank(GetRankRequest) returns (GetRankResponse);
+  // StarLeaderboard star a leaderboard
+  // 点赞排行榜
+  rpc StarLeaderboard(StarLeaderboardRequest) returns (StarLeaderboardResponse);
+}
+
+// LeaderboardPrivateService is a private service for leaderboard
+// 排行榜私有服务, 用于管理排行榜
+service LeaderboardPrivateService {
+  // expire leaderboard,default 30 days
+  // 实排行榜过期, 默认30天
+  rpc ExpireLeaderboard(ExpireLeaderboardRequest) returns (ExpireLeaderboardResponse);
+  // update leaderboard score
+  // 更新排行榜分数
+  rpc UpdateScore(UpdateScoreRequest) returns (UpdateScoreResponse);
+  // clear leaderboard
+  // 清空排行榜
+  rpc ClearLeaderboard(ClearLeaderboardRequest) returns (ClearLeaderboardResponse);
+}
+
+message GetLeaderboardRequest {
+  // leaderboard id, required
+  string id = 1;
+  // page number, default 1
+  int32 page = 2;
+  // page size, default 10
+  int32 page_size = 3;
+}
+
+message LeaderboardEntry {
+  // member uid
+  string uid = 1;
+  // member score
+  double score = 2;
+  // member star number
+  int64 star = 4;
+}
+
+message GetLeaderboardResponse {
+  repeated LeaderboardEntry entries = 1;
+  bool is_deleted = 2;
+}
+
+message UpdateScoreRequest {
+  enum UpdateType {
+    // add score default
+    ADD = 0;
+    // replace when greater than old score
+    GTR = 1;
+    // replace when less than old score
+    LSR = 2;
+  }
+  string id = 1; // leaderboard id
+  map<string, double> scores = 2; // uid -> score
+  UpdateType update_type = 3; // default ADD
+}
+
+message UpdateScoreResponse {
+  string id = 1;//leaderboard id
+  string old_uid = 2;//old player uid
+  string current_uid = 3;//current player uid
+}
+
+message GetRankRequest {
+  string id = 1; // leaderboard id
+  string country = 2; // country code
+}
+
+message GetRankResponse {
+  int64 rank = 1;
+  double score = 2;
+}
+
+message ExpireLeaderboardRequest {
+  string id = 1; // leaderboard id
+  int64 expire_time = 2; // expire time in day(default:30d)
+  int32 num = 3; // number of entries need return
+}
+
+message ExpireLeaderboardResponse {
+  // is expired, if leaderboard already expired, return false, otherwise return true
+  bool is_deleted = 1;
+  // leaderboard entries
+  repeated LeaderboardEntry entries = 2;
+}
+
+message ClearLeaderboardRequest {
+  string id = 1; // leaderboard id
+}
+
+message ClearLeaderboardResponse {}
+
+message StarLeaderboardRequest {
+  string id = 1; // leaderboard id
+  string uid = 2;
+}
+
+message StarLeaderboardResponse {
+  int64 star_count = 1;
+}

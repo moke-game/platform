@@ -1,0 +1,41 @@
+syntax = "proto3";
+package buddy.pb;
+option go_package = "buddy/api;buddy";
+
+// Nothing is used when there is no data to be sent.
+message Nothing {
+}
+
+message ProfileId {
+  string profileId = 1;
+}
+// Buddy contains state associated with a buddy.
+message Buddy {
+  string uid = 1;
+  int32 receiveReward = 2;
+  bool isFavorite = 3;
+  string remark = 4;
+  int64 actTime=5;
+}
+
+message Inviter{
+  string uid = 1;
+  string reqInfo = 2;
+  int64 reqTime = 3;
+}
+
+message Blocked{
+  string uid = 1;
+  int64 addTime = 2;
+}
+
+message Buddies {
+  map<string,Buddy> buddies = 1;
+  map<string,Inviter> inviters = 2;
+  map<string, Inviter>  inviterSends = 3;
+  map<string,Blocked> blocked = 4;
+}
+
+message ProfileIds {
+  repeated ProfileId profileIds = 1;
+}

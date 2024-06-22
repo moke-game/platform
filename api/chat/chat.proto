@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package chat.pb;
+
+option go_package = "chat/api;chat";
+
+// ChatService provides chat service.
+service ChatService {
+  // Chat create a stream to send and receive chat information.
+  rpc Chat(stream ChatRequest) returns (stream ChatResponse);
+}
+
+service ChatPrivateService {
+  // add blocked list
+  rpc AddBlocked(AddBlockedRequest) returns (AddBlockedResponse);
+}
+
+message Destination {
+  int32 channel = 1;
+  string id = 2;
+}
+
+message ChatMessage {
+  //message we send or receive chat information, It carries the necessary information
+  message Message {
+    //user id
+    string profile_id = 1;
+    //who started the chat
+    string nickname = 2;
+    //user avatar
+    string avatar = 3;
+    // user avatar frame
+    int32 avatar_frame = 4;
+    // user gender
+    int32 gender = 5;
+    //content
+    string content = 6;
+    //emoji
+    int32 emoji = 7;
+    //send time
+    int64 timestamp = 8;
+  }
+
+  //send where
+  Destination destination = 1;
+
+  //chat all content
+  Message message = 2;
+}
+
+message ChatRequest {
+  message Subscribe {
+    //who started the chat
+    string profile_id = 1;
+    //send where
+    Destination destination = 2;
+  }
+
+  message UnSubscribe {
+    //who started the chat
+    string profile_id = 1;
+    //send where
+    Destination destination = 2;
+  }
+
+  oneof kind {
+    Subscribe subscribe = 1;
+    UnSubscribe unsubscribe = 3;
+    ChatMessage message = 2;
+  }
+}
+
+message ChatError {
+  enum Code {
+    CODE_NONE = 0;
+    CODE_INTERVAL = 1;
+    CODE_BLOCKED = 2;
+  }
+  Code code = 1;
+}
+
+message ChatResponse {
+  oneof kind {
+    ChatMessage message = 1;
+    ChatError error = 2;
+  }
+}
+
+message AddBlockedRequest {
+  // profile id
+  string profile_id = 1;
+  bool is_blocked = 2; // true: add blocked list, false: remove blocked list
+  int64 duration = 3; // block time, 0: permanent (s)
+}
+
+message AddBlockedResponse {}

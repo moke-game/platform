@@ -1,0 +1,122 @@
+syntax = "proto3";
+package buddy.pb;
+option go_package = "buddy/api;buddy";
+
+// Import path is relative to root directory specified in .spacerouter.yml
+import "buddy/buddy_common.proto";
+
+// PublicService is a public service for managing buddies for the current user.
+service BuddyService {
+  // AddBuddy adds a buddy to the current user's queue.
+  rpc AddBuddy (AddBuddyRequest) returns (AddBuddyResponse);
+
+  // RemoveBuddy removes a buddy from the current user's queue.
+  rpc RemoveBuddy (RemoveBuddyRequest) returns (Nothing);
+
+  // GetBuddies returns the current user's buddies.
+  rpc GetBuddies (GetBuddyRequest) returns (GetBuddyResponse);
+
+  // ReplyAddBuddy is called to accept or reject a buddy add request.
+  rpc ReplyAddBuddy (ReplyAddBuddyRequest) returns (ReplyAddBuddyResponse);
+
+  // WatchBuddies returns a stream on which changes to the current user's
+  //buddies and blocked list  and recent met will be sent.
+  rpc WatchBuddies (Nothing) returns (stream BuddyChanges);
+
+  // Remark adds a buddy remark.
+  rpc Remark (RemarkRequest) returns (Nothing);
+
+  //Refuse buddy request
+  rpc RefuseBuddy(RefuseBuddyRequest) returns(Nothing);
+
+  //---------------------------------------------Blocked List Start------------------------------------
+  // GetBlockedUsers returns the current user's blocked users.
+  rpc GetBlockedProfiles (Nothing) returns (ProfileIds);
+
+  //AddBlockedUsers is called to add users to self's buddy list or blocked list
+  rpc AddBlockedProfiles (ProfileIds) returns (Nothing);
+
+  //RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
+  rpc RemoveBlockedProfiles (ProfileIds) returns (Nothing);
+
+  rpc VerifyBlocked(VerifyBlockedRequest) returns(VerifyBlockedResponse);
+  //---------------------------------------------Blocked List End---------------------------------------
+
+  rpc DeleteAccount(DeleteAccountRequest) returns(DeleteAccountResponse);
+}
+
+
+// AddBuddyRequest is used to request a user be added as a buddy.
+message AddBuddyRequest {
+  repeated string uid = 1;
+  string reqInfo = 2;
+}
+message AddBuddyResponse{
+  repeated string failed = 1;
+}
+
+//RemoveBuddyRequest is used to request a user be removed as a buddy.
+message RemoveBuddyRequest {
+  string uid = 1;
+}
+
+// RemarkRequest is used to send a remark to a buddy.
+message RemarkRequest {
+  string uid = 1;
+  string remark = 2;
+}
+
+message GetBuddyRequest{
+  string uid=1;
+}
+
+message GetBuddyResponse{
+    Buddies buddies=1;
+}
+
+message RefuseBuddyRequest{
+  repeated string uid=1;
+}
+
+
+// ReplyAddBuddyRequest is used to respond to (accept or reject) a buddy add request.
+message ReplyAddBuddyRequest {
+  repeated string uid = 1;
+
+  // A value of 0 means reject while a value of 1 means accept
+  bool response = 2;
+}
+
+// ReplyAddBuddyResponse is used to respond to (accept or reject) a buddy add request.
+message ReplyAddBuddyResponse {
+  repeated string failed = 1;
+}
+
+message BuddyChanges{
+  repeated Buddy added = 1;
+  repeated Inviter inviterAdded = 2;
+  repeated string removed = 3;
+  repeated Buddy rewardUpdate = 4;
+}
+
+
+message IsBlockedResponse{
+  bool isBlocked = 1;
+}
+
+message VerifyBlockedRequest{
+  string uid_self=1;
+  string uid_other=2;
+}
+
+message VerifyBlockedResponse{
+  bool isBlocked=1;
+}
+
+message DeleteAccountRequest{
+  string uid=1;
+}
+
+message DeleteAccountResponse{
+
+}

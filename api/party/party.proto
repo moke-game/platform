@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package party.pb;
+
+option go_package = "party/api;pb";
+
+// PartyService is a service for party
+// 组队服务
+service PartyService {
+  // GetParty get party info
+  // 获取当前队伍信息
+  rpc GetParty(GetPartyRequest) returns (GetPartyResponse) {}
+  // JoinParty join party
+  // 加入队伍
+  rpc JoinParty(JoinPartyRequest) returns (stream JoinPartyResponse) {}
+  // JoinPartyReply join party reply
+  // 加入队伍回复
+  rpc JoinPartyReply(JoinPartyReplyRequest)returns(JoinPartyReplyResponse){}
+  // LeaveParty leave party
+  // 离开队伍
+  rpc LeaveParty(LeavePartyRequest) returns (LeavePartyResponse) {}
+  // KickOut kick out member
+  // 踢出队伍
+  rpc KickOut(KickOutRequest) returns (KickOutResponse) {}
+  // ManageParty manage party
+  // 管理队伍
+  rpc ManageParty(ManagePartyRequest) returns (ManagePartyResponse) {}
+  // UpdateMember update member
+  // 队伍成员更新信息
+  rpc UpdateMember(UpdateMemberRequest) returns (UpdateMemberResponse) {}
+  // InviteJoin invite join party
+  // 邀请加入队伍
+  rpc InviteJoinParty(InviteJoinRequest) returns (InviteJoinResponse) {}
+  // InviteJoinReplay invite join party replay
+  // 邀请加入队伍回复
+  rpc InviteJoinReplay(InviteReplayRequest) returns (InviteReplayResponse) {}
+}
+
+message Member {
+  string uid = 1; // uid
+  string nickname = 2; // nickname
+  string avatar = 3; // avatar
+  int32 hero_id = 4; // hero id
+  int32 status = 5; // status can not be 0, 0 is default value
+  bool is_offline = 6; // is offline
+  bool is_leave = 7; // be kicked out
+  int32 leave_reason = 8; // leave reason (1:leave, 2:kick out)
+}
+
+message PartySetting {
+  string id = 1; // party id
+  int32 type = 2; // party type
+  string name = 3; // party name
+  string owner = 4; // party owner
+  int32 max_member = 5; // max member
+  map<string, int64> refuse = 6;//block list
+}
+
+message PartyInfo {
+  PartySetting party = 1; // party setting
+  map<string, Member> members = 2; // members
+}
+
+// get party info
+message GetPartyRequest {
+  oneof kind {
+    string pid = 1; // party id
+    string uid = 2; // player uid
+  }
+}
+
+message GetPartyResponse {
+  PartyInfo party = 1; // party info
+}
+
+message JoinPartyRequest {
+  string id = 1; // party id required (if is_create is true, id is not required)
+  PartySetting party = 2; // party info (if is_create is true, party info is required)
+  Member member = 3; // member info required
+  bool is_create = 4; // is create party
+  bool is_publish = 5;//is publish party
+}
+
+// if join/create party success,
+// server will notice changes by this response
+message JoinPartyResponse {
+  PartyInfo party = 1; // party info
+}
+
+message JoinPartyReplyRequest{
+  string party_id = 1;
+  string player_id = 2;
+  int32 reply_code = 3;//3=拒绝五分钟内再次申请
+}
+
+message JoinPartyReplyResponse{
+
+}
+
+message LeavePartyRequest {}
+
+message LeavePartyResponse {
+  repeated string ids = 1;//原本的队伍成员ID
+}
+
+message ManagePartyRequest {
+  PartySetting party = 1; // party info
+}
+
+message ManagePartyResponse {}
+
+message KickOutRequest {
+  string party_id = 1; // party id
+  string uid = 2; // uid
+}
+
+message KickOutResponse {
+  repeated string ids = 1;//原本的队伍成员ID
+}
+
+message UpdateMemberRequest {
+  string party_id = 1; // party id
+  Member member = 2; // member info
+}
+
+message UpdateMemberResponse {}
+
+message InviteJoinRequest {
+  string inviter_id = 1; //inviter id
+  string player_id = 2; // invitee id
+}
+
+message InviteJoinResponse {
+  int32 replay_code = 1; //0=邀请成功 1=同意 2=拒绝 3=一定时间内拒绝再次申请 4=对方被其他队伍邀请中
+
+}
+
+message InviteReplayRequest {
+  int32 replay_code = 1; //1=同意 2=拒绝 3=一定时间内拒绝再次被邀请
+  string party_id = 2; // 房间id
+}
+
+message InviteReplayResponse {}

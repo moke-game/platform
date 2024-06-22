@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package auth.pb;
+
+option go_package = "auth/api;pb";
+
+service AuthService {
+  // Authenticate request a jwt token by id
+  // return a jwt token and a refresh token
+  rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
+  // RefreshToken request a new jwt token by refresh token
+  // return a jwt token and a refresh token
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  // ValidateToken validate a jwt token
+  // return a uid and data
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
+  // ClearToken clear the uid's token
+  rpc ClearToken(ClearTokenRequest) returns (ClearTokenResponse) {}
+  // Delete delete the id and uid info from db
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+  // AddBlocked add a uid to block list
+  // if is_block is true, will block the uid for duration seconds
+  rpc AddBlocked(BlockListRequest) returns (BlockListResponse) {}
+}
+
+message AuthenticateRequest {
+  enum AuthType {
+    NONE = 0;
+    //will create a new uid by id , it is used for login
+    CREATE_UID = 1;
+  }
+  string app_id = 1;
+  string id = 2;
+  AuthType auth = 3;
+  // custom your data ,will pack to token
+  bytes data = 4;
+}
+
+message AuthenticateResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  string id = 3;
+  bool is_override = 4; // if is_override is true, will override the old token
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateTokenResponse {
+  string uid = 1;
+  bytes data = 2; // will unpack from token
+}
+
+message ClearTokenRequest {
+  string uid = 1;
+  string access_token = 2;
+}
+
+message ClearTokenResponse {}
+
+message DeleteRequest {
+  string app_id = 1;
+  string id = 2;
+}
+message DeleteResponse {}
+
+
+message BlockListRequest {
+  string uid = 1;
+  bool is_block = 2; // true: block, false: unblock
+  int64 duration = 3; // block duration(Seconds) (if is_block is true)
+}
+
+message BlockListResponse {}

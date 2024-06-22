@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package mail.v1;
+
+option go_package = "mail/api;mail";
+
+// mail service for pubic
+service MailService {
+  // Watch watch mail changes,
+  rpc Watch(WatchMailRequest) returns (stream WatchMailResponse);
+  //UpdateMail update mail
+  rpc UpdateMail(UpdateMailRequest) returns (UpdateMailResponse);
+}
+
+// mail service for private (without auth, keep it in internal network)
+service MailPrivateService {
+  // send mail(grpc/http)
+  rpc SendMail(SendMailRequest) returns (SendMailResponse) {}
+}
+
+message MailReward {
+  int64 id = 1; // reward id
+  int32 num = 2; // reward num
+  // if expire>0, id must be unique eg.timestamp
+  int64 expire = 3; // reward expire time (0 means no expire)
+  int32 type = 4; // reward type
+}
+enum MailStatus {
+  UNREAD = 0;
+  READ = 1;
+  REWARDED = 2;
+  DELETED = 3;
+}
+
+message Mail {
+  message Filter {
+    // role register time (optional, if not set, will be now, if -1 means all register time)
+    int64 register_time = 1;
+  }
+
+  int64 id = 1; // mail uid (optional, if not set, will be generated)
+  // mail title (required,key: language, value: title)
+  // if template_id is set, title will be ignored
+  map<string, string> title = 2;
+  // mail content (required key: language, value: content),
+  // if template_id is set, content will be ignored
+  map<string, string> body = 3;
+  int64 date = 4; // mail  send time (optional, if not set, will be now)
+  int64 expire_at = 5; // mail expire time (optional, if not set, will be now+90 days)
+  // mail sender (required)
+  // if template_id is set, sender will be ignored
+  string from = 6;
+  repeated MailReward rewards = 7; //mail rewards (optional)
+  MailStatus status = 8; // mail status (0:unread,1:read,2:rewarded,3:deleted)
+  int32 template_id = 9; // mail template id (optional)
+  repeated string template_args = 10; // mail template args (optional)
+  Filter filters= 11; // mail filters
+}
+
+//send mail(private)
+message SendMailRequest {
+  enum SendType {
+    NONE = 0;
+    ALL = 1;
+    ROLE = 2;
+  }
+
+  string platform_id = 1; // platform id (optional, if not set, will be all platforms)
+  string channel_id = 3; // channel id (optional, if not set, will be all channels)
+  SendType send_type = 4; // send type (0:none,1:all,2:role)
+  repeated string role_ids = 5; // role id (optional, if not set, will be all roles)
+  Mail mail = 6; // mail content
+}
+
+// send mail response
+message SendMailResponse {}
+
+// watch mail changes request
+message WatchMailRequest {
+  string channel = 1; // channel
+  string language = 2; // language
+  int64 register_time = 3; // register time
+}
+
+// watch mail changes response
+message WatchMailResponse {
+  map<int64, Mail> mails = 1; // mail changes
+}
+
+// update mail status
+message UpdateMailRequest {
+  map<int64, MailStatus> updates = 1; //  <mailId,mailStatus> mailId=0 means update all mails
+}
+
+// update mail status response
+message UpdateMailResponse {
+  map<int64, MailReward> rewards = 1; // if update mail status to REWARDED, rewards will be returned
+}

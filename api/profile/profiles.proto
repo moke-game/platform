@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package profile.pb;
+
+option go_package = "profile/api;pb";
+
+// ProfileService is the service for profile
+// 玩家基本信息服务
+service ProfileService {
+  //IsProfileExist check if profile exist
+  // 当前玩家是否存在
+  rpc IsProfileExist(IsProfileExistRequest) returns (IsProfileExistResponse) {}
+  // GetProfile get profile by uid
+  // 获取玩家基本信息
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {}
+  // CreateProfile create profile
+  // 创建玩家基本信息
+  rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse) {}
+  // UpdateProfile update profile
+  // 更新玩家基本信息
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
+  // GetProfileStatus get profile status
+  // 获取玩家在线状态
+  rpc GetProfileStatus(GetProfileStatusRequest) returns (GetProfileStatusResponse) {}
+  // WatchProfile watch profile
+  // 监听玩家基本信息变化
+  rpc WatchProfile(WatchProfileRequest) returns (stream WatchProfileResponse) {}
+}
+service ProfilePrivateService {
+  // SetProfileStatus set profile status
+  // 设置玩家在线状态
+  rpc SetProfileStatus(SetProfileStatusRequest) returns (SetProfileStatusResponse) {}
+  // GetProfileBasics get profile basics，it is used for friends, leaderboard etc.
+  // 获取玩家基本信息,适用于好友，排行榜等等
+  rpc GetProfileBasicsPrivate(GetProfileBasicsPrivateRequest) returns (GetProfileBasicsPrivateResponse) {}
+}
+
+enum ProfileStatus {
+  OFFLINE = 0; //离线
+  ONLINE = 1; //在线 空闲
+  BATTLE = 2; //在线 战斗中
+  HIDE = 3; //隐身
+}
+
+message Profile {
+  string uid = 1;
+  string nickname = 2;
+  string avatar = 3;
+  int32 hero_id = 4;
+  int64 pet_profile_id = 5;
+  int32 online_status = 6;
+  int32 channel = 7;
+  string openid = 8;
+  string phone = 9;
+  string email = 10;
+  string device_id = 11;
+  int64 recharge_amount = 12;
+  string register_ip = 13;
+  int64 register_time = 14;
+  string platform_id = 15;
+  int64 last_login_time = 16;
+  string account = 17;
+  int64 delete_time = 18; //删除时间
+  int32 guide_step = 19; //新手引导完成的进度 最大值18
+}
+
+message IsProfileExistRequest {
+  string uid = 1;
+}
+
+message IsProfileExistResponse {
+  bool exist = 1;
+}
+
+message GetProfileRequest {
+  string uid = 1;
+}
+
+message GetProfileResponse {
+  Profile profile = 1;
+}
+
+message CreateProfileRequest {
+  Profile profile = 1;
+}
+
+message CreateProfileResponse {
+  Profile profile = 1;
+}
+
+message UpdateProfileRequest {
+  Profile profile = 1;
+  ProfileBasic basic = 2; //basic info in redis
+}
+
+message UpdateProfileResponse {
+  Profile profile = 1;
+}
+
+message SetProfileStatusRequest {
+  string uid = 1;
+  int32 status = 2;
+}
+
+message SetProfileStatusResponse {}
+
+message GetProfileStatusRequest {
+  repeated string uid = 1;
+}
+
+message GetProfileStatusResponse {
+  map<string, int32> status = 1;
+}
+
+message WatchProfileRequest {
+  string uid = 1;
+}
+
+message WatchProfileResponse {
+  Profile profile = 1;
+}
+
+message ProfileBasic {
+  string uid = 1;
+  string nickname = 2;
+  string avatar = 3;
+  int32 hero_id = 4;
+  int32 online_status = 5;
+  string hall_url = 6; // hall host url
+  string battle_url = 7; //battle host url
+  string room_id = 8; // room id
+  string room_hostname = 9; //room service host name
+  repeated string leaderboard_star_members = 10; //排行榜点赞信息
+}
+
+message GetProfileBasicsResponse {
+  map<string, ProfileBasic> basics = 1;
+}
+
+message GetProfileBasicsPrivateRequest {
+  repeated string uid = 1;
+}
+
+message GetProfileBasicsPrivateResponse {
+  map<string, ProfileBasic> basics = 1;
+}

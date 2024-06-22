@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package knapsack.pb;
+
+option go_package = "knapsack/api;pb";
+
+service KnapsackService {
+  // GetKnapsack get knapsack info
+  rpc GetKnapsack(GetKnapsackRequest) returns (GetKnapsackResponse) {}
+  // AddItem add items
+  rpc AddItem(AddItemRequest) returns (AddItemResponse) {}
+  // RemoveItem remove items
+  rpc RemoveItem(RemoveItemRequest) returns (RemoveItemResponse) {}
+  // RemoveThenAddItem remove items then add items
+  rpc RemoveThenAddItem(RemoveThenAddItemRequest) returns (RemoveThenAddItemResponse) {}
+}
+
+// KnapsackPrivateService provide private service for game/gm service
+service KnapsackPrivateService {
+  // AddItem add items
+  rpc AddItem(AddItemPrivateRequest) returns (AddItemPrivateResponse) {}
+  // RemoveItem remove items
+  rpc RemoveItem(RemoveItemPrivateRequest) returns (RemoveItemPrivateResponse) {}
+  // GetItemById get item by id
+  rpc GetItemById(GetItemByIdPrivateRequest) returns (GetItemByIdPrivateResponse) {}
+  // GetKnapsack get knapsack info
+  rpc GetKnapsack(GetKnapsackRequest) returns (GetKnapsackResponse) {}
+}
+
+message Item {
+  int64 id = 1; // 道具id
+  int32 type = 2; // 类型 静态配置表中的ID
+  int32 num = 3; //数量
+  int64 expire = 4; // 过期时间 秒
+}
+
+message Knapsack {
+  string uid = 1;
+  map<int64, Item> items = 2; // 道具列表
+  map<string, int64> event_ids = 3; //event记录
+  map<string, int64> atomic_ids = 4; //实现冥等
+  map<int32, bool> features = 5; //功能特性
+}
+
+message KnapsackModify {
+  map<int64, Item> incr_items = 1;
+  map<int64, Item> decr_items = 2;
+  Knapsack knapsack=3;
+  string source = 4;
+}
+
+message GetKnapsackRequest {
+  string uid = 1;
+}
+
+message GetKnapsackResponse {
+  Knapsack knapsack = 1;
+}
+
+message AddItemRequest {
+  map<int64, Item> items = 1;
+  map<int32, bool> features = 2; //功能特性
+  string source = 3; //道具变更时的场景
+}
+
+message AddItemResponse {}
+
+message RemoveItemRequest {
+  map<int64, Item> items = 1;
+  string source = 2; //道具变更时的场景
+}
+
+message RemoveItemResponse {}
+
+message RemoveThenAddItemRequest {
+  map<int64, Item> remove_items = 1;
+  map<int64, Item> add_items = 2;
+  string source = 3; //道具变更时的场景
+}
+
+message RemoveThenAddItemResponse {}
+
+message AddItemPrivateRequest {
+  string uid = 1;
+  map<int64, Item> items = 2;
+  string source = 3; //道具变更时的场景
+  map<int32, bool> features = 4; //功能特性
+}
+
+message AddItemPrivateResponse {}
+
+message RemoveItemPrivateRequest {
+  string uid = 1;
+  map<int64, Item> items = 2;
+  string source = 3; //道具变更时的场景
+}
+
+message RemoveItemPrivateResponse {}
+
+message GetItemByIdPrivateRequest {
+  string uid = 1;
+  int64 item_id = 2;
+}
+
+message GetItemByIdPrivateResponse {
+  Item item = 1;
+}
