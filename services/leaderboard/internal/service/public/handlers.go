@@ -8,8 +8,8 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	"github.com/moke-game/platform.git/api/gen/leaderboard"
-	"github.com/moke-game/platform.git/services/leaderboard/internal/service/errors"
+	"github.com/moke-game/platform/api/gen/leaderboard"
+	"github.com/moke-game/platform/services/leaderboard/internal/service/errors"
 )
 
 func (s *Service) GetLeaderboard(

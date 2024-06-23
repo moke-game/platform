@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/moke-game/platform.git/services/buddy/client"
+	"github.com/moke-game/platform/services/buddy/client"
 )
 
 var options struct {

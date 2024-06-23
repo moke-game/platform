@@ -5,8 +5,8 @@ import (
 
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/analytics"
-	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
+	pb "github.com/moke-game/platform/api/gen/analytics"
+	"github.com/moke-game/platform/services/analytics/internal/service/bi"
 )
 
 func (s *Service) Analytics(

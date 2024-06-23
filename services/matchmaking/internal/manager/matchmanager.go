@@ -14,13 +14,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb2 "github.com/moke-game/platform.git/api/gen/auth"
-	pb "github.com/moke-game/platform.git/api/gen/matchmaking"
-	"github.com/moke-game/platform.git/services/matchmaking/internal/agones"
-	"github.com/moke-game/platform.git/services/matchmaking/internal/db"
-	"github.com/moke-game/platform.git/services/matchmaking/internal/db/model"
-	"github.com/moke-game/platform.git/services/matchmaking/internal/utils"
-	"github.com/moke-game/platform.git/services/matchmaking/pkg/module/data"
+	pb2 "github.com/moke-game/platform/api/gen/auth"
+	pb "github.com/moke-game/platform/api/gen/matchmaking"
+	"github.com/moke-game/platform/services/matchmaking/internal/agones"
+	"github.com/moke-game/platform/services/matchmaking/internal/db"
+	"github.com/moke-game/platform/services/matchmaking/internal/db/model"
+	"github.com/moke-game/platform/services/matchmaking/internal/utils"
+	"github.com/moke-game/platform/services/matchmaking/pkg/module/data"
 )
 
 const (

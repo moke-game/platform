@@ -1,4 +1,4 @@
-module github.com/moke-game/platform.git
+module github.com/moke-game/platform
 
 go 1.21
 

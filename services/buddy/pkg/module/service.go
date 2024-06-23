@@ -3,8 +3,8 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/moke-game/platform.git/services/buddy/internal/service"
-	"github.com/moke-game/platform.git/services/buddy/pkg/bfx"
+	"github.com/moke-game/platform/services/buddy/internal/service"
+	"github.com/moke-game/platform/services/buddy/pkg/bfx"
 )
 
 // BuddyModule Provides buddy service

@@ -9,7 +9,7 @@ import (
 	"github.com/gstones/moke-kit/logging/slogger"
 	"github.com/gstones/moke-kit/server/tools"
 
-	pb2 "github.com/moke-game/platform.git/api/gen/auth"
+	pb2 "github.com/moke-game/platform/api/gen/auth"
 )
 
 type AuthClient struct {

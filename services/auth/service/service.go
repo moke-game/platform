@@ -17,10 +17,10 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
 
-	"github.com/moke-game/platform.git/services/auth/pkg/afx"
+	"github.com/moke-game/platform/services/auth/pkg/afx"
 
-	pb "github.com/moke-game/platform.git/api/gen/auth"
-	"github.com/moke-game/platform.git/services/auth/service/db"
+	pb "github.com/moke-game/platform/api/gen/auth"
+	"github.com/moke-game/platform/services/auth/service/db"
 )
 
 type Service struct {

@@ -8,9 +8,9 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	"github.com/moke-game/platform.git/api/gen/leaderboard"
-	"github.com/moke-game/platform.git/services/leaderboard/internal/db"
-	"github.com/moke-game/platform.git/services/leaderboard/pkg/lbfx"
+	"github.com/moke-game/platform/api/gen/leaderboard"
+	"github.com/moke-game/platform/services/leaderboard/internal/db"
+	"github.com/moke-game/platform/services/leaderboard/pkg/lbfx"
 )
 
 type Service struct {

@@ -6,7 +6,7 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
 
-	pb "github.com/moke-game/platform.git/api/gen/profile"
+	pb "github.com/moke-game/platform/api/gen/profile"
 )
 
 type ProfileClientParams struct {

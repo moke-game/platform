@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
+	"github.com/moke-game/platform/services/analytics/internal/service/bi"
 )
 
 var EventTypeName = map[bi.EventType]string{

@@ -14,9 +14,9 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/mail"
-	"github.com/moke-game/platform.git/services/mail/internal/service/db"
-	"github.com/moke-game/platform.git/services/mail/pkg/mailfx"
+	pb "github.com/moke-game/platform/api/gen/mail"
+	"github.com/moke-game/platform/services/mail/internal/service/db"
+	"github.com/moke-game/platform/services/mail/pkg/mailfx"
 )
 
 type Service struct {

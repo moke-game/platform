@@ -12,10 +12,10 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform.git/api/gen/profile"
-	"github.com/moke-game/platform.git/services/profile/changes"
-	errors2 "github.com/moke-game/platform.git/services/profile/errors"
-	"github.com/moke-game/platform.git/services/profile/internal/db/redis"
+	pb "github.com/moke-game/platform/api/gen/profile"
+	"github.com/moke-game/platform/services/profile/changes"
+	errors2 "github.com/moke-game/platform/services/profile/errors"
+	"github.com/moke-game/platform/services/profile/internal/db/redis"
 )
 
 func (s *Service) IsProfileExist(ctx context.Context, request *pb.IsProfileExistRequest) (*pb.IsProfileExistResponse, error) {

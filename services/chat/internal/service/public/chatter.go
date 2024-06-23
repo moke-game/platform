@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform.git/api/gen/chat"
-	"github.com/moke-game/platform.git/services/chat/internal/service/db"
+	pb "github.com/moke-game/platform/api/gen/chat"
+	"github.com/moke-game/platform/services/chat/internal/service/db"
 )
 
 type Chatter struct {

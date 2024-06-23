@@ -5,7 +5,7 @@ import (
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 	"google.golang.org/protobuf/proto"
 
-	ppb "github.com/moke-game/platform.git/api/gen/profile"
+	ppb "github.com/moke-game/platform/api/gen/profile"
 )
 
 type Dao struct {

@@ -11,9 +11,9 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/party"
-	"github.com/moke-game/platform.git/services/party/internal/db"
-	"github.com/moke-game/platform.git/services/party/pkg/ptfx"
+	pb "github.com/moke-game/platform/api/gen/party"
+	"github.com/moke-game/platform/services/party/internal/db"
+	"github.com/moke-game/platform/services/party/pkg/ptfx"
 )
 
 type Service struct {

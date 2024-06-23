@@ -3,8 +3,8 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/moke-game/platform.git/services/party/internal/service/public"
-	"github.com/moke-game/platform.git/services/party/pkg/ptfx"
+	"github.com/moke-game/platform/services/party/internal/service/public"
+	"github.com/moke-game/platform/services/party/pkg/ptfx"
 )
 
 // PartyModule Provides party service

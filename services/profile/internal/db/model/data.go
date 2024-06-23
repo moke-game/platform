@@ -1,6 +1,6 @@
 package model
 
-import ppb "github.com/moke-game/platform.git/api/gen/profile"
+import ppb "github.com/moke-game/platform/api/gen/profile"
 
 func (d *Dao) initData() {
 	d.Data = &ppb.Profile{}

@@ -3,9 +3,9 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/moke-game/platform.git/services/profile/internal/private"
-	"github.com/moke-game/platform.git/services/profile/internal/public"
-	"github.com/moke-game/platform.git/services/profile/pkg/pfx"
+	"github.com/moke-game/platform/services/profile/internal/private"
+	"github.com/moke-game/platform/services/profile/internal/public"
+	"github.com/moke-game/platform/services/profile/pkg/pfx"
 )
 
 // ProfileModule Provides profile service

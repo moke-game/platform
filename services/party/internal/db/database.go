@@ -9,7 +9,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/party"
+	pb "github.com/moke-game/platform/api/gen/party"
 )
 
 const PartyExpireTime = time.Hour * 4

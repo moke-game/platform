@@ -14,10 +14,10 @@ import (
 	"github.com/gstones/moke-kit/server/siface"
 	"github.com/gstones/moke-kit/utility"
 
-	pb "github.com/moke-game/platform.git/api/gen/chat"
-	"github.com/moke-game/platform.git/services/chat/internal/service/db"
-	"github.com/moke-game/platform.git/services/chat/internal/service/errors"
-	"github.com/moke-game/platform.git/services/chat/pkg/cfx"
+	pb "github.com/moke-game/platform/api/gen/chat"
+	"github.com/moke-game/platform/services/chat/internal/service/db"
+	"github.com/moke-game/platform/services/chat/internal/service/errors"
+	"github.com/moke-game/platform/services/chat/pkg/cfx"
 )
 
 type Service struct {

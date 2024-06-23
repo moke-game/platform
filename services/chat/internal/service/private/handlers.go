@@ -5,8 +5,8 @@ import (
 
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/chat"
-	"github.com/moke-game/platform.git/services/chat/internal/service/errors"
+	pb "github.com/moke-game/platform/api/gen/chat"
+	"github.com/moke-game/platform/services/chat/internal/service/errors"
 )
 
 func (s *Service) AddBlocked(_ context.Context, request *pb.AddBlockedRequest) (*pb.AddBlockedResponse, error) {

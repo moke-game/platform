@@ -6,7 +6,7 @@ import (
 	"github.com/gstones/moke-kit/mq/common"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform.git/api/gen/knapsack"
+	pb "github.com/moke-game/platform/api/gen/knapsack"
 )
 
 func CreateTopic(uid string) string {

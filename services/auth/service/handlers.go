@@ -8,12 +8,12 @@ import (
 	"github.com/gstones/moke-kit/orm/nerrors"
 	"go.uber.org/zap"
 
-	"github.com/moke-game/platform.git/services/auth/service/db/redis"
-	"github.com/moke-game/platform.git/services/auth/service/utils"
+	"github.com/moke-game/platform/services/auth/service/db/redis"
+	"github.com/moke-game/platform/services/auth/service/utils"
 
 	"github.com/pkg/errors"
 
-	pb "github.com/moke-game/platform.git/api/gen/auth"
+	pb "github.com/moke-game/platform/api/gen/auth"
 )
 
 func (s *Service) Authenticate(_ context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {

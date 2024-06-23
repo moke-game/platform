@@ -6,7 +6,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	pb "github.com/moke-game/platform.git/api/gen/profile"
+	pb "github.com/moke-game/platform/api/gen/profile"
 )
 
 type ProfileBasic struct {

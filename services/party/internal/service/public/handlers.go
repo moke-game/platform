@@ -11,10 +11,10 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform.git/api/gen/party"
-	"github.com/moke-game/platform.git/services/party/errors"
-	"github.com/moke-game/platform.git/services/party/internal/db"
-	"github.com/moke-game/platform.git/services/party/internal/service"
+	pb "github.com/moke-game/platform/api/gen/party"
+	"github.com/moke-game/platform/services/party/errors"
+	"github.com/moke-game/platform/services/party/internal/db"
+	"github.com/moke-game/platform/services/party/internal/service"
 )
 
 func (s *Service) GetParty(_ context.Context, request *pb.GetPartyRequest) (*pb.GetPartyResponse, error) {

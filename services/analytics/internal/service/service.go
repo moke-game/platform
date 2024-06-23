@@ -12,11 +12,11 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/analytics"
-	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
-	"github.com/moke-game/platform.git/services/analytics/internal/service/bi/clickhouse"
-	"github.com/moke-game/platform.git/services/analytics/internal/service/bi/local"
-	"github.com/moke-game/platform.git/services/analytics/pkg/analyfx"
+	pb "github.com/moke-game/platform/api/gen/analytics"
+	"github.com/moke-game/platform/services/analytics/internal/service/bi"
+	"github.com/moke-game/platform/services/analytics/internal/service/bi/clickhouse"
+	"github.com/moke-game/platform/services/analytics/internal/service/bi/local"
+	"github.com/moke-game/platform/services/analytics/pkg/analyfx"
 )
 
 type Service struct {

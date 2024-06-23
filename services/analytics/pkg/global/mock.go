@@ -3,7 +3,7 @@ package global
 import (
 	"google.golang.org/grpc"
 
-	pb "github.com/moke-game/platform.git/api/gen/analytics"
+	pb "github.com/moke-game/platform/api/gen/analytics"
 )
 
 type Noop struct {

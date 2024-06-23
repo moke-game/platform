@@ -10,8 +10,8 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	"github.com/moke-game/platform.git/api/gen/matchmaking"
-	"github.com/moke-game/platform.git/services/matchmaking/internal/db/model"
+	"github.com/moke-game/platform/api/gen/matchmaking"
+	"github.com/moke-game/platform/services/matchmaking/internal/db/model"
 )
 
 const messageExpire = time.Hour * 24 * 30

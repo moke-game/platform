@@ -3,9 +3,9 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/moke-game/platform.git/services/leaderboard/internal/service/private"
-	"github.com/moke-game/platform.git/services/leaderboard/internal/service/public"
-	"github.com/moke-game/platform.git/services/leaderboard/pkg/lbfx"
+	"github.com/moke-game/platform/services/leaderboard/internal/service/private"
+	"github.com/moke-game/platform/services/leaderboard/internal/service/public"
+	"github.com/moke-game/platform/services/leaderboard/pkg/lbfx"
 )
 
 var LeaderboardService = fx.Module("leaderboard",

@@ -13,9 +13,9 @@ import (
 	"github.com/samber/lo"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform.git/api/gen/mail"
-	"github.com/moke-game/platform.git/services/mail/internal/service/common"
-	"github.com/moke-game/platform.git/services/mail/internal/service/errors"
+	pb "github.com/moke-game/platform/api/gen/mail"
+	"github.com/moke-game/platform/services/mail/internal/service/common"
+	"github.com/moke-game/platform/services/mail/internal/service/errors"
 )
 
 func (s *Service) Watch(req *pb.WatchMailRequest, server pb.MailService_WatchServer) error {
