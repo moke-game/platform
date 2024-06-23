@@ -3,9 +3,9 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/gstones/platform/services/knapsack/internal/service/private"
-	"github.com/gstones/platform/services/knapsack/internal/service/public"
-	"github.com/gstones/platform/services/knapsack/pkg/kfx"
+	"github.com/moke-game/platform.git/services/knapsack/internal/service/private"
+	"github.com/moke-game/platform.git/services/knapsack/internal/service/public"
+	"github.com/moke-game/platform.git/services/knapsack/pkg/kfx"
 )
 
 // KnapsackModule Provides knapsack service

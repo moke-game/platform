@@ -3,8 +3,8 @@ package local
 import (
 	"go.uber.org/zap"
 
-	"github.com/gstones/platform/services/analytics/internal/service/bi"
-	"github.com/gstones/platform/services/analytics/internal/service/bi/local/internal"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi/local/internal"
 )
 
 func NewDataProcessor(

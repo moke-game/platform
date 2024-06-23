@@ -7,9 +7,9 @@ import (
 	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/zap"
 
-	pb "github.com/gstones/platform/api/gen/knapsack"
-	"github.com/gstones/platform/services/knapsack/changes"
-	"github.com/gstones/platform/services/knapsack/errors"
+	pb "github.com/moke-game/platform.git/api/gen/knapsack"
+	"github.com/moke-game/platform.git/services/knapsack/changes"
+	"github.com/moke-game/platform.git/services/knapsack/errors"
 )
 
 func (s *Service) GetKnapsack(ctx context.Context, _ *pb.GetKnapsackRequest) (*pb.GetKnapsackResponse, error) {

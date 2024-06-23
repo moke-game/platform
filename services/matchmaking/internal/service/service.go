@@ -20,13 +20,13 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb2 "github.com/gstones/platform/api/gen/auth"
-	pb "github.com/gstones/platform/api/gen/matchmaking"
-	"github.com/gstones/platform/services/auth/pkg/afx"
-	"github.com/gstones/platform/services/matchmaking/internal/agones"
-	"github.com/gstones/platform/services/matchmaking/internal/db"
-	"github.com/gstones/platform/services/matchmaking/internal/manager"
-	"github.com/gstones/platform/services/matchmaking/pkg/matchfx"
+	pb2 "github.com/moke-game/platform.git/api/gen/auth"
+	pb "github.com/moke-game/platform.git/api/gen/matchmaking"
+	"github.com/moke-game/platform.git/services/auth/pkg/afx"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/agones"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/db"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/manager"
+	"github.com/moke-game/platform.git/services/matchmaking/pkg/matchfx"
 )
 
 const (

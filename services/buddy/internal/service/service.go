@@ -11,9 +11,9 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
 
-	pb "github.com/gstones/platform/api/gen/buddy"
-	"github.com/gstones/platform/services/buddy/internal/db"
-	"github.com/gstones/platform/services/buddy/pkg/bfx"
+	pb "github.com/moke-game/platform.git/api/gen/buddy"
+	"github.com/moke-game/platform.git/services/buddy/internal/db"
+	"github.com/moke-game/platform.git/services/buddy/pkg/bfx"
 )
 
 type Service struct {

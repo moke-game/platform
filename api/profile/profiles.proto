@@ -130,7 +130,6 @@ message ProfileBasic {
   string battle_url = 7; //battle host url
   string room_id = 8; // room id
   string room_hostname = 9; //room service host name
-  repeated string leaderboard_star_members = 10; //排行榜点赞信息
 }
 
 message GetProfileBasicsResponse {

@@ -12,9 +12,9 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/gstones/platform/api/gen/mail"
-	"github.com/gstones/platform/services/mail/internal/service/common"
-	"github.com/gstones/platform/services/mail/internal/service/errors"
+	pb "github.com/moke-game/platform.git/api/gen/mail"
+	"github.com/moke-game/platform.git/services/mail/internal/service/common"
+	"github.com/moke-game/platform.git/services/mail/internal/service/errors"
 )
 
 func (s *Service) SendMail(_ context.Context, request *pb.SendMailRequest) (*pb.SendMailResponse, error) {

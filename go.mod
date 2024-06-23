@@ -1,4 +1,4 @@
-module github.com/gstones/platform
+module github.com/moke-game/platform.git
 
 go 1.21
 

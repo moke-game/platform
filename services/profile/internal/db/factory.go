@@ -5,8 +5,8 @@ import (
 
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 
-	pb "github.com/gstones/platform/api/gen/profile"
-	"github.com/gstones/platform/services/profile/internal/db/model"
+	pb "github.com/moke-game/platform.git/api/gen/profile"
+	"github.com/moke-game/platform.git/services/profile/internal/db/model"
 )
 
 type Database struct {

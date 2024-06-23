@@ -3,7 +3,7 @@ package data
 import (
 	"sort"
 
-	pb "github.com/gstones/platform/api/gen/buddy"
+	pb "github.com/moke-game/platform.git/api/gen/buddy"
 )
 
 type MemberType int32

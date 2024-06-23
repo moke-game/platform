@@ -6,9 +6,9 @@ import (
 	"github.com/gstones/moke-kit/mq/miface"
 	"go.uber.org/zap"
 
-	pb "github.com/gstones/platform/api/gen/knapsack"
-	"github.com/gstones/platform/services/knapsack/changes"
-	"github.com/gstones/platform/services/knapsack/errors"
+	pb "github.com/moke-game/platform.git/api/gen/knapsack"
+	"github.com/moke-game/platform.git/services/knapsack/changes"
+	"github.com/moke-game/platform.git/services/knapsack/errors"
 )
 
 func (s *Service) AddItem(_ context.Context, request *pb.AddItemPrivateRequest) (*pb.AddItemPrivateResponse, error) {

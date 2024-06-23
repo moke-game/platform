@@ -5,7 +5,7 @@ import (
 	"github.com/gstones/moke-kit/server/tools"
 	"go.uber.org/fx"
 
-	"github.com/gstones/platform/api/gen/leaderboard"
+	"github.com/moke-game/platform.git/api/gen/leaderboard"
 )
 
 type LeaderboardClientPrivateParams struct {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/gstones/platform/services/auth/client"
+	"github.com/moke-game/platform.git/services/auth/client"
 )
 
 var options struct {

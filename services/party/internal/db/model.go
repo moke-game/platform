@@ -3,7 +3,7 @@ package db
 import (
 	"encoding/json"
 
-	pb "github.com/gstones/platform/api/gen/party"
+	pb "github.com/moke-game/platform.git/api/gen/party"
 )
 
 type Party struct {

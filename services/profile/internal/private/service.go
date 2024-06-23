@@ -12,8 +12,8 @@ import (
 	"github.com/gstones/moke-kit/server/siface"
 	"github.com/gstones/moke-kit/utility"
 
-	pb "github.com/gstones/platform/api/gen/profile"
-	"github.com/gstones/platform/services/profile/pkg/pfx"
+	pb "github.com/moke-game/platform.git/api/gen/profile"
+	"github.com/moke-game/platform.git/services/profile/pkg/pfx"
 )
 
 type Service struct {

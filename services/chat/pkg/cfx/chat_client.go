@@ -6,7 +6,7 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
 
-	pb "github.com/gstones/platform/api/gen/chat"
+	pb "github.com/moke-game/platform.git/api/gen/chat"
 )
 
 type ChatClientParams struct {

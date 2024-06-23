@@ -7,7 +7,7 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
 
-	pb "github.com/gstones/platform/api/gen/auth"
+	pb "github.com/moke-game/platform.git/api/gen/auth"
 )
 
 type AuthClientParams struct {

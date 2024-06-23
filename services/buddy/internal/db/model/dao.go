@@ -5,7 +5,7 @@ import (
 	"github.com/gstones/moke-kit/orm/nosql"
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 
-	"github.com/gstones/platform/services/buddy/internal/db/model/data"
+	"github.com/moke-game/platform.git/services/buddy/internal/db/model/data"
 )
 
 type Dao struct {

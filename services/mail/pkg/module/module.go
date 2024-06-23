@@ -3,9 +3,9 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/gstones/platform/services/mail/internal/service/private"
-	"github.com/gstones/platform/services/mail/internal/service/public"
-	"github.com/gstones/platform/services/mail/pkg/mailfx"
+	"github.com/moke-game/platform.git/services/mail/internal/service/private"
+	"github.com/moke-game/platform.git/services/mail/internal/service/public"
+	"github.com/moke-game/platform.git/services/mail/pkg/mailfx"
 )
 
 var MailModule = fx.Module("mail",

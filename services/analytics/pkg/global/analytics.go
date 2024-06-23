@@ -1,7 +1,7 @@
 package global
 
 import (
-	pb "github.com/gstones/platform/api/gen/analytics"
+	pb "github.com/moke-game/platform.git/api/gen/analytics"
 )
 
 var (

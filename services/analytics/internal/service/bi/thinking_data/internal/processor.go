@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/gstones/platform/services/analytics/internal/service/bi"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
 )
 
 type Processor struct {

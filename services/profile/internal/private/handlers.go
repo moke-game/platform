@@ -5,9 +5,9 @@ import (
 
 	"go.uber.org/zap"
 
-	pb "github.com/gstones/platform/api/gen/profile"
-	"github.com/gstones/platform/services/profile/errors"
-	"github.com/gstones/platform/services/profile/internal/db/redis"
+	pb "github.com/moke-game/platform.git/api/gen/profile"
+	"github.com/moke-game/platform.git/services/profile/errors"
+	"github.com/moke-game/platform.git/services/profile/internal/db/redis"
 )
 
 func (s *Service) SetProfileStatus(_ context.Context, request *pb.SetProfileStatusRequest) (*pb.SetProfileStatusResponse, error) {

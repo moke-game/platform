@@ -10,7 +10,7 @@ import (
 	"github.com/gstones/moke-kit/orm/nerrors"
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 
-	"github.com/gstones/platform/services/auth/service/db/model"
+	"github.com/moke-game/platform.git/services/auth/service/db/model"
 )
 
 type Database struct {

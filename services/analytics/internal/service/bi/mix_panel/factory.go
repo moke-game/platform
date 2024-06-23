@@ -4,8 +4,8 @@ import (
 	"github.com/gstones/moke-kit/mq/miface"
 	"go.uber.org/zap"
 
-	"github.com/gstones/platform/services/analytics/internal/service/bi"
-	"github.com/gstones/platform/services/analytics/internal/service/bi/mix_panel/internal"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi/mix_panel/internal"
 )
 
 func NewDataProcessor(

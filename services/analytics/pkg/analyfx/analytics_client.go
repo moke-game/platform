@@ -6,8 +6,8 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
 
-	pb "github.com/gstones/platform/api/gen/analytics"
-	"github.com/gstones/platform/services/analytics/pkg/global"
+	pb "github.com/moke-game/platform.git/api/gen/analytics"
+	"github.com/moke-game/platform.git/services/analytics/pkg/global"
 )
 
 type AnalyticsClientParams struct {

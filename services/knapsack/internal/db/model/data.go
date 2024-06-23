@@ -1,6 +1,6 @@
 package model
 
-import pb "github.com/gstones/platform/api/gen/knapsack"
+import pb "github.com/moke-game/platform.git/api/gen/knapsack"
 
 func (d *Dao) initData() {
 	d.Data = &pb.Knapsack{}

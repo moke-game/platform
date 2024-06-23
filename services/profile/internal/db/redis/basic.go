@@ -6,19 +6,17 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	pb "github.com/gstones/platform/api/gen/profile"
+	pb "github.com/moke-game/platform.git/api/gen/profile"
 )
 
 type ProfileBasic struct {
-	Uid                    string   `json:"uid"  redis:"uid"`
-	Nickname               string   `json:"nickname" redis:"nickname"`
-	Avatar                 string   `json:"avatar" redis:"avatar"`
-	HeroId                 int32    `json:"hero_id" redis:"hero_id" `
-	HallUrl                string   `json:"hall_url" redis:"hall_url"`
-	BattleUrl              string   `json:"battle_url" redis:"battle_url"`
-	RoomId                 string   `json:"room_id" redis:"room_id"`
-	LeaderboardStarMembers []string `json:"leaderboard_star_members" redis:"leaderboard_star_members"`
-	LeaderboardStarTime    int64    `json:"leaderboard_star_time" redis:"leaderboard_star_time"`
+	Uid       string `json:"uid"  redis:"uid"`
+	Nickname  string `json:"nickname" redis:"nickname"`
+	Avatar    string `json:"avatar" redis:"avatar"`
+	HeroId    int32  `json:"hero_id" redis:"hero_id" `
+	HallUrl   string `json:"hall_url" redis:"hall_url"`
+	BattleUrl string `json:"battle_url" redis:"battle_url"`
+	RoomId    string `json:"room_id" redis:"room_id"`
 }
 
 func (p *ProfileBasic) MarshalBinary() ([]byte, error) {
@@ -31,15 +29,13 @@ func (p *ProfileBasic) UnmarshalBinary(data []byte) error {
 
 func (p *ProfileBasic) toProto() *pb.ProfileBasic {
 	return &pb.ProfileBasic{
-		Uid:                    p.Uid,
-		Nickname:               p.Nickname,
-		Avatar:                 p.Avatar,
-		HeroId:                 p.HeroId,
-		HallUrl:                p.HallUrl,
-		BattleUrl:              p.BattleUrl,
-		RoomId:                 p.RoomId,
-		LeaderboardStarMembers: p.LeaderboardStarMembers,
-		LeaderboardStarTime:    p.LeaderboardStarTime,
+		Uid:       p.Uid,
+		Nickname:  p.Nickname,
+		Avatar:    p.Avatar,
+		HeroId:    p.HeroId,
+		HallUrl:   p.HallUrl,
+		BattleUrl: p.BattleUrl,
+		RoomId:    p.RoomId,
 	}
 }
 
@@ -60,17 +56,10 @@ func GetBasicInfo(redisCli *redis.Client, uids ...string) (map[string]*pb.Profil
 	}
 	res := make(map[string]*pb.ProfileBasic)
 	for _, v := range cmds {
-		info := &ProfileBasic{
-			LeaderboardStarMembers: make([]string, 0),
-		}
+		info := &ProfileBasic{}
 		cmd := v.(*redis.MapStringStringCmd)
 		if err := cmd.Scan(info); err != nil {
 			return nil, err
-		}
-		if members := cmd.Val()["leaderboard_star_members"]; members != "" {
-			if err := json.Unmarshal([]byte(members), &info.LeaderboardStarMembers); err != nil {
-				return nil, err
-			}
 		}
 		res[info.Uid] = info.toProto()
 	}
@@ -124,19 +113,6 @@ func SetBasicInfo(redisCli *redis.Client, uid string, basic *pb.ProfileBasic) er
 		if basic.RoomHostname != "" {
 			dataMap["room_hostname"] = basic.RoomHostname
 		}
-
-		if basic.LeaderboardStarTime != 0 {
-			dataMap["leaderboard_star_time"] = basic.LeaderboardStarTime
-		}
-
-		if basic.LeaderboardStarMembers != nil && len(basic.LeaderboardStarMembers) > 0 {
-			if data, err := json.Marshal(basic.LeaderboardStarMembers); err != nil {
-				return err
-			} else {
-				dataMap["leaderboard_star_members"] = string(data)
-			}
-		}
-
 		return redisCli.HSet(context.Background(), key.String(), dataMap).Err()
 	}
 

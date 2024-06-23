@@ -5,8 +5,8 @@ import (
 
 	"github.com/gstones/moke-kit/3rd/agones/pkg/module"
 
-	"github.com/gstones/platform/services/matchmaking/internal/service"
-	"github.com/gstones/platform/services/matchmaking/pkg/matchfx"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/service"
+	"github.com/moke-game/platform.git/services/matchmaking/pkg/matchfx"
 )
 
 // MatchModule Provides match service

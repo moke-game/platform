@@ -10,10 +10,10 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/gstones/platform/api/gen/buddy"
-	"github.com/gstones/platform/services/buddy/internal/db/model/data"
-	"github.com/gstones/platform/services/buddy/internal/errors"
-	"github.com/gstones/platform/services/buddy/internal/utils"
+	pb "github.com/moke-game/platform.git/api/gen/buddy"
+	"github.com/moke-game/platform.git/services/buddy/internal/db/model/data"
+	"github.com/moke-game/platform.git/services/buddy/internal/errors"
+	"github.com/moke-game/platform.git/services/buddy/internal/utils"
 )
 
 func (s *Service) AddBuddy(ctx context.Context, request *pb.AddBuddyRequest) (*pb.AddBuddyResponse, error) {

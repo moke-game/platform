@@ -7,7 +7,7 @@ import (
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 	"go.uber.org/zap"
 
-	"github.com/gstones/platform/services/knapsack/internal/db/model"
+	"github.com/moke-game/platform.git/services/knapsack/internal/db/model"
 )
 
 type Database struct {

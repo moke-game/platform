@@ -11,9 +11,9 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
 
-	pb "github.com/gstones/platform/api/gen/knapsack"
-	"github.com/gstones/platform/services/knapsack/internal/db"
-	"github.com/gstones/platform/services/knapsack/pkg/kfx"
+	pb "github.com/moke-game/platform.git/api/gen/knapsack"
+	"github.com/moke-game/platform.git/services/knapsack/internal/db"
+	"github.com/moke-game/platform.git/services/knapsack/pkg/kfx"
 )
 
 type Service struct {

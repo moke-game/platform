@@ -3,8 +3,8 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/gstones/platform/services/auth/pkg/afx"
-	public "github.com/gstones/platform/services/auth/service"
+	"github.com/moke-game/platform.git/services/auth/pkg/afx"
+	public "github.com/moke-game/platform.git/services/auth/service"
 )
 
 // AuthModule Provides auth service

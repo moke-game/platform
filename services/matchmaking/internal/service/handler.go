@@ -7,10 +7,10 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/gstones/platform/api/gen/matchmaking"
-	"github.com/gstones/platform/services/matchmaking/internal/errors"
-	"github.com/gstones/platform/services/matchmaking/internal/manager"
-	"github.com/gstones/platform/services/matchmaking/internal/utils"
+	pb "github.com/moke-game/platform.git/api/gen/matchmaking"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/errors"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/manager"
+	"github.com/moke-game/platform.git/services/matchmaking/internal/utils"
 )
 
 func (s *Service) PveMatch(ctx context.Context, request *pb.PveMatchRequest) (*pb.PveMatchResponse, error) {

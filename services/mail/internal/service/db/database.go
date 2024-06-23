@@ -11,8 +11,8 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	pb "github.com/gstones/platform/api/gen/mail"
-	"github.com/gstones/platform/services/mail/internal/service/common"
+	pb "github.com/moke-game/platform.git/api/gen/mail"
+	"github.com/moke-game/platform.git/services/mail/internal/service/common"
 )
 
 type Database struct {

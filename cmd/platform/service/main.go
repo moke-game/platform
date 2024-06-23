@@ -10,16 +10,16 @@ import (
 	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"github.com/gstones/moke-kit/orm/pkg/ofx"
 
-	analytics "github.com/gstones/platform/services/analytics/pkg/module"
-	auth "github.com/gstones/platform/services/auth/pkg/module"
-	buddy "github.com/gstones/platform/services/buddy/pkg/module"
-	chat "github.com/gstones/platform/services/chat/pkg/module"
-	knapsack "github.com/gstones/platform/services/knapsack/pkg/module"
-	"github.com/gstones/platform/services/leaderboard/pkg/module"
-	mail "github.com/gstones/platform/services/mail/pkg/module"
-	match "github.com/gstones/platform/services/matchmaking/pkg/module"
-	party "github.com/gstones/platform/services/party/pkg/module"
-	profile "github.com/gstones/platform/services/profile/pkg/module"
+	analytics "github.com/moke-game/platform.git/services/analytics/pkg/module"
+	auth "github.com/moke-game/platform.git/services/auth/pkg/module"
+	buddy "github.com/moke-game/platform.git/services/buddy/pkg/module"
+	chat "github.com/moke-game/platform.git/services/chat/pkg/module"
+	knapsack "github.com/moke-game/platform.git/services/knapsack/pkg/module"
+	"github.com/moke-game/platform.git/services/leaderboard/pkg/module"
+	mail "github.com/moke-game/platform.git/services/mail/pkg/module"
+	match "github.com/moke-game/platform.git/services/matchmaking/pkg/module"
+	party "github.com/moke-game/platform.git/services/party/pkg/module"
+	profile "github.com/moke-game/platform.git/services/profile/pkg/module"
 )
 
 func initEnvs() {

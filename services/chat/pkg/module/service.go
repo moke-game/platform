@@ -3,9 +3,9 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/gstones/platform/services/chat/internal/service/private"
-	"github.com/gstones/platform/services/chat/internal/service/public"
-	"github.com/gstones/platform/services/chat/pkg/cfx"
+	"github.com/moke-game/platform.git/services/chat/internal/service/private"
+	"github.com/moke-game/platform.git/services/chat/internal/service/public"
+	"github.com/moke-game/platform.git/services/chat/pkg/cfx"
 )
 
 // ChatModule Provides chat service

@@ -3,8 +3,8 @@ package module
 import (
 	"go.uber.org/fx"
 
-	"github.com/gstones/platform/services/analytics/internal/service"
-	"github.com/gstones/platform/services/analytics/pkg/analyfx"
+	"github.com/moke-game/platform.git/services/analytics/internal/service"
+	"github.com/moke-game/platform.git/services/analytics/pkg/analyfx"
 )
 
 // AnalyticsModule provides service for analytics

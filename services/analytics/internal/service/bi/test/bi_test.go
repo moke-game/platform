@@ -5,9 +5,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/gstones/platform/services/analytics/internal/service/bi"
-	"github.com/gstones/platform/services/analytics/internal/service/bi/mix_panel"
-	"github.com/gstones/platform/services/analytics/internal/service/bi/thinking_data"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi/mix_panel"
+	"github.com/moke-game/platform.git/services/analytics/internal/service/bi/thinking_data"
 )
 
 type testCase struct {
