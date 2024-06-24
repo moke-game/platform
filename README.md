@@ -1,6 +1,6 @@
 # Platform
 
-A platform service for power up
+A platform service for moke-game
 
 * cmd/platform:  all in one platform service
 
