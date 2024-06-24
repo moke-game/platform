@@ -1,6 +1,8 @@
 package global
 
 import (
+	"context"
+
 	"google.golang.org/grpc"
 
 	pb "github.com/moke-game/platform/api/gen/analytics"
@@ -10,10 +12,7 @@ type Noop struct {
 	grpc.ClientStream
 }
 
-func (n *Noop) Send(event *pb.AnalyticsEvents) error {
-	return nil
-}
+func (c *Noop) Analytics(_ context.Context, _ *pb.AnalyticsEvents, _ ...grpc.CallOption) (*pb.Nothing, error) {
 
-func (n *Noop) CloseAndRecv() (*pb.Nothing, error) {
-	return nil, nil
+	return &pb.Nothing{}, nil
 }
