@@ -66,7 +66,7 @@ func (d *PrivateDao) GetProfileByNickname(
 	isRegex bool,
 	page, size int64,
 ) ([]*pb.Profile, error) {
-	filter := bson.M{}
+	var filter bson.M
 	option := &options.FindOptions{}
 	if isRegex {
 		filter = bson.M{

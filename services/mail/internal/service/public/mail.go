@@ -123,8 +123,8 @@ func (s *Service) handlePrivateMails(
 ) miface.SubResponseHandler {
 	return func(msg miface.Message, err error) mcommon.ConsumptionCode {
 		changes := make(map[int64]*pb.Mail)
-		if err := json.Unmarshal(msg.Data(), &changes); err != nil {
-			s.logger.Error("unmarshal err", zap.Error(err))
+		if e := json.Unmarshal(msg.Data(), &changes); e != nil {
+			s.logger.Error("unmarshal err", zap.Error(e))
 			return mcommon.ConsumeNackPersistentFailure
 		}
 
@@ -136,9 +136,8 @@ func (s *Service) handlePrivateMails(
 				}
 			}
 		}
-		err = server.Send(&pb.WatchMailResponse{Mails: changes})
-		if err != nil {
-			s.logger.Error("send change err", zap.Error(err))
+		if e := server.Send(&pb.WatchMailResponse{Mails: changes}); e != nil {
+			s.logger.Error("send change err", zap.Error(e))
 			return mcommon.ConsumeNackPersistentFailure
 		}
 		return mcommon.ConsumeAck
@@ -151,18 +150,18 @@ func (s *Service) handlePublicMails(
 ) miface.SubResponseHandler {
 	return func(msg miface.Message, err error) mcommon.ConsumptionCode {
 		changes := make(map[int64]*pb.Mail)
-		if err := json.Unmarshal(msg.Data(), &changes); err != nil {
-			s.logger.Error("unmarshal err", zap.Error(err))
+		if e := json.Unmarshal(msg.Data(), &changes); e != nil {
+			s.logger.Error("unmarshal err", zap.Error(e))
 			return mcommon.ConsumeNackPersistentFailure
 		}
-		if err := s.db.MergePublicAndPrivateMail(profileId, channel, language, registerTime); err != nil {
-			s.logger.Error("merge public and private mail err", zap.Error(err))
+		if e := s.db.MergePublicAndPrivateMail(profileId, channel, language, registerTime); e != nil {
+			s.logger.Error("merge public and private mail err", zap.Error(e))
 			return mcommon.ConsumeNackPersistentFailure
 		}
 
-		changes, err = common.FilterMailsMapWithLanguage(changes, language)
-		if err != nil {
-			s.logger.Error("filter mails with language err", zap.Error(err))
+		changes, e := common.FilterMailsMapWithLanguage(changes, language)
+		if e != nil {
+			s.logger.Error("filter mails with language err", zap.Error(e))
 			return mcommon.ConsumeAck
 		}
 		changes = common.FilterMailsMapWithRegisterTime(changes, registerTime)
@@ -175,9 +174,8 @@ func (s *Service) handlePublicMails(
 			}
 		}
 
-		err = server.Send(&pb.WatchMailResponse{Mails: changes})
-		if err != nil {
-			s.logger.Error("send change err", zap.Error(err))
+		if e = server.Send(&pb.WatchMailResponse{Mails: changes}); e != nil {
+			s.logger.Error("send change err", zap.Error(e))
 			return mcommon.ConsumeNackPersistentFailure
 		}
 		return mcommon.ConsumeAck

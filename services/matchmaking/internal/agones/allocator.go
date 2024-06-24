@@ -17,8 +17,7 @@ import (
 
 const (
 	Battle string = "battle"
-	World         = "world"
-	Trial         = "trial"
+	World  string = "world"
 )
 
 const namespace = "default"

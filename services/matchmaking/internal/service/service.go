@@ -114,14 +114,13 @@ func (s *Service) run() {
 	last := time.Now()
 	matchManager := manager.GetGlobalMatchManager()
 	for {
-		select {
-		case now := <-ticker.C:
-			delta := now.Sub(last)
-			if matchManager != nil {
-				ms := int32(delta.Milliseconds())
-				matchManager.Update(ms)
-				matchManager.UpdateRetry(ms)
-			}
+		now := <-ticker.C
+		delta := now.Sub(last)
+		if matchManager != nil {
+			ms := int32(delta.Milliseconds())
+			matchManager.Update(ms)
+			matchManager.UpdateRetry(ms)
 		}
 	}
+
 }

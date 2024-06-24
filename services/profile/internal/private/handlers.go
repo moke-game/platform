@@ -112,7 +112,7 @@ func (s *Service) SetProfileStatus(_ context.Context, request *pb.SetProfileStat
 }
 
 func (s *Service) GetProfileBasics(_ context.Context, request *pb.GetProfileBasicsRequest) (*pb.GetProfileBasicsResponse, error) {
-	uids := make([]string, 0)
+	var uids []string
 	if request.Uid == nil || len(request.GetUid()) <= 0 {
 		s.logger.Error("get uid not found")
 		return nil, errors.ErrNoMetaData

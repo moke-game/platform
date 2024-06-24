@@ -139,7 +139,6 @@ func (db *Database) checkAndMarkExpired(mail *pb.Mail) {
 	if mail.ExpireAt > 0 && mail.ExpireAt <= time.Now().Unix() {
 		mail.Status = pb.MailStatus_DELETED
 	}
-	return
 }
 
 func (db *Database) DelMails(profileId string, ids ...int64) error {
@@ -278,27 +277,4 @@ func (db *Database) checkAndUpdateStatus(mail *pb.Mail, status pb.MailStatus) bo
 
 	mail.Status = status
 	return true
-}
-
-func (db *Database) getSelfAllMails(profileId string) ([]*pb.Mail, error) {
-	key, err := makeMailKey(profileId)
-	if err != nil {
-		return nil, err
-	}
-	if data := db.LRange(context.Background(), key.String(), 0, -1); data.Err() != nil {
-		return nil, data.Err()
-	} else {
-		res := make([]*pb.Mail, 0)
-		for k, v := range data.Val() {
-			m := &pb.Mail{}
-			if err := json.Unmarshal([]byte(v), m); err != nil {
-				db.logger.Error("unmarshal error", zap.Error(err))
-				continue
-			}
-			m.Id = int64(k)
-			res = append(res, m)
-		}
-		return res, nil
-	}
-
 }

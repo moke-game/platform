@@ -3,7 +3,6 @@ package private
 import (
 	"github.com/gstones/moke-kit/orm/pkg/ofx"
 	"github.com/gstones/moke-kit/utility"
-	"github.com/redis/go-redis/v9"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
@@ -12,6 +11,7 @@ import (
 	"github.com/gstones/moke-kit/server/siface"
 
 	pb "github.com/moke-game/platform/api/gen/chat"
+
 	"github.com/moke-game/platform/services/chat/internal/service/db"
 	"github.com/moke-game/platform/services/chat/pkg/cfx"
 )
@@ -19,7 +19,6 @@ import (
 type Service struct {
 	utility.WithoutAuth
 	logger     *zap.Logger
-	redis      *redis.Client
 	appId      string
 	deployment string
 	db         *db.Database
