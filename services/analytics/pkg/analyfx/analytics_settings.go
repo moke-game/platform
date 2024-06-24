@@ -7,34 +7,29 @@ import (
 
 type AnalyticsSettingParams struct {
 	fx.In
+	AnalyticsUrl string `name:"AnalyticsUrl"`
 
-	IfunBiKinesisRegion     string `name:"IfunBiKinesisRegion"`
-	IfunBiKinesisKey        string `name:"IfunBiKinesisKey"`
-	IfunBiKinesisSecret     string `name:"IfunBiKinesisSecret"`
-	IfunBiKinesisStreamName string `name:"IfunBiKinesisStreamName"`
-	IfunBiAppId             string `name:"IfunBiAppId"`
-	AnalyticsUrl            string `name:"AnalyticsUrl"`
-	LocalBiPath             string `name:"LocalBiPath"`
-	CKaddr                  string `name:"CKaddr"`
-	CKdb                    string `name:"CKdb"`
-	CKuser                  string `name:"CKuser"`
-	CKpasswd                string `name:"CKpasswd"`
+	LocalBiPath string `name:"LocalBiPath"`
+
+	CKaddr   string `name:"CKaddr"`
+	CKdb     string `name:"CKdb"`
+	CKuser   string `name:"CKuser"`
+	CKpasswd string `name:"CKpasswd"`
 }
 
 type AnalyticsSettingsResult struct {
 	fx.Out
-
-	IfunBiAppId             string `name:"IfunBiAppId" envconfig:"IFUN_BI_APP_ID" default:"5ab1c27fb7c04ce9abedeb23755a3aee"`
-	IfunBiKinesisRegion     string `name:"IfunBiKinesisRegion" envconfig:"IFUN_BI_KINESIS_REGION" default:""`
-	IfunBiKinesisKey        string `name:"IfunBiKinesisKey" envconfig:"IFUN_BI_KINESIS_KEY" default:""`
-	IfunBiKinesisSecret     string `name:"IfunBiKinesisSecret" envconfig:"IFUN_BI_KINESIS_SECRET" default:""`
-	IfunBiKinesisStreamName string `name:"IfunBiKinesisStreamName" envconfig:"IFUN_BI_KINESIS_STREAM_NAME" default:""`
-	AnalyticsUrl            string `name:"AnalyticsUrl" envconfig:"ANALYTICS_URL" default:"localhost:8081"`
-	LocalBiPath             string `name:"LocalBiPath" envconfig:"LOCAL_BI_PATH" default:"./logs/bi"`
-	CKaddr                  string `name:"CKaddr" envconfig:"CK_ADDR" default:""`
-	CKdb                    string `name:"CKdb" envconfig:"CK_DB" default:"fr"`
-	CKuser                  string `name:"CKuser" envconfig:"CK_USER" default:""`
-	CKpasswd                string `name:"CKpasswd" envconfig:"CK_PASSWD" default:""`
+	// AnalyticsUrl is the url of the analytics service, default is localhost:8081.
+	// 当前统计服务器地址, 默认为localhost:8081
+	AnalyticsUrl string `name:"AnalyticsUrl" envconfig:"ANALYTICS_URL" default:"localhost:8081"`
+	// LocalBiPath is the path of the local bi logs, default is ./logs/bi.
+	// 本地bi日志路径, 默认为./logs/bi
+	LocalBiPath string `name:"LocalBiPath" envconfig:"LOCAL_BI_PATH" default:"./logs/bi"`
+	// ClickHouse settings.
+	CKaddr   string `name:"CKaddr" envconfig:"CK_ADDR" default:""`
+	CKdb     string `name:"CKdb" envconfig:"CK_DB" default:"default"`
+	CKuser   string `name:"CKuser" envconfig:"CK_USER" default:""`
+	CKpasswd string `name:"CKpasswd" envconfig:"CK_PASSWD" default:""`
 }
 
 func (g *AnalyticsSettingsResult) LoadFromEnv() (err error) {

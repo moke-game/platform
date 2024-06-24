@@ -19,12 +19,15 @@ enum DeliveryType {
   // Deliver to the local file
   Local = 0;
 
-  // Deliver to the sdk
-  SDK = 1;
+  // Deliver to ThinkingData
+  // https://www.thinkingdata.cn/
+  ThinkingData = 1;
 
   //Deliver to clickhouse
   ClickHouse = 2;
-
+  // Deliver to Mixpanel
+  // https://mixpanel.com/
+  Mixpanel = 3;
 }
 
 // AnalyticsEvent is a single analytics event to capture.
@@ -37,7 +40,7 @@ message Event {
   // Generic JSON property key/value pairs. {"id":"fun","age":10}
   bytes properties = 2;
 
-  // Where to deliver this event to.  Default is GM.
+  // Where to deliver this event to, defaults to Local.
   DeliveryType deliver_to = 3;
 }
 

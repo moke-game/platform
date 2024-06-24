@@ -34,27 +34,32 @@ func (s *Service) RegisterWithGatewayServer(server siface.IGatewayServer) error 
 	)
 }
 
-func NewService(l *zap.Logger, mq miface.MessageQueue, url, hostName, rootPath,
-	kisAppId, kisRegion, kisKey, kisSecret, kisSname string,
-	addr, dbname, uname, passwd string,
+func NewService(
+	l *zap.Logger,
+	mq miface.MessageQueue,
+	settings analyfx.AnalyticsSettingParams,
 ) (result *Service, err error) {
 	processes := make(map[pb.DeliveryType]bi.DataProcessor)
-	if process, err := local.NewDataProcessor(l, hostName, rootPath); err != nil {
-		return nil, err
+	hostname := os.Getenv("HOST_NAME")
+	if process, e := local.NewDataProcessor(l, hostname, settings.LocalBiPath); err != nil {
+		return nil, e
 	} else {
 		processes[pb.DeliveryType_Local] = process
 	}
-	if process, err := clickhouse.NewDataProcessor(l, rootPath, addr, dbname, uname, passwd); err != nil {
-		return nil, err
+	if process, e := clickhouse.NewDataProcessor(
+		l, settings.LocalBiPath, settings.CKaddr,
+		settings.CKdb, settings.CKuser, settings.CKpasswd,
+	); e != nil {
+		return nil, e
 	} else {
 		processes[pb.DeliveryType_ClickHouse] = process
 	}
 	result = &Service{
 		logger:    l,
 		mq:        mq,
-		hostName:  hostName,
+		hostName:  hostname,
 		processes: processes,
-		url:       url,
+		url:       settings.AnalyticsUrl,
 	}
 	return
 }
@@ -70,11 +75,7 @@ var ServiceModule = fx.Provide(
 		mq mfx.MessageQueueParams,
 		settings analyfx.AnalyticsSettingParams,
 	) (out sfx.GrpcServiceResult, gw sfx.GatewayServiceResult, err error) {
-		hostname := os.Getenv("HOST_NAME")
-		if svc, e := NewService(l, mq.MessageQueue, settings.AnalyticsUrl, hostname, settings.LocalBiPath,
-			settings.IfunBiAppId, settings.IfunBiKinesisRegion, settings.IfunBiKinesisKey, settings.IfunBiKinesisSecret, settings.IfunBiKinesisStreamName,
-			settings.CKaddr, settings.CKdb, settings.CKuser, settings.CKpasswd,
-		); e != nil {
+		if svc, e := NewService(l, mq.MessageQueue, settings); e != nil {
 			err = e
 		} else {
 			out.GrpcService = svc
