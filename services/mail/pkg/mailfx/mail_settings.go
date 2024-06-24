@@ -1,8 +1,6 @@
 package mailfx
 
 import (
-	"time"
-
 	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
 )
@@ -29,7 +27,6 @@ type MailSettingsResult struct {
 }
 
 func (msl *MailSettingsResult) LoadFromEnv() (err error) {
-	time.Now().Unix()
 	err = utility.Load(msl)
 	return
 }

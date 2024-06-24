@@ -13,7 +13,6 @@ import (
 
 type Processor struct {
 	logger   *zap.Logger
-	token    string
 	rootPath string
 	hostname string
 }

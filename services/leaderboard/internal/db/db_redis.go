@@ -101,18 +101,6 @@ func (db *Database) UpdateScore(id string, scores map[string]float64) error {
 	return nil
 }
 
-func (db *Database) addScores(id string, scores map[string]float64) error {
-	if key, err := MakeLeaderboardKey(id); err != nil {
-		return err
-	} else {
-		members := make([]redis.Z, 0)
-		for k, v := range scores {
-			members = append(members, redis.Z{Member: k, Score: v})
-		}
-		return db.redisCli.ZAdd(context.Background(), key.String(), members...).Err()
-	}
-}
-
 func (db *Database) GetTopWithScores(id string, start, stop int64) ([]redis.Z, error) {
 	if key, err := MakeLeaderboardKey(id); err != nil {
 		return nil, err

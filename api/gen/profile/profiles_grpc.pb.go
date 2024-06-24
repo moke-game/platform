@@ -356,20 +356,24 @@ var ProfileService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	ProfilePrivateService_SetProfileStatus_FullMethodName        = "/profile.pb.ProfilePrivateService/SetProfileStatus"
-	ProfilePrivateService_GetProfileBasicsPrivate_FullMethodName = "/profile.pb.ProfilePrivateService/GetProfileBasicsPrivate"
+	ProfilePrivateService_GetProfilePrivate_FullMethodName = "/profile.pb.ProfilePrivateService/GetProfilePrivate"
+	ProfilePrivateService_SetProfileStatus_FullMethodName  = "/profile.pb.ProfilePrivateService/SetProfileStatus"
+	ProfilePrivateService_GetProfileBasics_FullMethodName  = "/profile.pb.ProfilePrivateService/GetProfileBasics"
 )
 
 // ProfilePrivateServiceClient is the client API for ProfilePrivateService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProfilePrivateServiceClient interface {
+	// GetProfilePrivate get profile info for private use,like gm,admin etc
+	// 获取玩家信息，如gm，admin等
+	GetProfilePrivate(ctx context.Context, in *GetProfilePrivateRequest, opts ...grpc.CallOption) (*GetProfilePrivateResponse, error)
 	// SetProfileStatus set profile status
 	// 设置玩家在线状态
 	SetProfileStatus(ctx context.Context, in *SetProfileStatusRequest, opts ...grpc.CallOption) (*SetProfileStatusResponse, error)
-	// GetProfileBasics get profile basics，it is used for friends, leaderboard etc.
-	// 获取玩家基本信息,适用于好友，排行榜等等
-	GetProfileBasicsPrivate(ctx context.Context, in *GetProfileBasicsPrivateRequest, opts ...grpc.CallOption) (*GetProfileBasicsPrivateResponse, error)
+	// GetProfileBasics multiple get profile basics, for friends, leaderboard etc
+	// 批量获取玩家基本信息,适用于好友，排行榜等等
+	GetProfileBasics(ctx context.Context, in *GetProfileBasicsRequest, opts ...grpc.CallOption) (*GetProfileBasicsResponse, error)
 }
 
 type profilePrivateServiceClient struct {
@@ -378,6 +382,16 @@ type profilePrivateServiceClient struct {
 
 func NewProfilePrivateServiceClient(cc grpc.ClientConnInterface) ProfilePrivateServiceClient {
 	return &profilePrivateServiceClient{cc}
+}
+
+func (c *profilePrivateServiceClient) GetProfilePrivate(ctx context.Context, in *GetProfilePrivateRequest, opts ...grpc.CallOption) (*GetProfilePrivateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProfilePrivateResponse)
+	err := c.cc.Invoke(ctx, ProfilePrivateService_GetProfilePrivate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *profilePrivateServiceClient) SetProfileStatus(ctx context.Context, in *SetProfileStatusRequest, opts ...grpc.CallOption) (*SetProfileStatusResponse, error) {
@@ -390,10 +404,10 @@ func (c *profilePrivateServiceClient) SetProfileStatus(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *profilePrivateServiceClient) GetProfileBasicsPrivate(ctx context.Context, in *GetProfileBasicsPrivateRequest, opts ...grpc.CallOption) (*GetProfileBasicsPrivateResponse, error) {
+func (c *profilePrivateServiceClient) GetProfileBasics(ctx context.Context, in *GetProfileBasicsRequest, opts ...grpc.CallOption) (*GetProfileBasicsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetProfileBasicsPrivateResponse)
-	err := c.cc.Invoke(ctx, ProfilePrivateService_GetProfileBasicsPrivate_FullMethodName, in, out, cOpts...)
+	out := new(GetProfileBasicsResponse)
+	err := c.cc.Invoke(ctx, ProfilePrivateService_GetProfileBasics_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -404,23 +418,29 @@ func (c *profilePrivateServiceClient) GetProfileBasicsPrivate(ctx context.Contex
 // All implementations should embed UnimplementedProfilePrivateServiceServer
 // for forward compatibility
 type ProfilePrivateServiceServer interface {
+	// GetProfilePrivate get profile info for private use,like gm,admin etc
+	// 获取玩家信息，如gm，admin等
+	GetProfilePrivate(context.Context, *GetProfilePrivateRequest) (*GetProfilePrivateResponse, error)
 	// SetProfileStatus set profile status
 	// 设置玩家在线状态
 	SetProfileStatus(context.Context, *SetProfileStatusRequest) (*SetProfileStatusResponse, error)
-	// GetProfileBasics get profile basics，it is used for friends, leaderboard etc.
-	// 获取玩家基本信息,适用于好友，排行榜等等
-	GetProfileBasicsPrivate(context.Context, *GetProfileBasicsPrivateRequest) (*GetProfileBasicsPrivateResponse, error)
+	// GetProfileBasics multiple get profile basics, for friends, leaderboard etc
+	// 批量获取玩家基本信息,适用于好友，排行榜等等
+	GetProfileBasics(context.Context, *GetProfileBasicsRequest) (*GetProfileBasicsResponse, error)
 }
 
 // UnimplementedProfilePrivateServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedProfilePrivateServiceServer struct {
 }
 
+func (UnimplementedProfilePrivateServiceServer) GetProfilePrivate(context.Context, *GetProfilePrivateRequest) (*GetProfilePrivateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfilePrivate not implemented")
+}
 func (UnimplementedProfilePrivateServiceServer) SetProfileStatus(context.Context, *SetProfileStatusRequest) (*SetProfileStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetProfileStatus not implemented")
 }
-func (UnimplementedProfilePrivateServiceServer) GetProfileBasicsPrivate(context.Context, *GetProfileBasicsPrivateRequest) (*GetProfileBasicsPrivateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProfileBasicsPrivate not implemented")
+func (UnimplementedProfilePrivateServiceServer) GetProfileBasics(context.Context, *GetProfileBasicsRequest) (*GetProfileBasicsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfileBasics not implemented")
 }
 
 // UnsafeProfilePrivateServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -432,6 +452,24 @@ type UnsafeProfilePrivateServiceServer interface {
 
 func RegisterProfilePrivateServiceServer(s grpc.ServiceRegistrar, srv ProfilePrivateServiceServer) {
 	s.RegisterService(&ProfilePrivateService_ServiceDesc, srv)
+}
+
+func _ProfilePrivateService_GetProfilePrivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProfilePrivateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfilePrivateServiceServer).GetProfilePrivate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProfilePrivateService_GetProfilePrivate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfilePrivateServiceServer).GetProfilePrivate(ctx, req.(*GetProfilePrivateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProfilePrivateService_SetProfileStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -452,20 +490,20 @@ func _ProfilePrivateService_SetProfileStatus_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfilePrivateService_GetProfileBasicsPrivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProfileBasicsPrivateRequest)
+func _ProfilePrivateService_GetProfileBasics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProfileBasicsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfilePrivateServiceServer).GetProfileBasicsPrivate(ctx, in)
+		return srv.(ProfilePrivateServiceServer).GetProfileBasics(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProfilePrivateService_GetProfileBasicsPrivate_FullMethodName,
+		FullMethod: ProfilePrivateService_GetProfileBasics_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilePrivateServiceServer).GetProfileBasicsPrivate(ctx, req.(*GetProfileBasicsPrivateRequest))
+		return srv.(ProfilePrivateServiceServer).GetProfileBasics(ctx, req.(*GetProfileBasicsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -478,12 +516,16 @@ var ProfilePrivateService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ProfilePrivateServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "GetProfilePrivate",
+			Handler:    _ProfilePrivateService_GetProfilePrivate_Handler,
+		},
+		{
 			MethodName: "SetProfileStatus",
 			Handler:    _ProfilePrivateService_SetProfileStatus_Handler,
 		},
 		{
-			MethodName: "GetProfileBasicsPrivate",
-			Handler:    _ProfilePrivateService_GetProfileBasicsPrivate_Handler,
+			MethodName: "GetProfileBasics",
+			Handler:    _ProfilePrivateService_GetProfileBasics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

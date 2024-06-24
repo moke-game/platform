@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gstones/moke-kit/mq/miface"
@@ -83,50 +81,6 @@ func (s *Service) makeMailFromRequest(req *pb.SendMailRequest) (*pb.Mail, error)
 	}
 
 	return res, nil
-}
-
-func (s *Service) makeMailRewards(items []string) ([]*pb.MailReward, error) {
-	rewards := make([]*pb.MailReward, 0)
-	for _, v := range items {
-		strs := strings.Split(v, ":")
-		if len(strs) < 2 {
-			return nil, fmt.Errorf("invalid item %s", v)
-		}
-		if id, err := strconv.ParseInt(strs[0], 10, 32); err != nil {
-			return nil, fmt.Errorf("invalid item id %s", v)
-		} else if num, err := strconv.ParseInt(strs[1], 10, 32); err != nil {
-			return nil, fmt.Errorf("invalid item num %s", v)
-		} else {
-			rewards = append(rewards, &pb.MailReward{
-				Id:   id,
-				Num:  int32(num),
-				Type: int32(id),
-			})
-		}
-	}
-	return rewards, nil
-}
-
-func (s *Service) initDefault(mail *pb.Mail) *pb.Mail {
-	mail.Id = time.Now().Unix()
-	if mail.Date == 0 {
-		mail.Date = time.Now().Unix()
-	}
-	if mail.ExpireAt <= 0 {
-		mail.ExpireAt = mail.Date + int64(s.defaultExpire.Seconds())
-	} else {
-		duration := time.Hour * time.Duration(mail.ExpireAt)
-		mail.ExpireAt = mail.Date + int64(duration.Seconds())
-	}
-	for _, v := range mail.Rewards {
-		if v.Id == 0 && v.Type != 0 {
-			v.Id = int64(v.Type)
-		}
-		if v.Type == 0 && v.Id != 0 {
-			v.Type = int32(v.Id)
-		}
-	}
-	return mail
 }
 
 func (s *Service) savePrivateMail(targets []string, mail *pb.Mail) error {

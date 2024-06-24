@@ -2,7 +2,6 @@ package manager
 
 import (
 	"context"
-	"encoding/json"
 	"math"
 	"strconv"
 	"sync"
@@ -736,14 +735,8 @@ func (m *MatchManager) onMatchWithRivalSuccess(matchData []*model.MatchData) {
 }
 
 func (m *MatchManager) authResult(result *data.MatchResult) ([]byte, error) {
-	byt, err := json.Marshal(result)
-	if err != nil {
-		m.logger.Error("matchmaking MatchResponse marshal err", zap.Any("error", err))
-		return nil, err
-	}
 	res := &pb2.AuthenticateRequest{
-		Id:   result.MatchRoomId,
-		Data: byt,
+		Id: result.MatchRoomId,
 	}
 	if authRes, err := m.aClient.Authenticate(context.TODO(), res); err != nil {
 		m.logger.Error("matchmaking Authenticate err", zap.Any("error", err))
@@ -999,25 +992,21 @@ func (m *MatchManager) CheckMatchStatus(uid string) int64 {
 
 func (m *MatchManager) matchStatus(uid string, matchType, queueLevel, playId string) int64 {
 	dataMap, _ := m.db.GetAllWaitData(matchType, queueLevel, playId)
-	if dataMap != nil {
-		for _, matchData := range dataMap {
-			if matchData.Members == nil {
-				continue
-			}
-			if _, ok := matchData.Members[uid]; ok {
-				return matchData.MatchTime
-			}
+	for _, matchData := range dataMap {
+		if matchData.Members == nil {
+			continue
+		}
+		if _, ok := matchData.Members[uid]; ok {
+			return matchData.MatchTime
 		}
 	}
 	dataMap, _ = m.db.GetAllMatchData(matchType, queueLevel, playId)
-	if dataMap != nil {
-		for _, matchData := range dataMap {
-			if matchData.Members == nil {
-				continue
-			}
-			if _, ok := matchData.Members[uid]; ok {
-				return matchData.MatchTime
-			}
+	for _, matchData := range dataMap {
+		if matchData.Members == nil {
+			continue
+		}
+		if _, ok := matchData.Members[uid]; ok {
+			return matchData.MatchTime
 		}
 	}
 	return 0
@@ -1041,27 +1030,6 @@ func (m *MatchManager) addRetryMatch(roomId string, match []*model.MatchData) {
 	for _, matchData := range match {
 		for _, playerData := range matchData.Members {
 			m.retryIdsMap.Store(playerData.Uid, roomId)
-		}
-	}
-}
-
-func (m *MatchManager) delRetryMatchByUid(uid string) {
-	val, ok := m.retryIdsMap.Load(uid)
-	if !ok {
-		m.logger.Info("delRetryMatchByUid key not found", zap.String("uid", uid))
-		return
-	}
-	roomId := val.(string)
-	match, ok := m.retryMap.Load(roomId)
-	if !ok {
-		m.logger.Info("delRetryMatchByUid key not found", zap.String("roomId", roomId))
-		return
-	}
-	m.retryMap.Delete(roomId)
-	mh := match.(*model.MatchRetry)
-	for _, datum := range mh.MatchData {
-		for _, playerData := range datum.Members {
-			m.retryIdsMap.Delete(playerData.Uid)
 		}
 	}
 }

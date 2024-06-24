@@ -175,7 +175,7 @@ func (c *Chatter) pubMessage(message *pb.ChatMessage) {
 	if message == nil || message.GetDestination() == nil {
 		return
 	}
-	if time.Now().Sub(c.latChatTime) < c.intervalMax {
+	if time.Since(c.latChatTime) < c.intervalMax {
 		c.logger.Warn("chat interval too short")
 		c.sendResponseErr(pb.ChatError_CODE_INTERVAL)
 		return

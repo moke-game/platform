@@ -1,6 +1,7 @@
 package db
 
 import (
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 
 	"github.com/gstones/moke-kit/orm/nosql/diface"
@@ -51,4 +52,12 @@ func (db *Database) CreateProfile(uid string, profile *pb.Profile) (*model.Dao, 
 	} else {
 		return dm, nil
 	}
+}
+
+func NewProfilePrivateDao(db *mongo.Database) (*model.PrivateDao, error) {
+	pd := &model.PrivateDao{}
+	if err := pd.Init(db); err != nil {
+		return nil, err
+	}
+	return pd, nil
 }
