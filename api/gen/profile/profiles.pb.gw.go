@@ -183,7 +183,7 @@ func request_ProfileService_WatchProfile_0(ctx context.Context, marshaler runtim
 }
 
 func request_ProfilePrivateService_GetProfilePrivate_0(ctx context.Context, marshaler runtime.Marshaler, client ProfilePrivateServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetProfileRequest
+	var protoReq GetProfilePrivateRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -196,7 +196,7 @@ func request_ProfilePrivateService_GetProfilePrivate_0(ctx context.Context, mars
 }
 
 func local_request_ProfilePrivateService_GetProfilePrivate_0(ctx context.Context, marshaler runtime.Marshaler, server ProfilePrivateServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetProfileRequest
+	var protoReq GetProfilePrivateRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {

@@ -367,7 +367,7 @@ const (
 type ProfilePrivateServiceClient interface {
 	// GetProfilePrivate get profile info for private use,like gm,admin etc
 	// 获取玩家信息，如gm，admin等
-	GetProfilePrivate(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
+	GetProfilePrivate(ctx context.Context, in *GetProfilePrivateRequest, opts ...grpc.CallOption) (*GetProfilePrivateResponse, error)
 	// SetProfileStatus set profile status
 	// 设置玩家在线状态
 	SetProfileStatus(ctx context.Context, in *SetProfileStatusRequest, opts ...grpc.CallOption) (*SetProfileStatusResponse, error)
@@ -384,9 +384,9 @@ func NewProfilePrivateServiceClient(cc grpc.ClientConnInterface) ProfilePrivateS
 	return &profilePrivateServiceClient{cc}
 }
 
-func (c *profilePrivateServiceClient) GetProfilePrivate(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error) {
+func (c *profilePrivateServiceClient) GetProfilePrivate(ctx context.Context, in *GetProfilePrivateRequest, opts ...grpc.CallOption) (*GetProfilePrivateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetProfileResponse)
+	out := new(GetProfilePrivateResponse)
 	err := c.cc.Invoke(ctx, ProfilePrivateService_GetProfilePrivate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -420,7 +420,7 @@ func (c *profilePrivateServiceClient) GetProfileBasics(ctx context.Context, in *
 type ProfilePrivateServiceServer interface {
 	// GetProfilePrivate get profile info for private use,like gm,admin etc
 	// 获取玩家信息，如gm，admin等
-	GetProfilePrivate(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
+	GetProfilePrivate(context.Context, *GetProfilePrivateRequest) (*GetProfilePrivateResponse, error)
 	// SetProfileStatus set profile status
 	// 设置玩家在线状态
 	SetProfileStatus(context.Context, *SetProfileStatusRequest) (*SetProfileStatusResponse, error)
@@ -433,7 +433,7 @@ type ProfilePrivateServiceServer interface {
 type UnimplementedProfilePrivateServiceServer struct {
 }
 
-func (UnimplementedProfilePrivateServiceServer) GetProfilePrivate(context.Context, *GetProfileRequest) (*GetProfileResponse, error) {
+func (UnimplementedProfilePrivateServiceServer) GetProfilePrivate(context.Context, *GetProfilePrivateRequest) (*GetProfilePrivateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfilePrivate not implemented")
 }
 func (UnimplementedProfilePrivateServiceServer) SetProfileStatus(context.Context, *SetProfileStatusRequest) (*SetProfileStatusResponse, error) {
@@ -455,7 +455,7 @@ func RegisterProfilePrivateServiceServer(s grpc.ServiceRegistrar, srv ProfilePri
 }
 
 func _ProfilePrivateService_GetProfilePrivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProfileRequest)
+	in := new(GetProfilePrivateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -467,7 +467,7 @@ func _ProfilePrivateService_GetProfilePrivate_Handler(srv interface{}, ctx conte
 		FullMethod: ProfilePrivateService_GetProfilePrivate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilePrivateServiceServer).GetProfilePrivate(ctx, req.(*GetProfileRequest))
+		return srv.(ProfilePrivateServiceServer).GetProfilePrivate(ctx, req.(*GetProfilePrivateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
