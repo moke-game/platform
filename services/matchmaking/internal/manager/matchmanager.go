@@ -2,7 +2,6 @@ package manager
 
 import (
 	"context"
-	"encoding/json"
 	"math"
 	"strconv"
 	"sync"
@@ -736,14 +735,8 @@ func (m *MatchManager) onMatchWithRivalSuccess(matchData []*model.MatchData) {
 }
 
 func (m *MatchManager) authResult(result *data.MatchResult) ([]byte, error) {
-	byt, err := json.Marshal(result)
-	if err != nil {
-		m.logger.Error("matchmaking MatchResponse marshal err", zap.Any("error", err))
-		return nil, err
-	}
 	res := &pb2.AuthenticateRequest{
-		Id:   result.MatchRoomId,
-		Data: byt,
+		Id: result.MatchRoomId,
 	}
 	if authRes, err := m.aClient.Authenticate(context.TODO(), res); err != nil {
 		m.logger.Error("matchmaking Authenticate err", zap.Any("error", err))

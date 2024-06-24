@@ -1,0 +1,90 @@
+name: reviewdog
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  reviewdog-pr:
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    if: github.event_name == 'pull_request'
+    name: reviewdog on Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+
+      - name: Install linters
+        run: go install golang.org/x/lint/golint@latest
+
+      - name: Setup reviewdog
+        # uses: reviewdog/action-setup@v1
+        run: |
+          go install github.com/reviewdog/reviewdog/cmd/reviewdog@latest
+
+      - name: Run reviewdog (github-pr-check)
+        continue-on-error: true
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog -reporter=github-pr-check -runners=golint,govet -fail-on-error
+
+      - name: Run reviewdog (github-pr-review with tee)
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Remove Go Problem Matchers [1] as it reports duplicate results with
+          # reviewdog.
+          # [1]: https://github.com/actions/toolkit/blob/master/docs/commands.md#problem-matchers
+          echo "::remove-matcher owner=go::"
+          golint ./... | reviewdog -f=golint -name=golint-pr-review -reporter=github-pr-review -tee
+
+      - name: Run reviewdog (github-pr-check with -filter-mode=file)
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          golint | reviewdog -f=golint -name=golint-pr-check-filter-mode-file -reporter=github-pr-check -filter-mode=file -level=warning
+
+      - name: gofmt -s with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gofmt -s -d . | \
+            reviewdog -name="gofmt" -f=diff -f.diff.strip=0 -reporter=github-pr-review
+
+  staticcheck:
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    if: github.event_name == 'pull_request'
+    name: runner / staticcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+      - uses: reviewdog/action-staticcheck@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_on_error: true
+  alex:
+    name: runner / alex
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: reviewdog/action-alex@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-check
+          level: info

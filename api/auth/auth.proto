@@ -7,40 +7,53 @@ option go_package = "auth/api;pb";
 service AuthService {
   // Authenticate request a jwt token by id
   // return a jwt token and a refresh token
+  // 请求一个 jwt token,用于身份认证
   rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
   // RefreshToken request a new jwt token by refresh token
   // return a jwt token and a refresh token
+  // 刷新jwt token 过期时间
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
   // ValidateToken validate a jwt token
   // return a uid and data
+  // 验证jwt token是否合法
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
   // ClearToken clear the uid's token
+  // 清除uid对应的token
   rpc ClearToken(ClearTokenRequest) returns (ClearTokenResponse) {}
   // Delete delete the id and uid info from db
+  // 删除id对应的uid信息
   rpc Delete(DeleteRequest) returns (DeleteResponse) {}
   // AddBlocked add a uid to block list
   // if is_block is true, will block the uid for duration seconds
+  // 添加到黑名单
   rpc AddBlocked(BlockListRequest) returns (BlockListResponse) {}
 }
 
 message AuthenticateRequest {
   enum AuthType {
+    // just create a jwt token by id, it is suitable for game room auth
+    // 只创建一个jwt token，适用于游戏匹配房间验证
     NONE = 0;
-    //will create a new uid by id , it is used for login
+    // will create a uid by id, it is suitable for login auth
+    // 通过id创建一个uid，适用于登录验证
     CREATE_UID = 1;
   }
   string app_id = 1;
+  // account id/ room id
   string id = 2;
   AuthType auth = 3;
   // custom your data ,will pack to token
-  bytes data = 4;
+  bytes custom_data = 4;
 }
 
 message AuthenticateResponse {
   string access_token = 1;
   string refresh_token = 2;
-  string id = 3;
-  bool is_override = 4; // if is_override is true, will override the old token
+  string uid = 3;
+  // if is_override is true means already has a token
+  // it is suitable for different device login logic
+  // 如果为true，表示已经有一个token, 适用于不同设备重复登录逻辑
+  bool is_override = 4;
 }
 
 message RefreshTokenRequest {
@@ -58,7 +71,8 @@ message ValidateTokenRequest {
 
 message ValidateTokenResponse {
   string uid = 1;
-  bytes data = 2; // will unpack from token
+  // custom data from token
+  bytes custom_data = 2;
 }
 
 message ClearTokenRequest {

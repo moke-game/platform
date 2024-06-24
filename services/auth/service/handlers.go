@@ -33,12 +33,12 @@ func (s *Service) Authenticate(_ context.Context, request *pb.AuthenticateReques
 	} else if isBlocked {
 		s.logger.Info("profile is blocked", zap.String("uid", id))
 		return &pb.AuthenticateResponse{
-			Id: id,
+			Uid: id,
 		}, ErrPermissionDenied
 	}
 
 	isOverride := false
-	if access, err := utils.CreatJwt(id, utils.TokenTypeAccess, s.jwtSecret, request.GetData(), s.jwtExpire); err != nil {
+	if access, err := utils.CreatJwt(id, utils.TokenTypeAccess, s.jwtSecret, request.GetCustomData(), s.jwtExpire); err != nil {
 		s.logger.Error("generate access jwt failed", zap.Error(err))
 		return nil, ErrGenerateJwtFailure
 	} else if isOverride, err = redis.IsAuthTokenExist(s.redisCli, id); err != nil {
@@ -54,7 +54,7 @@ func (s *Service) Authenticate(_ context.Context, request *pb.AuthenticateReques
 		return &pb.AuthenticateResponse{
 			AccessToken:  access,
 			RefreshToken: refresh,
-			Id:           id,
+			Uid:          id,
 			IsOverride:   isOverride,
 		}, nil
 	}
@@ -80,8 +80,8 @@ func (s *Service) ValidateToken(_ context.Context, request *pb.ValidateTokenRequ
 		return nil, ErrPermissionDenied
 	} else {
 		return &pb.ValidateTokenResponse{
-			Uid:  uid,
-			Data: data,
+			Uid:        uid,
+			CustomData: data,
 		}, nil
 	}
 }

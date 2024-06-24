@@ -33,19 +33,25 @@ const (
 type AuthServiceClient interface {
 	// Authenticate request a jwt token by id
 	// return a jwt token and a refresh token
+	// 请求一个 jwt token,用于身份认证
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
 	// RefreshToken request a new jwt token by refresh token
 	// return a jwt token and a refresh token
+	// 刷新jwt token 过期时间
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	// ValidateToken validate a jwt token
 	// return a uid and data
+	// 验证jwt token是否合法
 	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 	// ClearToken clear the uid's token
+	// 清除uid对应的token
 	ClearToken(ctx context.Context, in *ClearTokenRequest, opts ...grpc.CallOption) (*ClearTokenResponse, error)
 	// Delete delete the id and uid info from db
+	// 删除id对应的uid信息
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	// AddBlocked add a uid to block list
 	// if is_block is true, will block the uid for duration seconds
+	// 添加到黑名单
 	AddBlocked(ctx context.Context, in *BlockListRequest, opts ...grpc.CallOption) (*BlockListResponse, error)
 }
 
@@ -123,19 +129,25 @@ func (c *authServiceClient) AddBlocked(ctx context.Context, in *BlockListRequest
 type AuthServiceServer interface {
 	// Authenticate request a jwt token by id
 	// return a jwt token and a refresh token
+	// 请求一个 jwt token,用于身份认证
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// RefreshToken request a new jwt token by refresh token
 	// return a jwt token and a refresh token
+	// 刷新jwt token 过期时间
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	// ValidateToken validate a jwt token
 	// return a uid and data
+	// 验证jwt token是否合法
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	// ClearToken clear the uid's token
+	// 清除uid对应的token
 	ClearToken(context.Context, *ClearTokenRequest) (*ClearTokenResponse, error)
 	// Delete delete the id and uid info from db
+	// 删除id对应的uid信息
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	// AddBlocked add a uid to block list
 	// if is_block is true, will block the uid for duration seconds
+	// 添加到黑名单
 	AddBlocked(context.Context, *BlockListRequest) (*BlockListResponse, error)
 }
 

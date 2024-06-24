@@ -182,6 +182,32 @@ func request_ProfileService_WatchProfile_0(ctx context.Context, marshaler runtim
 
 }
 
+func request_ProfilePrivateService_GetProfilePrivate_0(ctx context.Context, marshaler runtime.Marshaler, client ProfilePrivateServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetProfileRequest
+	var metadata runtime.ServerMetadata
+
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.GetProfilePrivate(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_ProfilePrivateService_GetProfilePrivate_0(ctx context.Context, marshaler runtime.Marshaler, server ProfilePrivateServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetProfileRequest
+	var metadata runtime.ServerMetadata
+
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.GetProfilePrivate(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 func request_ProfilePrivateService_SetProfileStatus_0(ctx context.Context, marshaler runtime.Marshaler, client ProfilePrivateServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SetProfileStatusRequest
 	var metadata runtime.ServerMetadata
@@ -208,28 +234,28 @@ func local_request_ProfilePrivateService_SetProfileStatus_0(ctx context.Context,
 
 }
 
-func request_ProfilePrivateService_GetProfileBasicsPrivate_0(ctx context.Context, marshaler runtime.Marshaler, client ProfilePrivateServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetProfileBasicsPrivateRequest
+func request_ProfilePrivateService_GetProfileBasics_0(ctx context.Context, marshaler runtime.Marshaler, client ProfilePrivateServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetProfileBasicsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.GetProfileBasicsPrivate(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetProfileBasics(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_ProfilePrivateService_GetProfileBasicsPrivate_0(ctx context.Context, marshaler runtime.Marshaler, server ProfilePrivateServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetProfileBasicsPrivateRequest
+func local_request_ProfilePrivateService_GetProfileBasics_0(ctx context.Context, marshaler runtime.Marshaler, server ProfilePrivateServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetProfileBasicsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.GetProfileBasicsPrivate(ctx, &protoReq)
+	msg, err := server.GetProfileBasics(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -381,6 +407,31 @@ func RegisterProfileServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterProfilePrivateServiceHandlerFromEndpoint instead.
 func RegisterProfilePrivateServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ProfilePrivateServiceServer) error {
 
+	mux.Handle("POST", pattern_ProfilePrivateService_GetProfilePrivate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/profile.pb.ProfilePrivateService/GetProfilePrivate", runtime.WithHTTPPathPattern("/profile.pb.ProfilePrivateService/GetProfilePrivate"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_ProfilePrivateService_GetProfilePrivate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_ProfilePrivateService_GetProfilePrivate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	mux.Handle("POST", pattern_ProfilePrivateService_SetProfileStatus_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -406,7 +457,7 @@ func RegisterProfilePrivateServiceHandlerServer(ctx context.Context, mux *runtim
 
 	})
 
-	mux.Handle("POST", pattern_ProfilePrivateService_GetProfileBasicsPrivate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_ProfilePrivateService_GetProfileBasics_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -414,12 +465,12 @@ func RegisterProfilePrivateServiceHandlerServer(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/profile.pb.ProfilePrivateService/GetProfileBasicsPrivate", runtime.WithHTTPPathPattern("/profile.pb.ProfilePrivateService/GetProfileBasicsPrivate"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/profile.pb.ProfilePrivateService/GetProfileBasics", runtime.WithHTTPPathPattern("/profile.pb.ProfilePrivateService/GetProfileBasics"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ProfilePrivateService_GetProfileBasicsPrivate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ProfilePrivateService_GetProfileBasics_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -427,7 +478,7 @@ func RegisterProfilePrivateServiceHandlerServer(ctx context.Context, mux *runtim
 			return
 		}
 
-		forward_ProfilePrivateService_GetProfileBasicsPrivate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ProfilePrivateService_GetProfileBasics_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -673,6 +724,28 @@ func RegisterProfilePrivateServiceHandler(ctx context.Context, mux *runtime.Serv
 // "ProfilePrivateServiceClient" to call the correct interceptors.
 func RegisterProfilePrivateServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ProfilePrivateServiceClient) error {
 
+	mux.Handle("POST", pattern_ProfilePrivateService_GetProfilePrivate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/profile.pb.ProfilePrivateService/GetProfilePrivate", runtime.WithHTTPPathPattern("/profile.pb.ProfilePrivateService/GetProfilePrivate"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_ProfilePrivateService_GetProfilePrivate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_ProfilePrivateService_GetProfilePrivate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	mux.Handle("POST", pattern_ProfilePrivateService_SetProfileStatus_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -695,25 +768,25 @@ func RegisterProfilePrivateServiceHandlerClient(ctx context.Context, mux *runtim
 
 	})
 
-	mux.Handle("POST", pattern_ProfilePrivateService_GetProfileBasicsPrivate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_ProfilePrivateService_GetProfileBasics_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/profile.pb.ProfilePrivateService/GetProfileBasicsPrivate", runtime.WithHTTPPathPattern("/profile.pb.ProfilePrivateService/GetProfileBasicsPrivate"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/profile.pb.ProfilePrivateService/GetProfileBasics", runtime.WithHTTPPathPattern("/profile.pb.ProfilePrivateService/GetProfileBasics"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ProfilePrivateService_GetProfileBasicsPrivate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ProfilePrivateService_GetProfileBasics_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ProfilePrivateService_GetProfileBasicsPrivate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ProfilePrivateService_GetProfileBasics_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -721,13 +794,17 @@ func RegisterProfilePrivateServiceHandlerClient(ctx context.Context, mux *runtim
 }
 
 var (
+	pattern_ProfilePrivateService_GetProfilePrivate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"profile.pb.ProfilePrivateService", "GetProfilePrivate"}, ""))
+
 	pattern_ProfilePrivateService_SetProfileStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"profile.pb.ProfilePrivateService", "SetProfileStatus"}, ""))
 
-	pattern_ProfilePrivateService_GetProfileBasicsPrivate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"profile.pb.ProfilePrivateService", "GetProfileBasicsPrivate"}, ""))
+	pattern_ProfilePrivateService_GetProfileBasics_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"profile.pb.ProfilePrivateService", "GetProfileBasics"}, ""))
 )
 
 var (
+	forward_ProfilePrivateService_GetProfilePrivate_0 = runtime.ForwardResponseMessage
+
 	forward_ProfilePrivateService_SetProfileStatus_0 = runtime.ForwardResponseMessage
 
-	forward_ProfilePrivateService_GetProfileBasicsPrivate_0 = runtime.ForwardResponseMessage
+	forward_ProfilePrivateService_GetProfileBasics_0 = runtime.ForwardResponseMessage
 )

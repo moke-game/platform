@@ -1,0 +1,23 @@
+name: Go
+on: [pull_request]
+jobs:
+
+  test:
+    permissions:
+      contents: read
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 50 # Need git history for testing.
+
+    - uses: actions/setup-go@v4
+      with:
+        go-version-file: "go.mod"
+
+    - name: Test
+      run: go test -v -race -coverpkg=./... -coverprofile=coverage.txt ./...
+
+    - uses: codecov/codecov-action@v3

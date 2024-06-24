@@ -13,6 +13,7 @@ import (
 	"github.com/gstones/moke-kit/utility"
 
 	pb "github.com/moke-game/platform/api/gen/profile"
+	"github.com/moke-game/platform/services/profile/internal/db"
 	"github.com/moke-game/platform/services/profile/pkg/pfx"
 )
 
@@ -20,10 +21,10 @@ type Service struct {
 	utility.WithoutAuth
 	url string
 
-	//profileDb  *db.Database
-	logger   *zap.Logger
-	redisCli *redis.Client
-	mq       miface.MessageQueue
+	profileDb *db.Database
+	logger    *zap.Logger
+	redisCli  *redis.Client
+	mq        miface.MessageQueue
 }
 
 func (s *Service) RegisterWithGrpcServer(server siface.IGrpcServer) error {
@@ -36,12 +37,14 @@ func NewService(
 	url string,
 	client *redis.Client,
 	mq miface.MessageQueue,
+	db *db.Database,
 ) (result *Service, err error) {
 	result = &Service{
-		logger:   l,
-		redisCli: client,
-		url:      url,
-		mq:       mq,
+		logger:    l,
+		redisCli:  client,
+		url:       url,
+		mq:        mq,
+		profileDb: db,
 	}
 	return
 }
@@ -56,11 +59,14 @@ var Module = fx.Provide(
 		mongoParams ofx.MongoParams,
 		mqParams mfx.MessageQueueParams,
 	) (out sfx.GrpcServiceResult, err error) {
-		if svc, e := NewService(
+		if coll, e := dbProvider.DriverProvider.OpenDbDriver(pSetting.ProfileStoreName); e != nil {
+			err = e
+		} else if svc, e := NewService(
 			l,
 			pSetting.ProfileUrl,
 			redisParams.Redis,
 			mqParams.MessageQueue,
+			db.OpenDatabase(l, coll, rcParams.RedisCache),
 		); e != nil {
 			err = e
 		} else {
