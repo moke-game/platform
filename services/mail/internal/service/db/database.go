@@ -71,11 +71,9 @@ func (db *Database) getPublicIndex(id string, channel string) (int32, error) {
 			return 0, nil
 		}
 		return 0, err
+	} else if v, err := strconv.ParseInt(res.Val(), 10, 32); err != nil {
+		return 0, err
 	} else {
-		v, err := strconv.Atoi(res.Val())
-		if err != nil {
-			return 0, err
-		}
 		return int32(v), nil
 	}
 }
