@@ -20,8 +20,8 @@ func SetProfileStatus(redisCli *redis.Client, profileID string, status int) erro
 	}
 }
 
-func GetProfileStatus(redisCli *redis.Client, profileID ...string) map[string]int {
-	result := make(map[string]int)
+func GetProfileStatus(redisCli *redis.Client, profileID ...string) map[string]int32 {
+	result := make(map[string]int32)
 	keys := make([]string, len(profileID))
 	for i, id := range profileID {
 		if key, err := NewProfileStatusKey(id); err != nil {
@@ -37,10 +37,11 @@ func GetProfileStatus(redisCli *redis.Client, profileID ...string) map[string]in
 			if res[i] == nil {
 				continue
 			}
-			if status, err := strconv.Atoi(res[i].(string)); err != nil {
+
+			if status, err := strconv.ParseInt(res[i].(string), 10, 32); err != nil {
 				continue
 			} else {
-				result[id] = status
+				result[id] = int32(status)
 			}
 		}
 	}

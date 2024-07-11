@@ -8,6 +8,7 @@ import "buddy/buddy_common.proto";
 // PublicService is a public service for managing buddies for the current user.
 service BuddyService {
   // AddBuddy adds a buddy to the current user's queue.
+  // 添加好友请求
   rpc AddBuddy (AddBuddyRequest) returns (AddBuddyResponse);
 
   // RemoveBuddy removes a buddy from the current user's queue.
@@ -48,11 +49,14 @@ service BuddyService {
 
 // AddBuddyRequest is used to request a user be added as a buddy.
 message AddBuddyRequest {
+  // The user ID of the user to be added as a buddy.
+  // 目标玩家ID
   repeated string uid = 1;
+  // The request information to be sent to the user.
+  // 请求信息
   string reqInfo = 2;
 }
 message AddBuddyResponse{
-  repeated string failed = 1;
 }
 
 //RemoveBuddyRequest is used to request a user be removed as a buddy.
