@@ -38,7 +38,7 @@ func GetProfileStatus(redisCli *redis.Client, profileID ...string) map[string]in
 				continue
 			}
 
-			if status, err := strconv.Atoi(res[i].(string)); err != nil {
+			if status, err := strconv.ParseInt(res[i].(string), 10, 32); err != nil {
 				continue
 			} else {
 				result[id] = int32(status)

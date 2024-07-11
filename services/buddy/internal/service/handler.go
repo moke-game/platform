@@ -18,7 +18,6 @@ import (
 
 func (s *Service) AddBuddy(ctx context.Context, request *pb.AddBuddyRequest) (*pb.AddBuddyResponse, error) {
 	resp := &pb.AddBuddyResponse{}
-	errs := make([]string, 0)
 	uid, ok := ctx.Value(utility.UIDContextKey).(string)
 	if !ok {
 		s.logger.Error("get uid from context err")
@@ -37,48 +36,38 @@ func (s *Service) AddBuddy(ctx context.Context, request *pb.AddBuddyRequest) (*p
 	for _, id := range request.Uid {
 		//不允许添加自己为好友
 		if id == uid {
-			errs = append(errs, errors.ErrCanNotAddSelf.Error())
-			continue
+			return nil, errors.ErrCanNotAddSelf
 		}
 		//对方在你的黑名单中
 		if _, ok := selfDao.Data.BlockedProfiles[id]; ok {
-			errs = append(errs, errors.ErrInSelfBlockedList.Error())
-			continue
+			return nil, errors.ErrInSelfBlockedList
 		}
 		//已经是好友
 		if _, ok := selfDao.Data.Buddies[id]; ok {
-			errs = append(errs, errors.ErrBuddyAlreadyAdded.Error())
-			continue
+			return nil, errors.ErrBuddyAlreadyAdded
 		}
 		//对方已经申请过添加为好友
 		if _, ok := selfDao.Data.Inviters[id]; ok {
-			errs = append(errs, errors.ErrBuddyAlreadyInYourRequestList.Error())
-			continue
+			return nil, errors.ErrBuddyAlreadyRequested
 		}
 		if dao, err := s.db.LoadOrCreateBuddyQueue(id); err != nil {
-			s.logger.Error("load or create buddy queue err", zap.Error(err))
-			errs = append(errs, err.Error())
-			continue
+			return nil, errors.ErrDBErr
 		} else {
 			//你在对方黑名单中
 			if _, ok := dao.Data.BlockedProfiles[uid]; ok {
-				errs = append(errs, errors.ErrInTargetBlockedList.Error())
-				continue
+				return nil, errors.ErrInTargetBlockedList
 			}
 			//已经申请过添加为好友
 			if _, ok := dao.Data.Inviters[uid]; ok {
-				errs = append(errs, errors.ErrBuddyAlreadyRequested.Error())
-				continue
+				return nil, errors.ErrBuddyAlreadyRequested
 			}
 			//对方好友已达上限
 			if int32(len(dao.Data.Buddies)) >= s.maxBuddies {
-				errs = append(errs, errors.ErrTargetBuddiesTopLimit.Error())
-				continue
+				return nil, errors.ErrTargetBuddiesTopLimit
 			}
 			//对方好友申请已经达到上限
 			if int32(len(dao.Data.Inviters)) >= s.maxInviter {
-				errs = append(errs, errors.ErrTargetInviterTopLimit.Error())
-				continue
+				return nil, errors.ErrTargetInviterTopLimit
 			}
 			inviter := &data.Inviter{
 				UID:     uid,
@@ -89,7 +78,7 @@ func (s *Service) AddBuddy(ctx context.Context, request *pb.AddBuddyRequest) (*p
 			er := dao.Save()
 			if er != nil {
 				s.logger.Error("AddBuddy save err", zap.Error(er))
-				errs = append(errs, errors.ErrDBErr.Error())
+				return nil, errors.ErrDBErr
 			}
 			//通知对方
 			//监听topic
@@ -104,9 +93,7 @@ func (s *Service) AddBuddy(ctx context.Context, request *pb.AddBuddyRequest) (*p
 			respByt, _ := proto.Marshal(buddyChange)
 			option := miface.WithBytes(respByt)
 			if mqErr := s.mq.Publish(topic, option); mqErr != nil {
-				if mqErr != nil {
-					s.logger.Error("AddBuddy Publish err", zap.Any("error", mqErr))
-				}
+				s.logger.Error("AddBuddy mq publish err", zap.Any("error", mqErr))
 			}
 		}
 	}
