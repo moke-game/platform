@@ -1,6 +1,6 @@
 module github.com/moke-game/platform
 
-go 1.21
+go 1.22.5
 
 //replace github.com/gstones/moke-kit => ../moke-kit
 
