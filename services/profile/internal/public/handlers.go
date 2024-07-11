@@ -59,7 +59,7 @@ func (s *Service) GetProfile(ctx context.Context, request *pb.GetProfileRequest)
 			Profile: profile.ToProto(),
 		}
 		if status := redis.GetProfileStatus(s.redisCli, request.Uid); len(status) > 0 {
-			resp.Profile.OnlineStatus = int32(status[request.Uid])
+			resp.Profile.OnlineStatus = status[request.Uid]
 		}
 		return resp, nil
 	}
@@ -162,7 +162,7 @@ func (s *Service) GetProfileStatus(_ context.Context, request *pb.GetProfileStat
 		Status: make(map[string]int32),
 	}
 	for k, v := range status {
-		resp.Status[k] = int32(v)
+		resp.Status[k] = v
 	}
 	return resp, nil
 }

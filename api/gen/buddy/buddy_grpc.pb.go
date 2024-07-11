@@ -40,6 +40,7 @@ const (
 // PublicService is a public service for managing buddies for the current user.
 type BuddyServiceClient interface {
 	// AddBuddy adds a buddy to the current user's queue.
+	// 添加好友请求
 	AddBuddy(ctx context.Context, in *AddBuddyRequest, opts ...grpc.CallOption) (*AddBuddyResponse, error)
 	// RemoveBuddy removes a buddy from the current user's queue.
 	RemoveBuddy(ctx context.Context, in *RemoveBuddyRequest, opts ...grpc.CallOption) (*Nothing, error)
@@ -223,6 +224,7 @@ func (c *buddyServiceClient) DeleteAccount(ctx context.Context, in *DeleteAccoun
 // PublicService is a public service for managing buddies for the current user.
 type BuddyServiceServer interface {
 	// AddBuddy adds a buddy to the current user's queue.
+	// 添加好友请求
 	AddBuddy(context.Context, *AddBuddyRequest) (*AddBuddyResponse, error)
 	// RemoveBuddy removes a buddy from the current user's queue.
 	RemoveBuddy(context.Context, *RemoveBuddyRequest) (*Nothing, error)

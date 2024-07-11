@@ -3,9 +3,8 @@
 中台服务,包含许多公共性服务
 
 ## Services:
-
-* 统计服务: analytics
 * 校验服务: auth
+* 统计服务: analytics
 * 好友服务: buddy
 * 聊天服务: chat
 * 背包服务: knapsack

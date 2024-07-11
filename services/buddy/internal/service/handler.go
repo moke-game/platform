@@ -110,7 +110,6 @@ func (s *Service) AddBuddy(ctx context.Context, request *pb.AddBuddyRequest) (*p
 			}
 		}
 	}
-	resp.Failed = errs
 	return resp, nil
 }
 
