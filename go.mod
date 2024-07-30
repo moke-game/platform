@@ -16,10 +16,10 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0
-	github.com/gstones/moke-kit v1.0.1-0.20240711154956-8247ce0236c8
+	github.com/gstones/moke-kit v1.0.3
 	github.com/json-iterator/go v1.1.12
 	github.com/pkg/errors v0.9.1
-	github.com/redis/go-redis/v9 v9.5.3
+	github.com/redis/go-redis/v9 v9.6.0
 	github.com/samber/lo v1.39.0
 	github.com/spf13/cobra v1.8.0
 	go.mongodb.org/mongo-driver v1.16.0

@@ -34,7 +34,7 @@ const (
 // ProfileService is the service for profile
 // 玩家基本信息服务
 type ProfileServiceClient interface {
-	// IsProfileExist check if profile exist
+	//IsProfileExist check if profile exist
 	// 当前玩家是否存在
 	IsProfileExist(ctx context.Context, in *IsProfileExistRequest, opts ...grpc.CallOption) (*IsProfileExistResponse, error)
 	// GetProfile get profile by uid
@@ -152,7 +152,7 @@ func (x *profileServiceWatchProfileClient) Recv() (*WatchProfileResponse, error)
 // ProfileService is the service for profile
 // 玩家基本信息服务
 type ProfileServiceServer interface {
-	// IsProfileExist check if profile exist
+	//IsProfileExist check if profile exist
 	// 当前玩家是否存在
 	IsProfileExist(context.Context, *IsProfileExistRequest) (*IsProfileExistResponse, error)
 	// GetProfile get profile by uid

@@ -129,9 +129,9 @@ type ChatMessage struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// send where
+	//send where
 	Destination *Destination `protobuf:"bytes,1,opt,name=destination,proto3" json:"destination,omitempty"`
-	// chat all content
+	//chat all content
 	Message *ChatMessage_Message `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 }
 
@@ -512,21 +512,21 @@ type ChatMessage_Message struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// user id
+	//user id
 	ProfileId string `protobuf:"bytes,1,opt,name=profile_id,json=profileId,proto3" json:"profile_id,omitempty"`
-	// who started the chat
+	//who started the chat
 	Nickname string `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	// user avatar
+	//user avatar
 	Avatar string `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	// user avatar frame
 	AvatarFrame int32 `protobuf:"varint,4,opt,name=avatar_frame,json=avatarFrame,proto3" json:"avatar_frame,omitempty"`
 	// user gender
 	Gender int32 `protobuf:"varint,5,opt,name=gender,proto3" json:"gender,omitempty"`
-	// content
+	//content
 	Content string `protobuf:"bytes,6,opt,name=content,proto3" json:"content,omitempty"`
-	// emoji
+	//emoji
 	Emoji int32 `protobuf:"varint,7,opt,name=emoji,proto3" json:"emoji,omitempty"`
-	// send time
+	//send time
 	Timestamp int64 `protobuf:"varint,8,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 }
 
@@ -623,9 +623,9 @@ type ChatRequest_Subscribe struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// who started the chat
+	//who started the chat
 	ProfileId string `protobuf:"bytes,1,opt,name=profile_id,json=profileId,proto3" json:"profile_id,omitempty"`
-	// send where
+	//send where
 	Destination *Destination `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
 }
 
@@ -680,9 +680,9 @@ type ChatRequest_UnSubscribe struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// who started the chat
+	//who started the chat
 	ProfileId string `protobuf:"bytes,1,opt,name=profile_id,json=profileId,proto3" json:"profile_id,omitempty"`
-	// send where
+	//send where
 	Destination *Destination `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
 }
 
