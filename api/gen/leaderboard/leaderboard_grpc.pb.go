@@ -31,7 +31,7 @@ const (
 // LeaderboardService is a service for leaderboard
 // 排行榜服务
 type LeaderboardServiceClient interface {
-	// GetLeaderboard get leaderboard entries
+	//GetLeaderboard get leaderboard entries
 	// 获取排行榜
 	GetLeaderboard(ctx context.Context, in *GetLeaderboardRequest, opts ...grpc.CallOption) (*GetLeaderboardResponse, error)
 	// GetRank get player rank
@@ -87,7 +87,7 @@ func (c *leaderboardServiceClient) StarLeaderboard(ctx context.Context, in *Star
 // LeaderboardService is a service for leaderboard
 // 排行榜服务
 type LeaderboardServiceServer interface {
-	// GetLeaderboard get leaderboard entries
+	//GetLeaderboard get leaderboard entries
 	// 获取排行榜
 	GetLeaderboard(context.Context, *GetLeaderboardRequest) (*GetLeaderboardResponse, error)
 	// GetRank get player rank

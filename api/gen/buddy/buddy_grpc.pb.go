@@ -49,18 +49,18 @@ type BuddyServiceClient interface {
 	// ReplyAddBuddy is called to accept or reject a buddy add request.
 	ReplyAddBuddy(ctx context.Context, in *ReplyAddBuddyRequest, opts ...grpc.CallOption) (*ReplyAddBuddyResponse, error)
 	// WatchBuddies returns a stream on which changes to the current user's
-	// buddies and blocked list  and recent met will be sent.
+	//buddies and blocked list  and recent met will be sent.
 	WatchBuddies(ctx context.Context, in *Nothing, opts ...grpc.CallOption) (BuddyService_WatchBuddiesClient, error)
 	// Remark adds a buddy remark.
 	Remark(ctx context.Context, in *RemarkRequest, opts ...grpc.CallOption) (*Nothing, error)
-	// Refuse buddy request
+	//Refuse buddy request
 	RefuseBuddy(ctx context.Context, in *RefuseBuddyRequest, opts ...grpc.CallOption) (*Nothing, error)
-	// ---------------------------------------------Blocked List Start------------------------------------
+	//---------------------------------------------Blocked List Start------------------------------------
 	// GetBlockedUsers returns the current user's blocked users.
 	GetBlockedProfiles(ctx context.Context, in *Nothing, opts ...grpc.CallOption) (*ProfileIds, error)
-	// AddBlockedUsers is called to add users to self's buddy list or blocked list
+	//AddBlockedUsers is called to add users to self's buddy list or blocked list
 	AddBlockedProfiles(ctx context.Context, in *ProfileIds, opts ...grpc.CallOption) (*Nothing, error)
-	// RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
+	//RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
 	RemoveBlockedProfiles(ctx context.Context, in *ProfileIds, opts ...grpc.CallOption) (*Nothing, error)
 	VerifyBlocked(ctx context.Context, in *VerifyBlockedRequest, opts ...grpc.CallOption) (*VerifyBlockedResponse, error)
 	DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountResponse, error)
@@ -233,18 +233,18 @@ type BuddyServiceServer interface {
 	// ReplyAddBuddy is called to accept or reject a buddy add request.
 	ReplyAddBuddy(context.Context, *ReplyAddBuddyRequest) (*ReplyAddBuddyResponse, error)
 	// WatchBuddies returns a stream on which changes to the current user's
-	// buddies and blocked list  and recent met will be sent.
+	//buddies and blocked list  and recent met will be sent.
 	WatchBuddies(*Nothing, BuddyService_WatchBuddiesServer) error
 	// Remark adds a buddy remark.
 	Remark(context.Context, *RemarkRequest) (*Nothing, error)
-	// Refuse buddy request
+	//Refuse buddy request
 	RefuseBuddy(context.Context, *RefuseBuddyRequest) (*Nothing, error)
-	// ---------------------------------------------Blocked List Start------------------------------------
+	//---------------------------------------------Blocked List Start------------------------------------
 	// GetBlockedUsers returns the current user's blocked users.
 	GetBlockedProfiles(context.Context, *Nothing) (*ProfileIds, error)
-	// AddBlockedUsers is called to add users to self's buddy list or blocked list
+	//AddBlockedUsers is called to add users to self's buddy list or blocked list
 	AddBlockedProfiles(context.Context, *ProfileIds) (*Nothing, error)
-	// RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
+	//RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
 	RemoveBlockedProfiles(context.Context, *ProfileIds) (*Nothing, error)
 	VerifyBlocked(context.Context, *VerifyBlockedRequest) (*VerifyBlockedResponse, error)
 	DeleteAccount(context.Context, *DeleteAccountRequest) (*DeleteAccountResponse, error)

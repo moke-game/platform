@@ -32,7 +32,7 @@ const (
 //
 // TODO refactor matchmaking service with open match
 type MatchServiceClient interface {
-	// Match match request
+	//  Match match request
 	Match(ctx context.Context, in *MatchRequest, opts ...grpc.CallOption) (*MatchResponse, error)
 	PveMatch(ctx context.Context, in *PveMatchRequest, opts ...grpc.CallOption) (*PveMatchResponse, error)
 	MatchCancel(ctx context.Context, in *MatchCancelRequest, opts ...grpc.CallOption) (*MatchCancelResponse, error)
@@ -104,7 +104,7 @@ func (c *matchServiceClient) MatchStatus(ctx context.Context, in *MatchStatusReq
 //
 // TODO refactor matchmaking service with open match
 type MatchServiceServer interface {
-	// Match match request
+	//  Match match request
 	Match(context.Context, *MatchRequest) (*MatchResponse, error)
 	PveMatch(context.Context, *PveMatchRequest) (*PveMatchResponse, error)
 	MatchCancel(context.Context, *MatchCancelRequest) (*MatchCancelResponse, error)

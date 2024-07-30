@@ -28,7 +28,7 @@ const (
 	// Deliver to ThinkingData
 	// https://www.thinkingdata.cn/
 	DeliveryType_ThinkingData DeliveryType = 1
-	// Deliver to clickhouse
+	//Deliver to clickhouse
 	DeliveryType_ClickHouse DeliveryType = 2
 	// Deliver to Mixpanel
 	// https://mixpanel.com/
@@ -133,7 +133,7 @@ type Event struct {
 
 	// The unique name for this event.  Be pragmatic with event names and store additional properties in the
 	// properties field.
-	// NOTE: only contain: number,letter(ignoring case) and underscore"_" ,no spaces in the configuration
+	//NOTE: only contain: number,letter(ignoring case) and underscore"_" ,no spaces in the configuration
 	Event string `protobuf:"bytes,1,opt,name=event,proto3" json:"event,omitempty"`
 	// Generic JSON property key/value pairs. {"id":"fun","age":10}
 	Properties []byte `protobuf:"bytes,2,opt,name=properties,proto3" json:"properties,omitempty"`

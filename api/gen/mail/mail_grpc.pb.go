@@ -31,7 +31,7 @@ const (
 type MailServiceClient interface {
 	// Watch watch mail changes,
 	Watch(ctx context.Context, in *WatchMailRequest, opts ...grpc.CallOption) (MailService_WatchClient, error)
-	// UpdateMail update mail
+	//UpdateMail update mail
 	UpdateMail(ctx context.Context, in *UpdateMailRequest, opts ...grpc.CallOption) (*UpdateMailResponse, error)
 }
 
@@ -94,7 +94,7 @@ func (c *mailServiceClient) UpdateMail(ctx context.Context, in *UpdateMailReques
 type MailServiceServer interface {
 	// Watch watch mail changes,
 	Watch(*WatchMailRequest, MailService_WatchServer) error
-	// UpdateMail update mail
+	//UpdateMail update mail
 	UpdateMail(context.Context, *UpdateMailRequest) (*UpdateMailResponse, error)
 }
 
