@@ -1,5 +1,5 @@
 package bi
 
 type DataProcessor interface {
-	Handle(name EventType, properties []byte) error
+	Handle(name EventType, userID string, distinct string, properties []byte) error
 }

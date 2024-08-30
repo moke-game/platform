@@ -11,7 +11,7 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/party"
+	pb "github.com/moke-game/platform/api/gen/party/api"
 	"github.com/moke-game/platform/services/party/internal/db"
 	"github.com/moke-game/platform/services/party/pkg/ptfx"
 )

@@ -3,7 +3,7 @@ package common
 import (
 	"fmt"
 
-	pb "github.com/moke-game/platform/api/gen/mail"
+	pb "github.com/moke-game/platform/api/gen/mail/api"
 )
 
 func FilterMailsMapWithLanguage(mails map[int64]*pb.Mail, language string) (map[int64]*pb.Mail, error) {

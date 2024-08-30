@@ -1,95 +1,30 @@
 syntax = "proto3";
 
-package matchmaking.pb;
+// MatchService is a service for match，need custom match function
+// 匹配服务，用于匹配玩家，需要自定义匹配函数
+package matchmaking.v1;
 
 option go_package = "matchmaking/api;matchmaking";
 
-// TODO refactor matchmaking service with open match
-service MatchService {
-  //  Match match request
-  rpc Match(MatchRequest) returns (MatchResponse) {}
-  rpc PveMatch(PveMatchRequest)returns(PveMatchResponse){}
-  rpc MatchCancel(MatchCancelRequest) returns (MatchCancelResponse) {}
-  rpc MatchWithRival(MatchWithRivalRequest) returns(MatchWitchRivalResponse){}
-  rpc MatchStatus(MatchStatusRequest)returns(MatchStatusResponse){}
+service MatchService{
+  rpc Match(MatchRequest) returns (stream MatchResponse);
 }
 
-message MatchMessage {}
-
-message MatchRequest {
-  repeated Ticket ticket = 1;
-  int32 group_size = 2; // group need size
-  int32 play_id = 3; // room play type
-  repeated int32 map_id = 4;
+message MatchRequest{
+  string userId = 1;
+  string gameId = 2;
 }
 
-message Ticket {
-  string profile_id = 1; //user unique id
-  int32 diff_tag = 2; //差异化区分 英雄ID
-  int32 score = 3; // score
-  string nickname = 4; // nickname
-  string avatar = 5; // avatar
-  int32 hero_level = 6; // hero level
-  int64 pet_profile_id = 7;
-  map<int32, double> hero_attribute = 8; // hero attribute
-  map<int32, double> pet_attribute = 9;//pet add attribute
-  int32 hero_cups = 10;
-  map<int32, int32> pet_skill = 11;//宠物携带的技能
-  bool is_again = 12; // 是否是再次匹配
-  int32 skin_id = 13; //皮肤ID
+message MatchResponse{
+  string matchId = 1;
+  repeated Ticket userIds = 2;
+  string gameId = 3;
 }
 
-message BattleRoomData{
-  string uid = 1;
-  string room_id = 2;
-  string addr = 3;
-  int32 play_id = 4;
-  int64 play_time = 5;//游戏时长 秒
-  int64 begin_time = 6;//游戏开始时间戳 秒
-  int32 map_id = 7;//地图ID
-}
-
-message MatchResponse {}
-
-message PveMatchRequest{
-  repeated Ticket ticket = 1;
-  int32 group_size = 2; // group need size
-  int32 play_id = 3; // room play type
-  repeated int32 map_id = 4;
-}
-
-message PveMatchResponse{}
-
-message MatchResult {
-  string battle_room_url = 1;
-  string battle_room_id = 2;
-  bytes auth_byte = 3;
-  int32 play_id = 4; // match request play_id
-  int32 map_id = 5;
-}
-
-message MatchCancelRequest {
-  string profile_id = 1; //user unique id
-}
-
-message MatchCancelResponse {}
-
-message MatchWithRivalRequest{
-  repeated Ticket ticket = 1;
-  repeated Ticket rival_ticket = 2;
-  int32 play_id = 3; // room play type
-}
-
-message MatchWitchRivalResponse{
-
-}
-
-message MatchingCancel {}
-
-message MatchStatusRequest{
-  string profile_id = 1;//user unique id
-}
-
-message MatchStatusResponse{
-  int64 match_time = 1;//开始匹配的时间
+message Ticket{
+  string ticketId = 1;
+  string userId = 2;
+  string gameId = 3;
+  string matchId = 4;
+  string status = 5;
 }

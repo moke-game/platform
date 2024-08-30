@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	"github.com/moke-game/platform/api/gen/leaderboard"
+	leaderboard "github.com/moke-game/platform/api/gen/leaderboard/api"
 	"github.com/moke-game/platform/services/leaderboard/internal/service/errors"
 )
 

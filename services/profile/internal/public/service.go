@@ -1,20 +1,18 @@
 package public
 
 import (
+	"github.com/gstones/moke-kit/mq/miface"
+	"github.com/gstones/moke-kit/mq/pkg/mfx"
+	"github.com/gstones/moke-kit/orm/nosql/diface"
+	"github.com/gstones/moke-kit/orm/pkg/ofx"
+	"github.com/gstones/moke-kit/server/pkg/sfx"
+	"github.com/gstones/moke-kit/server/siface"
 	"github.com/redis/go-redis/v9"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	"github.com/gstones/moke-kit/mq/miface"
-	"github.com/gstones/moke-kit/mq/pkg/mfx"
-
-	"github.com/gstones/moke-kit/orm/nosql/diface"
-	"github.com/gstones/moke-kit/orm/pkg/ofx"
-	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/siface"
-
-	pb "github.com/moke-game/platform/api/gen/profile"
+	pb "github.com/moke-game/platform/api/gen/profile/api"
 	"github.com/moke-game/platform/services/profile/internal/db"
 	"github.com/moke-game/platform/services/profile/pkg/pfx"
 )

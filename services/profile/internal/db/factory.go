@@ -1,12 +1,11 @@
 package db
 
 import (
+	"github.com/gstones/moke-kit/orm/nosql/diface"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 
-	"github.com/gstones/moke-kit/orm/nosql/diface"
-
-	pb "github.com/moke-game/platform/api/gen/profile"
+	pb "github.com/moke-game/platform/api/gen/profile/api"
 	"github.com/moke-game/platform/services/profile/internal/db/model"
 )
 

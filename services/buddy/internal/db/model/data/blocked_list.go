@@ -3,7 +3,7 @@ package data
 import (
 	"time"
 
-	pb "github.com/moke-game/platform/api/gen/buddy"
+	pb "github.com/moke-game/platform/api/gen/buddy/api"
 )
 
 type BlockedProfile struct {

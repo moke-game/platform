@@ -11,7 +11,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/mail"
+	pb "github.com/moke-game/platform/api/gen/mail/api"
 	"github.com/moke-game/platform/services/mail/internal/service/common"
 )
 

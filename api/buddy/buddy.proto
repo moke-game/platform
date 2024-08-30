@@ -1,49 +1,127 @@
 syntax = "proto3";
-package buddy.pb;
+
+// Buddy service is used for buddy management
+// 好友服务 用于好友管理
+package buddy.v1;
 option go_package = "buddy/api;buddy";
 
 // Import path is relative to root directory specified in .spacerouter.yml
 import "buddy/buddy_common.proto";
+import "google/api/annotations.proto";
 
-// PublicService is a public service for managing buddies for the current user.
+
+// BuddyService is a service for managing buddies
+// 好友服务 用于好友管理
 service BuddyService {
   // AddBuddy adds a buddy to the current user's queue.
   // 添加好友请求
-  rpc AddBuddy (AddBuddyRequest) returns (AddBuddyResponse);
+  rpc AddBuddy (AddBuddyRequest) returns (AddBuddyResponse){
+    option (google.api.http) = {
+      post: "/v1/buddy/add"
+      body: "*"
+    };
+  }
 
   // RemoveBuddy removes a buddy from the current user's queue.
-  rpc RemoveBuddy (RemoveBuddyRequest) returns (Nothing);
+  // 删除好友请求
+  rpc RemoveBuddy (RemoveBuddyRequest) returns (Nothing){
+    option (google.api.http) = {
+      post: "/v1/buddy/remove"
+      body: "*"
+    };
+  };
 
   // GetBuddies returns the current user's buddies.
-  rpc GetBuddies (GetBuddyRequest) returns (GetBuddyResponse);
+  // 获取好友列表
+  rpc GetBuddies (GetBuddyRequest) returns (GetBuddyResponse){
+    option (google.api.http) = {
+      post: "/v1/buddy/get"
+      body: "*"
+    };
+  };
 
   // ReplyAddBuddy is called to accept or reject a buddy add request.
-  rpc ReplyAddBuddy (ReplyAddBuddyRequest) returns (ReplyAddBuddyResponse);
+  // 回复好友请求
+  rpc ReplyAddBuddy (ReplyAddBuddyRequest) returns (ReplyAddBuddyResponse){
+    option (google.api.http) = {
+      post: "/v1/buddy/reply"
+      body: "*"
+    };
+  };
 
   // WatchBuddies returns a stream on which changes to the current user's
   //buddies and blocked list  and recent met will be sent.
-  rpc WatchBuddies (Nothing) returns (stream BuddyChanges);
+  // 监听好友列表变化
+  rpc WatchBuddies (Nothing) returns (stream BuddyChanges){
+    option (google.api.http) = {
+      post: "/v1/buddy/watch"
+      body: "*"
+    };
+  };
 
-  // Remark adds a buddy remark.
-  rpc Remark (RemarkRequest) returns (Nothing);
+  // Remark remark buddy nickname
+  // 备注好友昵称
+  rpc Remark (RemarkRequest) returns (Nothing){
+    option (google.api.http) = {
+      post: "/v1/buddy/remark"
+      body: "*"
+    };
+  };
 
   //Refuse buddy request
-  rpc RefuseBuddy(RefuseBuddyRequest) returns(Nothing);
+  // 拒绝好友请求
+  rpc RefuseBuddy(RefuseBuddyRequest) returns(Nothing){
+    option (google.api.http) = {
+      post: "/v1/buddy/refuse"
+      body: "*"
+    };
+  };
 
   //---------------------------------------------Blocked List Start------------------------------------
   // GetBlockedUsers returns the current user's blocked users.
-  rpc GetBlockedProfiles (Nothing) returns (ProfileIds);
+  // 获取黑名单列表
+  rpc GetBlockedProfiles (Nothing) returns (ProfileIds){
+    option (google.api.http) = {
+      post: "/v1/buddy/blocked/get"
+      body: "*"
+    };
+  };
 
   //AddBlockedUsers is called to add users to self's buddy list or blocked list
-  rpc AddBlockedProfiles (ProfileIds) returns (Nothing);
+  // 添加黑名单
+  rpc AddBlockedProfiles (ProfileIds) returns (Nothing){
+    option (google.api.http) = {
+      post: "/v1/buddy/blocked/add"
+      body: "*"
+    };
+  };
 
   //RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
-  rpc RemoveBlockedProfiles (ProfileIds) returns (Nothing);
+  // 移除黑名单
+  rpc RemoveBlockedProfiles (ProfileIds) returns (Nothing){
+    option (google.api.http) = {
+      post: "/v1/buddy/blocked/remove"
+      body: "*"
+    };
+  };
 
-  rpc VerifyBlocked(VerifyBlockedRequest) returns(VerifyBlockedResponse);
+  //  IsBlocked is called to check if a user is blocked
+  // 检查是否在黑名单
+  rpc IsBlocked(IsBlockedRequest) returns(IsBlockedResponse){
+    option (google.api.http) = {
+      post: "/v1/buddy/is_blocked"
+      body: "*"
+    };
+  };
   //---------------------------------------------Blocked List End---------------------------------------
-
-  rpc DeleteAccount(DeleteAccountRequest) returns(DeleteAccountResponse);
+  // DeleteAccount is called to delete a self buddy account data
+  // 删除好友关系数据
+  rpc DeleteAccount(DeleteAccountRequest) returns(DeleteAccountResponse){
+    option (google.api.http) = {
+      post: "/v1/buddy/delete"
+      body: "*"
+    };
+  };
 }
 
 
@@ -54,7 +132,7 @@ message AddBuddyRequest {
   repeated string uid = 1;
   // The request information to be sent to the user.
   // 请求信息
-  string reqInfo = 2;
+  string req_info = 2;
 }
 message AddBuddyResponse{
 }
@@ -71,15 +149,15 @@ message RemarkRequest {
 }
 
 message GetBuddyRequest{
-  string uid=1;
+  string uid = 1;
 }
 
 message GetBuddyResponse{
-    Buddies buddies=1;
+  Buddies buddies = 1;
 }
 
 message RefuseBuddyRequest{
-  repeated string uid=1;
+  repeated string uid = 1;
 }
 
 
@@ -98,27 +176,21 @@ message ReplyAddBuddyResponse {
 
 message BuddyChanges{
   repeated Buddy added = 1;
-  repeated Inviter inviterAdded = 2;
+  repeated Inviter inviter_added = 2;
   repeated string removed = 3;
-  repeated Buddy rewardUpdate = 4;
+  repeated Buddy reward_update = 4;
 }
 
+message IsBlockedRequest{
+  string uid = 2;
+}
 
 message IsBlockedResponse{
-  bool isBlocked = 1;
-}
-
-message VerifyBlockedRequest{
-  string uid_self=1;
-  string uid_other=2;
-}
-
-message VerifyBlockedResponse{
-  bool isBlocked=1;
+  bool is_blocked = 1;
 }
 
 message DeleteAccountRequest{
-  string uid=1;
+  string uid = 1;
 }
 
 message DeleteAccountResponse{

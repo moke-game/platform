@@ -8,7 +8,7 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	"github.com/moke-game/platform/api/gen/leaderboard"
+	leaderboard "github.com/moke-game/platform/api/gen/leaderboard/api"
 	"github.com/moke-game/platform/services/leaderboard/internal/db"
 	"github.com/moke-game/platform/services/leaderboard/pkg/lbfx"
 )

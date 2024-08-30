@@ -7,7 +7,7 @@ import (
 	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/knapsack"
+	pb "github.com/moke-game/platform/api/gen/knapsack/api"
 	"github.com/moke-game/platform/services/knapsack/changes"
 	"github.com/moke-game/platform/services/knapsack/errors"
 )

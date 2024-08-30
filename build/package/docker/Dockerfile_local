@@ -1,9 +1,0 @@
-ARG APP_NAME=platform
-
-FROM alpine
-ARG APP_NAME
-RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-RUN apk --no-cache add tzdata
-ENV TZ=Asia/Shanghai
-COPY ./cmd/${APP_NAME}/service/service /app
-CMD ["/app"]

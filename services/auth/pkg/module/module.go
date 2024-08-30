@@ -3,14 +3,14 @@ package module
 import (
 	"go.uber.org/fx"
 
+	"github.com/moke-game/platform/services/auth/internal"
 	"github.com/moke-game/platform/services/auth/pkg/afx"
-	public "github.com/moke-game/platform/services/auth/service"
 )
 
 // AuthModule Provides auth service
 var AuthModule = fx.Module("auth",
 	afx.SettingsModule,
-	public.ServiceModule,
+	internal.ServiceModule,
 )
 
 // AuthClientModule Provides auth client for grpc
@@ -27,10 +27,18 @@ var AuthMiddlewareModule = fx.Module("auth_middleware",
 	afx.AuthCheckModule,
 )
 
+// SupabaseMiddlewareModule Provides supabase middleware for grpc
+// if import this module, every grpc unary/stream will auth by supabase auth
+// https://supabase.com/docs/guides/auth
+var SupabaseMiddlewareModule = fx.Module("supabase_middleware",
+	afx.SupabaseSettingsModule,
+	afx.SupabaseCheckModule,
+)
+
 // AuthAllModule  Provides client, service and middleware for auth
 var AuthAllModule = fx.Module("auth_all",
-	public.ServiceModule,
+	internal.ServiceModule,
 	afx.AuthClientModule,
-	afx.AuthCheckModule,
+	//afx.AuthCheckModule,
 	afx.SettingsModule,
 )

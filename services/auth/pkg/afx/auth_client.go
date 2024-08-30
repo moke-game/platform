@@ -1,13 +1,11 @@
 package afx
 
 import (
-	"go.uber.org/fx"
-	"go.uber.org/zap"
-
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
+	"go.uber.org/fx"
 
-	pb "github.com/moke-game/platform/api/gen/auth"
+	pb "github.com/moke-game/platform/api/gen/auth/api"
 )
 
 type AuthClientParams struct {
@@ -22,7 +20,7 @@ type AuthClientResult struct {
 	AuthClient pb.AuthServiceClient `name:"AuthClient"`
 }
 
-func NewAuthClient(host string, logger *zap.Logger, sSetting sfx.SecuritySettingsParams) (pb.AuthServiceClient, error) {
+func NewAuthClient(host string, sSetting sfx.SecuritySettingsParams) (pb.AuthServiceClient, error) {
 	if sSetting.MTLSEnable {
 		if conn, err := tools.DialWithSecurity(
 			host,
@@ -48,9 +46,8 @@ var AuthClientModule = fx.Provide(
 	func(
 		setting AuthSettingParams,
 		sSetting sfx.SecuritySettingsParams,
-		logger *zap.Logger,
 	) (out AuthClientResult, err error) {
-		if cli, e := NewAuthClient(setting.AuthUrl, logger, sSetting); e != nil {
+		if cli, e := NewAuthClient(setting.AuthUrl, sSetting); e != nil {
 			err = e
 		} else {
 			out.AuthClient = cli

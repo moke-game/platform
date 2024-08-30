@@ -2,11 +2,9 @@ package internal
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -28,61 +26,126 @@ func (p *Processor) Init(
 ) error {
 	p.logger = logger.With(zap.String("data_processor", "clickhouse"))
 	p.rootPath = rootPath
-	// 连接ClickHouse
-	if addr != "" {
-		if conn, err := clickhouse.Open(&clickhouse.Options{
-			Addr: strings.Split(addr, ","),
-			Auth: clickhouse.Auth{
-				Database: dbname,
-				Username: uname,
-				Password: passwd,
-			},
-		}); err != nil {
-			p.logger.Error("clickhouse init fail", zap.Error(err))
-		} else {
-			p.conn = conn
-			p.logger.Info("clickhouse init", zap.Any("addr", addr), zap.Any("ping", p.conn.Ping(context.TODO())))
-		}
+	if addr == "" {
+		p.logger.Error("clickhouse addr empty")
+		return nil
+	}
+	var err error
+	if p.conn, err = clickhouse.Open(&clickhouse.Options{
+		Addr: strings.Split(addr, ","),
+		TLS:  &tls.Config{},
+		Auth: clickhouse.Auth{
+			Database: dbname,
+			Username: uname,
+			Password: passwd,
+		},
+	}); err != nil {
+		p.logger.Error("clickhouse init fail", zap.Error(err))
+	} else if err := p.conn.Ping(context.Background()); err != nil {
+		p.logger.Error("clickhouse ping fail", zap.Error(err))
+	} else {
+		p.logger.Info("clickhouse init success", zap.Any("addr", addr))
 	}
 	return nil
 }
 
-func (p *Processor) Handle(event bi.EventType, properties []byte) error {
+func (p *Processor) Handle(event bi.EventType, userId, distinct string, properties []byte) error {
 	if err := p.deliver(event.String(), properties); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (p *Processor) deliver(event string, data []byte) (err error) {
+func (p *Processor) deliver(event string, data []byte) error {
+	if p.conn == nil {
+		return errors.New("clickhouse conn nil")
+	}
 
 	var params = map[string]any{}
-	if err = json.Unmarshal(data, &params); err != nil {
-		return
-	}
-	params["event"] = event
-	if data, err = json.Marshal(params); err != nil {
-		return
+	if err := json.Unmarshal(data, &params); err != nil {
+		return err
 	}
 
-	if er := p.writeLogs(data); er != nil {
-		p.logger.Error("clickhouselogs fail", zap.Error(er))
-	}
-
-	if p.conn != nil {
-		btime := time.Now()
-		delete(params, "event")
-		if er := p.insertData(event, params); er != nil {
-			p.logger.Error("clickhouse insert fail", zap.Error(er), zap.Any("time", time.Since(btime).Milliseconds()))
+	if isExist, err := p.existsTable(event); err != nil {
+		return err
+	} else if !isExist {
+		if er := p.createTable(event, params); er != nil {
 			return er
 		}
 	}
 
-	return
+	if err := p.insertData(event, params); err != nil {
+		p.logger.Error("clickhouse insert fail", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+// https://clickhouse.com/docs/en/sql-reference/statements/create/table
+// create table if table not exists
+func (p *Processor) createTable(table string, params map[string]any) error {
+	if p.conn == nil {
+		return errors.New("clickhouse conn nil")
+	}
+	if table == "" {
+		return errors.New("event empty")
+	}
+	if len(params) == 0 {
+		return errors.New("params empty")
+	}
+
+	sql := "CREATE TABLE IF NOT EXISTS " + table + " ("
+	for k, v := range params {
+		sql += k + " " + p.getType(v) + ","
+	}
+	sql = strings.Trim(sql, ",") + ") ENGINE = MergeTree() ORDER BY ("
+	for k := range params {
+		sql += k + ","
+	}
+	sql = strings.Trim(sql, ",") + ")"
+
+	if err := p.conn.Exec(context.Background(), sql); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *Processor) getType(v any) string {
+	switch v.(type) {
+	case int:
+		return "Int32"
+	case int64:
+		return "Int64"
+	case float64:
+		return "Float64"
+	case string:
+		return "String"
+	case time.Time:
+		return "DateTime"
+	default:
+		return "String"
+	}
+}
+
+func (p *Processor) existsTable(table string) (bool, error) {
+	if p.conn == nil {
+		return false, errors.New("clickhouse conn nil")
+	}
+	sql := "EXISTS TABLE " + table
+	if rows, err := p.conn.Query(context.Background(), sql); err != nil {
+		return false, err
+	} else if rows.Next() {
+		var exists bool
+		if err := rows.Scan(&exists); err != nil {
+			return false, err
+		}
+		return exists, nil
+	}
+	return false, nil
 }
 
 func (p *Processor) insertData(table string, params map[string]any) (err error) {
-
 	if table == "" {
 		return errors.New("event empty")
 	}
@@ -90,12 +153,17 @@ func (p *Processor) insertData(table string, params map[string]any) (err error) 
 		return errors.New("params empty")
 	}
 	var argv []any
-	var sql = fmt.Sprintf("INSERT INTO %s (", table)
+	sql := "INSERT INTO " + table + " ("
 	for k, v := range params {
 		sql += k + ","
 		argv = append(argv, v)
 	}
+	sql = strings.Trim(sql, ",") + ") VALUES ("
+	for range params {
+		sql += "?,"
+	}
 	sql = strings.Trim(sql, ",") + ")"
+
 	if batch, er := p.conn.PrepareBatch(context.TODO(), sql); er != nil {
 		return er
 	} else if err = batch.Append(argv...); err != nil {
@@ -104,20 +172,4 @@ func (p *Processor) insertData(table string, params map[string]any) (err error) 
 		return err
 	}
 	return nil
-}
-
-func (p *Processor) writeLogs(data []byte) (err error) {
-	fileName := filepath.Join(p.rootPath, fmt.Sprintf("clickhouse_%s.log", time.Now().Format("2006-01-02")))
-	if err = os.MkdirAll(filepath.Dir(fileName), os.ModePerm); err != nil {
-		return fmt.Errorf("mkdir fail: %s - %w", fileName, err)
-	}
-	var file *os.File
-	if file, err = os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644); err != nil {
-		return fmt.Errorf("open fail fail: %s - %w", fileName, err)
-	}
-	defer file.Close()
-	if _, err = file.WriteString(string(data) + "\n"); err != nil {
-		return fmt.Errorf("write fail: %s - %s - %w", fileName, string(data), err)
-	}
-	return
 }

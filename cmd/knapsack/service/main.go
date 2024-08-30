@@ -6,13 +6,13 @@ import (
 	"github.com/gstones/moke-kit/orm/pkg/ofx"
 
 	auth "github.com/moke-game/platform/services/auth/pkg/module"
-	knapsack "github.com/moke-game/platform/services/knapsack/pkg/module"
+	"github.com/moke-game/platform/services/knapsack/pkg/module"
 )
 
 func main() {
 	fxmain.Main(
 		ofx.RedisCacheModule,
-		knapsack.KnapsackModule,
+		module.KnapsackModule,
 		mfx.NatsModule,
 		auth.AuthMiddlewareModule,
 	)

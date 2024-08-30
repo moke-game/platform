@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	pb "github.com/moke-game/platform/api/gen/profile"
+	pb "github.com/moke-game/platform/api/gen/profile/api"
 )
 
 type PrivateDao struct {

@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-package profile.pb;
+// ProfileService is the service for profile
+// 玩家基本信息服务, 用于读取/更新玩家基本信息
+package profile.v1;
 
+import "google/api/annotations.proto";
 option go_package = "profile/api;pb";
 
 // ProfileService is the service for profile
@@ -9,19 +12,44 @@ option go_package = "profile/api;pb";
 service ProfileService {
   //IsProfileExist check if profile exist
   // 当前玩家是否存在
-  rpc IsProfileExist(IsProfileExistRequest) returns (IsProfileExistResponse) {}
+  rpc IsProfileExist(IsProfileExistRequest) returns (IsProfileExistResponse) {
+    option (google.api.http) = {
+      post: "/v1/profile/is_exist"
+      body: "*"
+    };
+  }
   // GetProfile get profile by uid
   // 获取玩家基本信息
-  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {}
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/profile/get"
+      body: "*"
+    };
+  }
   // CreateProfile create profile
   // 创建玩家基本信息
-  rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse) {}
+  rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/profile/create"
+      body: "*"
+    };
+  }
   // UpdateProfile update profile
   // 更新玩家基本信息
-  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/profile/update"
+      body: "*"
+    };
+  }
   // GetProfileStatus get profile status
   // 获取玩家在线状态
-  rpc GetProfileStatus(GetProfileStatusRequest) returns (GetProfileStatusResponse) {}
+  rpc GetProfileStatus(GetProfileStatusRequest) returns (GetProfileStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/profile/status"
+      body: "*"
+    };
+  }
   // WatchProfile watch profile
   // 监听玩家基本信息变化
   rpc WatchProfile(WatchProfileRequest) returns (stream WatchProfileResponse) {}
@@ -38,22 +66,12 @@ service ProfilePrivateService {
   rpc GetProfileBasics(GetProfileBasicsRequest) returns (GetProfileBasicsResponse) {}
 }
 
-enum ProfileStatus {
-  OFFLINE = 0; //离线
-  ONLINE = 1; //在线 空闲
-  BATTLE = 2; //在线 战斗中
-  HIDE = 3; //隐身
-}
-
 message Profile {
   string uid = 1;
   string nickname = 2;
   string avatar = 3;
-  int32 hero_id = 4;
-  int64 pet_profile_id = 5;
   int32 online_status = 6;
   int32 channel = 7;
-  string openid = 8;
   string phone = 9;
   string email = 10;
   string device_id = 11;
@@ -62,9 +80,7 @@ message Profile {
   int64 register_time = 14;
   string platform_id = 15;
   int64 last_login_time = 16;
-  string account = 17;
-  int64 delete_time = 18; //删除时间
-  int32 guide_step = 19; //新手引导完成的进度 最大值18
+  map<string, string> extra = 17;
 }
 
 message IsProfileExistRequest {
@@ -127,12 +143,8 @@ message ProfileBasic {
   string uid = 1;
   string nickname = 2;
   string avatar = 3;
-  int32 hero_id = 4;
-  int32 online_status = 5;
-  string hall_url = 6; // hall host url
-  string battle_url = 7; //battle host url
-  string room_id = 8; // room id
-  string room_hostname = 9; //room service host name
+  int32 online_status = 4;
+  map<string, string> extra = 5;
 }
 
 message GetProfileBasicsRequest {

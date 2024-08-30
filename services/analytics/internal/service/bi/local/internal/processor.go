@@ -27,7 +27,7 @@ func (p *Processor) Init(
 	return nil
 }
 
-func (p *Processor) Handle(event bi.EventType, properties []byte) error {
+func (p *Processor) Handle(event bi.EventType, userId, distinct string, properties []byte) error {
 	if err := p.deliver(event.String(), properties); err != nil {
 		return err
 	}

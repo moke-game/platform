@@ -1,15 +1,23 @@
 syntax = "proto3";
 
+// MailService is a service for mail，support GM custom mail, system template mail
+// 邮件服务 用于邮件管理，支持GM自定义邮件，系统模板邮件
 package mail.v1;
 
 option go_package = "mail/api;mail";
+import "google/api/annotations.proto";
 
 // mail service for pubic
 service MailService {
   // Watch watch mail changes,
   rpc Watch(WatchMailRequest) returns (stream WatchMailResponse);
-  //UpdateMail update mail
-  rpc UpdateMail(UpdateMailRequest) returns (UpdateMailResponse);
+  //UpdateMail update mail status
+  rpc UpdateMail(UpdateMailRequest) returns (UpdateMailResponse){
+    option (google.api.http) = {
+      post: "/v1/mail/update"
+      body: "*"
+    };
+  };
 }
 
 // mail service for private (without auth, keep it in internal network)
@@ -54,7 +62,7 @@ message Mail {
   MailStatus status = 8; // mail status (0:unread,1:read,2:rewarded,3:deleted)
   int32 template_id = 9; // mail template id (optional)
   repeated string template_args = 10; // mail template args (optional)
-  Filter filters= 11; // mail filters
+  Filter filters = 11; // mail filters
 }
 
 //send mail(private)

@@ -6,7 +6,7 @@ import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
 
-	pb "github.com/moke-game/platform/api/gen/analytics"
+	pb "github.com/moke-game/platform/api/gen/analytics/api"
 	"github.com/moke-game/platform/services/analytics/pkg/global"
 )
 

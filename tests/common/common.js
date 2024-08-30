@@ -8,34 +8,3 @@ export const makeParams = (token) => {
         tags: {k6test: 'yes'},
     };
 }
-
-
-// export const login = () =>{
-//     const data = {
-//         app_id: 'test',
-//         id: crypto.randomUUID(),
-//         auth: 1,
-//         data: 'test'
-//     };
-//     let response = client.invoke('auth.pb.AuthService/Authenticate', data);
-//     check(response, {
-//         'status is OK': (r) => r && r.status === StatusOK,
-//     });
-//     console.log(response)
-//     return response["message"]["accessToken"];
-// }
-
-export const login = (client) => {
-    const data = {
-        app_id: 'test',
-        id: crypto.randomUUID(),
-        auth: 1,
-        data: 'test'
-    };
-    let response = client.invoke('auth.pb.AuthService/Authenticate', data);
-    check(response, {
-        'status is OK': (r) => r && r.status === StatusOK,
-    });
-    console.log(response)
-    return response["message"]["accessToken"];
-}

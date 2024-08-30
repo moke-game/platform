@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-package leaderboard.pb;
+// LeaderboardService is a service for leaderboard，can be used for different leaderboards in the game
+// 排行榜服务 可用于游戏中的不同排行榜
+package leaderboard.v1;
+import "google/api/annotations.proto";
 
 option go_package = "leaderboard/api;leaderboard";
 
@@ -9,13 +12,28 @@ option go_package = "leaderboard/api;leaderboard";
 service LeaderboardService {
   //GetLeaderboard get leaderboard entries
   // 获取排行榜
-  rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse);
+  rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse){
+    option (google.api.http) = {
+      post: "/v1/leaderboard/get"
+      body: "*"
+    };
+  }
   // GetRank get player rank
   // 获取玩家排名
-  rpc GetRank(GetRankRequest) returns (GetRankResponse);
+  rpc GetRank(GetRankRequest) returns (GetRankResponse){
+    option (google.api.http) = {
+      post: "/v1/leaderboard/rank"
+      body: "*"
+    };
+  }
   // StarLeaderboard star a leaderboard
   // 点赞排行榜
-  rpc StarLeaderboard(StarLeaderboardRequest) returns (StarLeaderboardResponse);
+  rpc StarLeaderboard(StarLeaderboardRequest) returns (StarLeaderboardResponse){
+    option (google.api.http) = {
+      post: "/v1/leaderboard/star"
+      body: "*"
+    };
+  }
 }
 
 // LeaderboardPrivateService is a private service for leaderboard

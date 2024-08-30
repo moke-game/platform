@@ -1,17 +1,16 @@
 package service
 
 import (
-	"github.com/gstones/moke-kit/orm/pkg/ofx"
-	"go.uber.org/fx"
-	"go.uber.org/zap"
-
 	"github.com/gstones/moke-kit/mq/miface"
 	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"github.com/gstones/moke-kit/orm/nosql/diface"
+	"github.com/gstones/moke-kit/orm/pkg/ofx"
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
+	"go.uber.org/fx"
+	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/buddy"
+	pb "github.com/moke-game/platform/api/gen/buddy/api"
 	"github.com/moke-game/platform/services/buddy/internal/db"
 	"github.com/moke-game/platform/services/buddy/pkg/bfx"
 )

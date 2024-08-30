@@ -1,12 +1,12 @@
 package model
 
-import ppb "github.com/moke-game/platform/api/gen/profile"
+import pb "github.com/moke-game/platform/api/gen/profile/api"
 
 func (d *Dao) initData() {
-	d.Data = &ppb.Profile{}
+	d.Data = &pb.Profile{}
 }
 
-func (d *Dao) InitDefault(uid string, profile *ppb.Profile) error {
+func (d *Dao) InitDefault(uid string, profile *pb.Profile) error {
 	d.Data = profile
 	d.Data.Uid = uid
 	return nil
