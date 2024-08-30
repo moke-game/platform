@@ -9,12 +9,17 @@ type AnalyticsSettingParams struct {
 	fx.In
 	AnalyticsUrl string `name:"AnalyticsUrl"`
 
+	// LocalBiPath is the path of the local bi logs, default is ./logs/bi.
 	LocalBiPath string `name:"LocalBiPath"`
 
-	CKaddr   string `name:"CKaddr"`
-	CKdb     string `name:"CKdb"`
-	CKuser   string `name:"CKuser"`
-	CKpasswd string `name:"CKpasswd"`
+	// ClickHouse settings.
+	CKAddr   string `name:"CKAddr"`
+	CKDB     string `name:"CKDB"`
+	CKUser   string `name:"CKUser"`
+	CKPasswd string `name:"CKPasswd"`
+
+	// ThinkingData settings.
+	TDPath string `name:"TDPath"`
 }
 
 type AnalyticsSettingsResult struct {
@@ -26,10 +31,13 @@ type AnalyticsSettingsResult struct {
 	// 本地bi日志路径, 默认为./logs/bi
 	LocalBiPath string `name:"LocalBiPath" envconfig:"LOCAL_BI_PATH" default:"./logs/bi"`
 	// ClickHouse settings.
-	CKaddr   string `name:"CKaddr" envconfig:"CK_ADDR" default:""`
-	CKdb     string `name:"CKdb" envconfig:"CK_DB" default:"default"`
-	CKuser   string `name:"CKuser" envconfig:"CK_USER" default:""`
-	CKpasswd string `name:"CKpasswd" envconfig:"CK_PASSWD" default:""`
+	CKAddr   string `name:"CKAddr" envconfig:"CK_ADDR" default:""`
+	CKDB     string `name:"CKDB" envconfig:"CK_DB" default:"default"`
+	CKUser   string `name:"CKUser" envconfig:"CK_USER" default:""`
+	CKPasswd string `name:"CKPasswd" envconfig:"CK_PASSWD" default:""`
+
+	// ThinkingData settings.
+	TDPath string `name:"TDPath" envconfig:"TD_PATH" default:"./logs/td"`
 }
 
 func (g *AnalyticsSettingsResult) LoadFromEnv() (err error) {

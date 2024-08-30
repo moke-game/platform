@@ -12,10 +12,11 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/analytics"
+	pb "github.com/moke-game/platform/api/gen/analytics/api"
 	"github.com/moke-game/platform/services/analytics/internal/service/bi"
 	"github.com/moke-game/platform/services/analytics/internal/service/bi/clickhouse"
 	"github.com/moke-game/platform/services/analytics/internal/service/bi/local"
+	"github.com/moke-game/platform/services/analytics/internal/service/bi/thinkingdata"
 	"github.com/moke-game/platform/services/analytics/pkg/analyfx"
 )
 
@@ -39,26 +40,37 @@ func NewService(
 	mq miface.MessageQueue,
 	settings analyfx.AnalyticsSettingParams,
 ) (result *Service, err error) {
-	processes := make(map[pb.DeliveryType]bi.DataProcessor)
+	processors := make(map[pb.DeliveryType]bi.DataProcessor)
 	hostname := os.Getenv("HOST_NAME")
-	if process, e := local.NewDataProcessor(l, hostname, settings.LocalBiPath); err != nil {
+	if proc, e := local.NewDataProcessor(l, hostname, settings.LocalBiPath); e != nil {
 		return nil, e
 	} else {
-		processes[pb.DeliveryType_Local] = process
+		processors[pb.DeliveryType_Local] = proc
 	}
-	if process, e := clickhouse.NewDataProcessor(
-		l, settings.LocalBiPath, settings.CKaddr,
-		settings.CKdb, settings.CKuser, settings.CKpasswd,
+	if settings.CKAddr != "" && settings.CKDB != "" && settings.CKUser != "" && settings.CKPasswd != "" {
+		if proc, e := clickhouse.NewDataProcessor(
+			l, settings.LocalBiPath, settings.CKAddr,
+			settings.CKDB, settings.CKUser, settings.CKPasswd,
+		); e != nil {
+			return nil, e
+		} else {
+			processors[pb.DeliveryType_ClickHouse] = proc
+		}
+	}
+	if proc, e := thinkingdata.NewDataProcessor(
+		l,
+		settings.TDPath,
 	); e != nil {
 		return nil, e
 	} else {
-		processes[pb.DeliveryType_ClickHouse] = process
+		processors[pb.DeliveryType_ThinkingData] = proc
 	}
+
 	result = &Service{
 		logger:    l,
 		mq:        mq,
 		hostName:  hostname,
-		processes: processes,
+		processes: processors,
 		url:       settings.AnalyticsUrl,
 	}
 	return

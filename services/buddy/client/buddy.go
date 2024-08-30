@@ -6,46 +6,40 @@ import (
 
 	"github.com/abiosoft/ishell"
 	mm "github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
-	"google.golang.org/grpc"
+	"github.com/gstones/moke-kit/logging/slogger"
+	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/gstones/moke-kit/logging/slogger"
-	"github.com/gstones/moke-kit/server/tools"
-
-	"github.com/moke-game/platform/api/gen/buddy"
+	buddy "github.com/moke-game/platform/api/gen/buddy/api"
+	"github.com/moke-game/platform/services/buddy/pkg/bfx"
 )
 
+// BuddyClient is the client for buddy service
 type BuddyClient struct {
 	client buddy.BuddyServiceClient
 	cmd    *ishell.Cmd
-	conn   *grpc.ClientConn
 }
 
-func NewBuddyClient(host string) (*BuddyClient, error) {
-	if conn, err := tools.DialInsecure(host); err != nil {
+func CreateBuddyClient(host string) (*ishell.Cmd, error) {
+	client, err := bfx.NewBuddyClient(host, sfx.SecuritySettingsParams{})
+	if err != nil {
 		return nil, err
-	} else {
-		cmd := &ishell.Cmd{
-			Name:    "buddy",
-			Help:    "buddy interactive",
-			Aliases: []string{"B"},
-		}
-		p := &BuddyClient{
-			client: buddy.NewBuddyServiceClient(conn),
-			cmd:    cmd,
-			conn:   conn,
-		}
-		p.initSubShells()
-		return p, nil
 	}
+	p := &BuddyClient{
+		client: client,
+	}
+	p.initShells()
+	return p.cmd, nil
+
 }
 
-func (p *BuddyClient) GetCmd() *ishell.Cmd {
-	return p.cmd
-}
-
-func (p *BuddyClient) Close() error {
-	return p.conn.Close()
+func (p *BuddyClient) initShells() {
+	p.cmd = &ishell.Cmd{
+		Name:    "buddy",
+		Help:    "buddy service interactive",
+		Aliases: []string{"B"},
+	}
+	p.initSubShells()
 }
 
 func (p *BuddyClient) initSubShells() {
@@ -62,8 +56,7 @@ func (p *BuddyClient) add(c *ishell.Context) {
 	c.ShowPrompt(false)
 	defer c.ShowPrompt(true)
 
-	slogger.Info(c, "Enter buddy name...")
-	msg := slogger.ReadLine(c, "buddy name: ")
+	msg := slogger.ReadLine(c, "buddy uid: ")
 	req := &buddy.AddBuddyRequest{
 		Uid:     []string{msg},
 		ReqInfo: "test",

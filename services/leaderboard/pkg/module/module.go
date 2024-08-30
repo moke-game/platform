@@ -8,7 +8,7 @@ import (
 	"github.com/moke-game/platform/services/leaderboard/pkg/lbfx"
 )
 
-var LeaderboardService = fx.Module("leaderboard",
+var LeaderboardModule = fx.Module("leaderboard",
 	lbfx.LeaderboardSettingModule,
 	public.Module,
 	private.Module,

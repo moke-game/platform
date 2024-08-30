@@ -3,18 +3,17 @@ package public
 import (
 	"time"
 
-	"github.com/gstones/moke-kit/orm/pkg/ofx"
-	"go.uber.org/fx"
-	"go.uber.org/zap"
-
 	mfx2 "github.com/gstones/moke-kit/fxmain/pkg/mfx"
 	"github.com/gstones/moke-kit/mq/miface"
 	"github.com/gstones/moke-kit/mq/pkg/mfx"
+	"github.com/gstones/moke-kit/orm/pkg/ofx"
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
 	"github.com/gstones/moke-kit/utility"
+	"go.uber.org/fx"
+	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/chat"
+	pb "github.com/moke-game/platform/api/gen/chat/api"
 	"github.com/moke-game/platform/services/chat/internal/service/db"
 	"github.com/moke-game/platform/services/chat/internal/service/errors"
 	"github.com/moke-game/platform/services/chat/pkg/cfx"

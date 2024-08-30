@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-package party.pb;
+// PartyService is a service for party, used to manage a party member, sync party info etc.
+// 组队服务，用于管理队伍成员，同步队伍信息等
+package party.v1;
+import "google/api/annotations.proto";
 
 option go_package = "party/api;pb";
 
@@ -9,31 +12,76 @@ option go_package = "party/api;pb";
 service PartyService {
   // GetParty get party info
   // 获取当前队伍信息
-  rpc GetParty(GetPartyRequest) returns (GetPartyResponse) {}
+  rpc GetParty(GetPartyRequest) returns (GetPartyResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/get"
+      body: "*"
+    };
+  }
   // JoinParty join party
   // 加入队伍
-  rpc JoinParty(JoinPartyRequest) returns (stream JoinPartyResponse) {}
+  rpc JoinParty(JoinPartyRequest) returns (stream JoinPartyResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/join"
+      body: "*"
+    };
+  }
   // JoinPartyReply join party reply
   // 加入队伍回复
-  rpc JoinPartyReply(JoinPartyReplyRequest)returns(JoinPartyReplyResponse){}
+  rpc JoinPartyReply(JoinPartyReplyRequest)returns(JoinPartyReplyResponse){
+    option (google.api.http) = {
+      post: "/v1/party/join_reply"
+      body: "*"
+    };
+  }
   // LeaveParty leave party
   // 离开队伍
-  rpc LeaveParty(LeavePartyRequest) returns (LeavePartyResponse) {}
+  rpc LeaveParty(LeavePartyRequest) returns (LeavePartyResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/leave"
+      body: "*"
+    };
+  }
   // KickOut kick out member
   // 踢出队伍
-  rpc KickOut(KickOutRequest) returns (KickOutResponse) {}
+  rpc KickOut(KickOutRequest) returns (KickOutResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/kick_out"
+      body: "*"
+    };
+  }
   // ManageParty manage party
   // 管理队伍
-  rpc ManageParty(ManagePartyRequest) returns (ManagePartyResponse) {}
+  rpc ManageParty(ManagePartyRequest) returns (ManagePartyResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/manage"
+      body: "*"
+    };
+  }
   // UpdateMember update member
   // 队伍成员更新信息
-  rpc UpdateMember(UpdateMemberRequest) returns (UpdateMemberResponse) {}
+  rpc UpdateMember(UpdateMemberRequest) returns (UpdateMemberResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/update_member"
+      body: "*"
+    };
+  }
   // InviteJoin invite join party
   // 邀请加入队伍
-  rpc InviteJoinParty(InviteJoinRequest) returns (InviteJoinResponse) {}
+  rpc InviteJoinParty(InviteJoinRequest) returns (InviteJoinResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/invite"
+      body: "*"
+    };
+  }
   // InviteJoinReplay invite join party replay
   // 邀请加入队伍回复
-  rpc InviteJoinReplay(InviteReplayRequest) returns (InviteReplayResponse) {}
+  rpc InviteJoinReplay(InviteReplayRequest) returns (InviteReplayResponse) {
+    option (google.api.http) = {
+      post: "/v1/party/invite_reply"
+      body: "*"
+    };
+  }
 }
 
 message Member {

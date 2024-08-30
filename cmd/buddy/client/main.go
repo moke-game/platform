@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 
+	"github.com/abiosoft/ishell"
 	"github.com/spf13/cobra"
 
 	"github.com/moke-game/platform/services/buddy/client"
@@ -14,6 +15,7 @@ var options struct {
 }
 
 const (
+	// DefaultHost default host
 	DefaultHost = "localhost:8081"
 )
 
@@ -34,7 +36,14 @@ func main() {
 		Use:   "shell",
 		Short: "Run an interactive grpc client",
 		Run: func(cmd *cobra.Command, args []string) {
-			client.RunBuddyCmd(options.host)
+			ishell := ishell.New()
+			buddyClient, err := client.CreateBuddyClient(options.host)
+			if err != nil {
+				cmd.Println(err)
+				return
+			}
+			ishell.AddCmd(buddyClient)
+			ishell.Run()
 		},
 	}
 

@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-package auth.pb;
+// Auth service is used for token refresh, token validation, custom token packing, etc.
+// 认证服务,用于token刷新，token验证，自定义封装token 等功能
+package auth.v1;
 
-option go_package = "auth/api;pb";
+option go_package = "auth/api/;v1";
 
 service AuthService {
   // Authenticate request a jwt token by id
@@ -17,6 +19,9 @@ service AuthService {
   // return a uid and data
   // 验证jwt token是否合法
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
+  // PacketToken pack some custom data to a jwt token, suitable for game room auth
+  // 将一些自定义数据打包到jwt token中,适用于游戏房间验证
+  rpc PackToken(PackTokenRequest) returns (PackTokenResponse) {}
   // ClearToken clear the uid's token
   // 清除uid对应的token
   rpc ClearToken(ClearTokenRequest) returns (ClearTokenResponse) {}
@@ -26,33 +31,23 @@ service AuthService {
   // AddBlocked add a uid to block list
   // if is_block is true, will block the uid for duration seconds
   // 添加到黑名单
-  rpc AddBlocked(BlockListRequest) returns (BlockListResponse) {}
+  rpc AddBlocked(AddBlockedRequest) returns (AddBlockedResponse) {}
 }
 
 message AuthenticateRequest {
-  enum AuthType {
-    // just create a jwt token by id, it is suitable for game room auth
-    // 只创建一个jwt token，适用于游戏匹配房间验证
-    NONE = 0;
-    // will create a uid by id, it is suitable for login auth
-    // 通过id创建一个uid，适用于登录验证
-    CREATE_UID = 1;
-  }
   string app_id = 1;
-  // account id/ room id
+  // account id
   string id = 2;
-  AuthType auth = 3;
-  // custom your data ,will pack to token
-  bytes custom_data = 4;
 }
 
 message AuthenticateResponse {
   string access_token = 1;
   string refresh_token = 2;
   string uid = 3;
-  // if is_override is true means already has a token
+  // if is_override is true means already has an active token
   // it is suitable for different device login logic
-  // 如果为true，表示已经有一个token, 适用于不同设备重复登录逻辑
+  // 如果is_override为true表示已经有一个活跃的token
+  // 适用于不同设备登录逻辑
   bool is_override = 4;
 }
 
@@ -89,10 +84,21 @@ message DeleteRequest {
 message DeleteResponse {}
 
 
-message BlockListRequest {
+message AddBlockedRequest {
   string uid = 1;
   bool is_block = 2; // true: block, false: unblock
   int64 duration = 3; // block duration(Seconds) (if is_block is true)
 }
 
-message BlockListResponse {}
+message AddBlockedResponse {}
+
+
+message PackTokenRequest {
+  string uid = 1; // user id or room id etc.(optional)
+  bytes custom_data = 2; // custom data will be packed to token (optional)
+  int64 duration = 3; // token duration(minute),default: 60 minutes (optional)
+}
+
+message PackTokenResponse {
+  string access_token = 1;
+}

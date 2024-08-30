@@ -13,7 +13,7 @@ import (
 	"github.com/samber/lo"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/mail"
+	pb "github.com/moke-game/platform/api/gen/mail/api"
 	"github.com/moke-game/platform/services/mail/internal/service/common"
 	"github.com/moke-game/platform/services/mail/internal/service/errors"
 )

@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform/api/gen/profile"
+	pb "github.com/moke-game/platform/api/gen/profile/api"
 	"github.com/moke-game/platform/services/profile/changes"
 	errors2 "github.com/moke-game/platform/services/profile/errors"
 	"github.com/moke-game/platform/services/profile/internal/db/redis"
@@ -130,13 +130,7 @@ func (s *Service) updateProfileInfo(uid string, update *pb.Profile) (*pb.Profile
 		s.logger.Error("load profile err", zap.Error(err))
 		return nil, errors2.ErrLoadFailure
 	}
-	updatePet := false
-	if update.PetProfileId != 0 {
-		if update.PetProfileId == -1 { //-1为宠物解绑
-			update.PetProfileId = 0
-		}
-		updatePet = true
-	}
+
 	//修改了昵称
 	if newName := update.Nickname; newName != "" && newName != profile.Data.Nickname {
 		if err = redis.ChangeName(s.redisCli, profile.Data.Nickname, newName); err != nil {
@@ -145,7 +139,7 @@ func (s *Service) updateProfileInfo(uid string, update *pb.Profile) (*pb.Profile
 		}
 	}
 	if err = profile.Update(func() bool {
-		return profile.UpdateData(update, updatePet)
+		return profile.UpdateData(update)
 	}); err != nil {
 		s.logger.Error("update profile err", zap.Error(err))
 		return nil, errors2.ErrUpdateFailure

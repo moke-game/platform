@@ -1,14 +1,24 @@
 syntax = "proto3";
 
-package analytics.pb;
-option go_package = "analytics/api;pb";
+// Analytics service for sending analytics events,
+// support multi delivery type: local,thinkingdata,clickhouse,mixpanel etc.
+// 分析服务用于发送分析事件
+// 支持多种投递方式: local,thinkingdata,clickhouse,mixpanel等
+package analytics.v1;
+option go_package = "analytics/api;v1";
+import "google/api/annotations.proto";
 
-// AnalyticsService is the service that allows clients to send analytics events to the analytics service.
-// 统计服务: 允许客户端将分析事件发送到分析服务的服务。
 service AnalyticsService {
   // Analytics send a batch of analytics events to the analytics service，return Nothing
+  // Recommend to use async/multi events at once
   // 发送一批分析事件到分析服务，返回Nothing
-  rpc Analytics(AnalyticsEvents) returns (Nothing) {}
+  // 建议使用异步+批量事件一次发送
+  rpc Analytics(AnalyticsEvents) returns (Nothing) {
+    option (google.api.http) = {
+      post: "/v1/analytics"
+      body: "*"
+    };
+  }
 }
 
 message AnalyticsEvents {
@@ -42,6 +52,13 @@ message Event {
 
   // Where to deliver this event to, defaults to Local.
   DeliveryType deliver_to = 3;
+
+  // user_id is the unique identifier for the user.
+  // if use thinkingdata ,distinct_id /user_id is required
+  string user_id = 4;
+  // distinct_id is the unique identifier for the user/visitor.
+  // if use thinkingdata ,distinct_id /user_id is required
+  string distinct_id = 5;
 }
 
 // Nothing is an empty message.  Used when there's nothing to send.

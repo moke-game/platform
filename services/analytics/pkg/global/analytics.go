@@ -1,8 +1,6 @@
 package global
 
-import (
-	pb "github.com/moke-game/platform/api/gen/analytics"
-)
+import pb "github.com/moke-game/platform/api/gen/analytics/api"
 
 var (
 	analyticsClient pb.AnalyticsServiceClient

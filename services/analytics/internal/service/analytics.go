@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/analytics"
+	pb "github.com/moke-game/platform/api/gen/analytics/api"
 	"github.com/moke-game/platform/services/analytics/internal/service/bi"
 )
 
@@ -20,7 +20,7 @@ func (s *Service) Analytics(
 			s.logger.Warn("no processor found", zap.String("deliverTo", v.DeliverTo.String()))
 			continue
 		}
-		if err := p.Handle(eventType, v.Properties); err != nil {
+		if err := p.Handle(eventType, v.UserId, v.DistinctId, v.Properties); err != nil {
 			s.logger.Error("bi data handle error", zap.Error(err))
 		}
 	}

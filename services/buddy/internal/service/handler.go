@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform/api/gen/buddy"
+	pb "github.com/moke-game/platform/api/gen/buddy/api"
 	"github.com/moke-game/platform/services/buddy/internal/db/model/data"
 	"github.com/moke-game/platform/services/buddy/internal/errors"
 	"github.com/moke-game/platform/services/buddy/internal/utils"
@@ -412,23 +412,29 @@ func (s *Service) RefuseBuddy(ctx context.Context, request *pb.RefuseBuddyReques
 	return &pb.Nothing{}, nil
 }
 
-func (s *Service) VerifyBlocked(_ context.Context, request *pb.VerifyBlockedRequest) (*pb.VerifyBlockedResponse, error) {
-	resp := &pb.VerifyBlockedResponse{}
-	selfDao, err := s.db.LoadOrCreateBuddyQueue(request.UidSelf)
+func (s *Service) IsBlocked(ctx context.Context, request *pb.IsBlockedRequest) (*pb.IsBlockedResponse, error) {
+	uid, ok := ctx.Value(utility.UIDContextKey).(string)
+	if !ok {
+		s.logger.Error("get uid from context err")
+		return nil, errors.ErrNoMetaData
+	}
+
+	resp := &pb.IsBlockedResponse{}
+	selfDao, err := s.db.LoadOrCreateBuddyQueue(uid)
 	if err != nil {
 		s.logger.Error("load or create buddy queue err", zap.Error(err))
 		return resp, errors.ErrNoMetaData
 	}
-	if selfDao.Data.IsBlocked(request.UidOther) {
+	if selfDao.Data.IsBlocked(request.GetUid()) {
 		resp.IsBlocked = true
 		return resp, nil
 	}
-	otherDao, err := s.db.LoadOrCreateBuddyQueue(request.UidOther)
+	otherDao, err := s.db.LoadOrCreateBuddyQueue(request.GetUid())
 	if err != nil {
 		s.logger.Error("load or create buddy queue err", zap.Error(err))
 		return resp, errors.ErrNoMetaData
 	}
-	if otherDao.Data.IsBlocked(request.UidSelf) {
+	if otherDao.Data.IsBlocked(uid) {
 		resp.IsBlocked = true
 		return resp, nil
 	}

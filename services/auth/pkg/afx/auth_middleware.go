@@ -4,14 +4,13 @@ import (
 	"context"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
+	"github.com/gstones/moke-kit/server/pkg/sfx"
+	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
-	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/utility"
-
-	pb "github.com/moke-game/platform/api/gen/auth"
+	pb "github.com/moke-game/platform/api/gen/auth/api"
 )
 
 // Author is auth for grpc middleware

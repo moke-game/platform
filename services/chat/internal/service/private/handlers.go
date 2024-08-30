@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/chat"
+	pb "github.com/moke-game/platform/api/gen/chat/api"
 	"github.com/moke-game/platform/services/chat/internal/service/errors"
 )
 

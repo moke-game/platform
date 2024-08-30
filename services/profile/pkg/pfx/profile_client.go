@@ -3,10 +3,10 @@ package pfx
 import (
 	"go.uber.org/fx"
 
+	pb "github.com/moke-game/platform/api/gen/profile/api"
+
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
-
-	pb "github.com/moke-game/platform/api/gen/profile"
 )
 
 type ProfileClientParams struct {

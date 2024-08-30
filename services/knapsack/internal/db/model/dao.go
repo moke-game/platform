@@ -8,7 +8,7 @@ import (
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform/api/gen/knapsack"
+	pb "github.com/moke-game/platform/api/gen/knapsack/api"
 )
 
 type Dao struct {

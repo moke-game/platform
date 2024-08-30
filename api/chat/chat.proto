@@ -1,6 +1,7 @@
 syntax = "proto3";
-
-package chat.pb;
+// Chat Service is used for real-time communication
+// 聊天服务 用于实时通讯
+package chat.v1;
 
 option go_package = "chat/api;chat";
 

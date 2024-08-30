@@ -3,16 +3,7 @@ package data
 import (
 	"sort"
 
-	pb "github.com/moke-game/platform/api/gen/buddy"
-)
-
-type MemberType int32
-
-const (
-	// Already a buddy.
-	MemberTypeBuddy MemberType = 0
-	// Need to be identified by self.
-	MemberTypeInviter MemberType = 1
+	pb "github.com/moke-game/platform/api/gen/buddy/api"
 )
 
 type Buddy struct {
@@ -71,21 +62,6 @@ func (b *Buddy) Favorite(isFavor bool) {
 
 func (b *Buddy) UnFavorite() {
 	b.IsFavorite = false
-}
-func NewInviter(uid string, text string, time int64) *Inviter {
-	return &Inviter{
-		UID:     uid,
-		ReqTime: time,
-		ReqInfo: text,
-	}
-}
-
-func NewBuddy(uid string, remark string, time int64) *Buddy {
-	return &Buddy{
-		UID:     uid,
-		ActTime: time,
-		Remark:  remark,
-	}
 }
 
 type BuddySettings struct {

@@ -1,12 +1,11 @@
 package bfx
 
 import (
-	"go.uber.org/fx"
-
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/tools"
+	"go.uber.org/fx"
 
-	pb "github.com/moke-game/platform/api/gen/buddy"
+	pb "github.com/moke-game/platform/api/gen/buddy/api"
 )
 
 type BuddyClientParams struct {

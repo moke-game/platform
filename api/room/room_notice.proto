@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package room.v1;
+import "room/room_common.proto";
+option go_package = "room/api;room";
+
+
+// Notice client to join room
+// when client join room, server will send this notice to all clients in the room
+// if client is already in the room, notice will not be sent
+// 当客户端加入房间时，服务器会向房间内所有客户端发送此通知
+message NtfRoomJoined {
+  // need add player info
+  // 需要添加的玩家信息
+  repeated Player players = 1;
+}
+
+// Notice client to exit room
+// when client exit room, server will send this notice to all clients in the room
+// 当客户端退出房间时，服务器会向房间内所有客户端发送此通知
+message NtfRoomExit {
+  // need remove player uids
+  // 需要移除的玩家uid
+  repeated string uids = 1;
+}
+
+// Notice client to sync frame data
+// Room will send this notice every frame to all clients in the room
+// 房间会每帧向房间内所有客户端发送此同步信息
+message NtfFrame {
+  // frame data
+  // 帧数据
+  repeated FrameData frames = 1;
+}

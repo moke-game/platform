@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
-	pb "github.com/moke-game/platform/api/gen/chat"
+	pb "github.com/moke-game/platform/api/gen/chat/api"
 	"github.com/moke-game/platform/services/chat/internal/service/db"
 )
 

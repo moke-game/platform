@@ -1,0 +1,64 @@
+syntax = "proto3";
+package room.v1;
+
+option go_package = "room/api;room";
+
+// Room error code
+enum RoomErrorCode {
+  ROOM_ERROR_CODE_OK = 0;
+  ROOM_ERROR_CODE_INVALID = 1;
+  ROOM_ERROR_CODE_NOT_FOUND = 2;
+  ROOM_ERROR_CODE_FULL = 3;
+  ROOM_ERROR_CODE_ALREADY_IN = 4;
+  ROOM_ERROR_CODE_NOT_IN = 5;
+  ROOM_ERROR_CODE_NOT_READY = 6;
+  ROOM_ERROR_CODE_ALREADY_READY = 7;
+  ROOM_ERROR_CODE_NOT_STARTED = 8;
+  ROOM_ERROR_CODE_ALREADY_STARTED = 9;
+  ROOM_ERROR_CODE_NOT_ENDED = 10;
+  ROOM_ERROR_CODE_ALREADY_ENDED = 11;
+  ROOM_ERROR_CODE_NOT_SYNC = 12;
+  ROOM_ERROR_CODE_ALREADY_SYNC = 13;
+}
+
+// Common response
+// Common response message,
+// all Response messages should be returned to the client as the message field of this message
+// 通用响应消息，所有Response消息都应该作为此消息的message字段返回给客户端
+message Response {
+  RoomErrorCode error_code = 1;
+  bytes message = 2;
+}
+
+
+// Command data
+// Operation frame data, used for client to send to the server, and the server broadcasts to all clients in the room
+// 操作帧数据, 用于客户端发送给服务器，服务器广播给房间内所有客户端
+message CmdData {
+  // player uid
+  string uid = 1; // player uid
+  // joystick x axis value
+  float x = 2; // x position
+  // joystick y axis value
+  float y = 3; // y position
+  // player action
+  int32 action = 4; // action
+  // custom data
+  bytes custom = 5; // custom data
+}
+
+// Frame data
+message FrameData{
+  // frame index
+  uint32 frame_index = 1;
+  // operation data
+  repeated CmdData cmds = 2;
+}
+
+
+// Player info
+message Player{
+  string uid = 1;
+  string nickname = 2;
+  string avatar = 3;
+}

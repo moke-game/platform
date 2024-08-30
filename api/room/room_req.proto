@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+// Room is a lockstep mode game room, clients in the room synchronize frame data through the server to achieve game synchronization
+// 房间是lockstep模式的游戏房间，房间内的客户端通过服务器同步帧数据，实现游戏同步
+package room.v1;
+import "room/room_common.proto";
+option go_package = "room/api;room";
+
+// Client join room
+message ReqJoin {
+  // room jwt token contains: uid,room_id
+  // 房间jwt token包含: uid,room_id
+  string token = 1;
+  // last frame index: default 0,
+  // if client has cache data and want to reconnect from a frame index,
+  // set this value to the corresponding frame index
+  // 最后一帧的索引: 默认为0,
+  // 如果客户端本地有缓存数据，想要从某个帧索引重新连接，设置这个值为对应的帧索引
+  uint32 last_frame_index = 2;
+}
+
+// Server response to client join room
+message RspJoin {
+  // room random seed
+  // 房间随机种子
+  int64  random_seed = 1;
+}
+
+// Client leave room
+message ReqExit {
+}
+
+// Server response to client leave room
+message RspExit {
+}
+
+// Client sync frame data
+message ReqSync {
+  CmdData cmd = 1;
+}
+
+// Server response to client sync frame data
+message RspSync {
+
+}
+
+

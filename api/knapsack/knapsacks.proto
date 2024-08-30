@@ -1,18 +1,41 @@
 syntax = "proto3";
 
-package knapsack.pb;
+// KnapsackService is a service for knapsack
+// 背包服务 用于背包物品管理
+package knapsack.v1;
+import "google/api/annotations.proto";
 
 option go_package = "knapsack/api;pb";
 
 service KnapsackService {
-  // GetKnapsack get knapsack info
-  rpc GetKnapsack(GetKnapsackRequest) returns (GetKnapsackResponse) {}
-  // AddItem add items
-  rpc AddItem(AddItemRequest) returns (AddItemResponse) {}
+  // GetKnapsack get knapsack items
+  rpc GetKnapsack(GetKnapsackRequest) returns (GetKnapsackResponse) {
+    option (google.api.http) = {
+      post: "/v1/knapsack/get"
+      body: "*"
+    };
+  }
+  // AddItem add items to knapsack
+  rpc AddItem(AddItemRequest) returns (AddItemResponse) {
+    option (google.api.http) = {
+      post: "/v1/knapsack/add"
+      body: "*"
+    };
+  }
   // RemoveItem remove items
-  rpc RemoveItem(RemoveItemRequest) returns (RemoveItemResponse) {}
+  rpc RemoveItem(RemoveItemRequest) returns (RemoveItemResponse) {
+    option (google.api.http) = {
+      post: "/v1/knapsack/remove"
+      body: "*"
+    };
+  }
   // RemoveThenAddItem remove items then add items
-  rpc RemoveThenAddItem(RemoveThenAddItemRequest) returns (RemoveThenAddItemResponse) {}
+  rpc RemoveThenAddItem(RemoveThenAddItemRequest) returns (RemoveThenAddItemResponse) {
+    option (google.api.http) = {
+      post: "/v1/knapsack/remove_then_add"
+      body: "*"
+    };
+  }
 }
 
 // KnapsackPrivateService provide private service for game/gm service
@@ -45,7 +68,7 @@ message Knapsack {
 message KnapsackModify {
   map<int64, Item> incr_items = 1;
   map<int64, Item> decr_items = 2;
-  Knapsack knapsack=3;
+  Knapsack knapsack = 3;
   string source = 4;
 }
 

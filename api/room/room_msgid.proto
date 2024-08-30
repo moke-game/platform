@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package room.v1;
+
+option go_package = "room/api;room";
+
+// MsgID
+enum MsgID {
+  MSG_ID_INVALID = 0;
+  MSG_ID_HEARTBEAT = 1;
+
+  MSG_ID_ROOM_JOIN = 1000;
+  MSG_ID_ROOM_EXIT = 1001;
+  MSG_ID_ROOM_SYNC = 1002;
+}
+
+// NoticeID
+enum NoticeID{
+  NOTICE_ID_INVALID = 0;
+
+  NOTICE_ID_ROOM_JOINED = 100;
+  NOTICE_ID_ROOM_EXIT = 101;
+  NOTICE_ID_ROOM_SYNC = 102;
+}
+

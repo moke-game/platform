@@ -5,7 +5,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "github.com/moke-game/platform/api/gen/analytics"
+	pb "github.com/moke-game/platform/api/gen/analytics/api"
 )
 
 type Noop struct {

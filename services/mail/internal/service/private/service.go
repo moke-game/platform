@@ -14,7 +14,7 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
-	pb "github.com/moke-game/platform/api/gen/mail"
+	pb "github.com/moke-game/platform/api/gen/mail/api"
 	"github.com/moke-game/platform/services/mail/internal/service/db"
 	"github.com/moke-game/platform/services/mail/pkg/mailfx"
 )

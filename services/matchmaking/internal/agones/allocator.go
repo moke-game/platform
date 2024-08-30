@@ -13,14 +13,11 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
-// https://github.com/googleforgames/agones/issues/2716
-
 const (
-	Battle string = "battle"
-	World  string = "world"
+	namespace        = "default"
+	Battle    string = "battle"
+	World     string = "world"
 )
-
-const namespace = "default"
 
 type PortMap map[int32][]types.SocketAddress
 
@@ -48,29 +45,29 @@ func CreateAgonesAllocator(
 	}
 }
 
-func (a *Allocator) Allocate(playId int32, uids ...string) (string, error) {
-	if playId == 0 {
-		if url, err := a.allocateWorld(uids...); err != nil {
-			return "", err
-		} else {
-			return url, nil
-		}
-	} else if url, err := a.allocateBattle(); err != nil {
-		return "", err
-	} else {
-		return url, nil
-	}
-}
+//func (a *Allocator) Allocate(playId int32, uids ...string) (string, error) {
+//	if playId == 0 {
+//		if url, err := a.allocateWorld(uids...); err != nil {
+//			return "", err
+//		} else {
+//			return url, nil
+//		}
+//	} else if url, err := a.AllocateBattle(); err != nil {
+//		return "", err
+//	} else {
+//		return url, nil
+//	}
+//}
+//
+//func (a *Allocator) allocateWorld(uids ...string) (string, error) {
+//	req, err := a.makeWorldRequest(uids...)
+//	if err != nil {
+//		return "", err
+//	}
+//	return a.allocate(req)
+//}
 
-func (a *Allocator) allocateWorld(uids ...string) (string, error) {
-	req, err := a.makeWorldRequest(uids...)
-	if err != nil {
-		return "", err
-	}
-	return a.allocate(req)
-}
-
-func (a *Allocator) allocateBattle() (string, error) {
+func (a *Allocator) AllocateBattle() (string, error) {
 	req, err := a.makeBattleRequest()
 	if err != nil {
 		return "", err
@@ -238,37 +235,4 @@ func (a *Allocator) intAccCacheFromAws(internalIp string) error {
 	}
 	a.setAccPortCache(internalIp, portMap)
 	return nil
-}
-
-func (a *Allocator) AllocateBattle1() (string, error) {
-	metadata := &allocation.MetaPatch{
-		Labels: map[string]string{"agones.dev/sdk-gs-session-ready": "false"},
-	}
-	readySelect := &allocation.GameServerSelector{
-		MatchLabels: map[string]string{
-			"agones.dev/fleet": Battle,
-		},
-		GameServerState: allocation.GameServerSelector_READY,
-	}
-	allocatedSelect := &allocation.GameServerSelector{
-		MatchLabels: map[string]string{
-			"agones.dev/fleet":                Battle,
-			"agones.dev/sdk-gs-session-ready": "true",
-		},
-		GameServerState: allocation.GameServerSelector_ALLOCATED,
-	}
-	request := &allocation.AllocationRequest{
-		Namespace:           "default",
-		Metadata:            metadata,
-		GameServerSelectors: []*allocation.GameServerSelector{allocatedSelect, readySelect},
-	}
-	if resp, err := a.client.Allocate(context.Background(), request); err != nil {
-		return "", err
-	} else if len(resp.Ports) <= 0 {
-		return "", fmt.Errorf("agones allocated service has no port")
-	} else {
-		host := fmt.Sprintf("%s:%d", resp.Address, resp.Ports[0].Port)
-		a.logger.Info("Agones allocated service", zap.String("response", host))
-		return host, nil
-	}
 }

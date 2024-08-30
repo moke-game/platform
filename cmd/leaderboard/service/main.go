@@ -11,7 +11,7 @@ import (
 func main() {
 	fxmain.Main(
 		ofx.RedisCacheModule,
-		module.LeaderboardService,
+		module.LeaderboardModule,
 		auth.AuthMiddlewareModule,
 	)
 }
