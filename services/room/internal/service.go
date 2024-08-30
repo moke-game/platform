@@ -25,10 +25,9 @@ import (
 
 type Service struct {
 	znet.BaseRouter
-	logger       *zap.Logger
-	roomMgr      *RoomMgr
-	agones       *Agones
-	asyncHandler map[uint32]riface.IHandler
+	logger  *zap.Logger
+	roomMgr *RoomMgr
+	agones  *Agones
 
 	setting rfx.RoomSettingParams
 	mq      miface.MessageQueue

@@ -57,10 +57,6 @@ func (f *Frames) getRangeFrames(start, end uint32) []*roompb.FrameData {
 	return frames
 }
 
-func (f *Frames) getFrame(index uint32) *roompb.FrameData {
-	return f.frames[index]
-}
-
 func (f *Frames) getCurrentFrame() *roompb.FrameData {
 	return f.frames[f.frameIndex]
 }

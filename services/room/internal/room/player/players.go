@@ -24,10 +24,7 @@ func (p *Players) AddPlayer(player *roompb.Player) error {
 
 func (p *Players) RemovePlayer(uid string) bool {
 	delete(p.players, uid)
-	if len(p.players) == 0 {
-		return true
-	}
-	return false
+	return len(p.players) == 0
 }
 
 func (p *Players) GetAllPlayers() []*roompb.Player {

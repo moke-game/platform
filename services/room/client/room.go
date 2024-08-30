@@ -51,11 +51,10 @@ func (ac *RoomWSClient) initSubCmd() {
 }
 
 func (ac *RoomWSClient) joinRoom(c *ishell.Context) {
-	roomId := slogger.ReadLine(c, "input room id:")
+	token := slogger.ReadLine(c, "input room token:")
 
 	req := &room.ReqJoin{
-		Token:  ac.username,
-		RoomId: roomId,
+		Token: token,
 	}
 
 	data, err := proto.Marshal(req)
@@ -70,8 +69,7 @@ func (ac *RoomWSClient) joinRoom(c *ishell.Context) {
 func (ac *RoomWSClient) sync(c *ishell.Context) {
 	req := &room.ReqSync{
 		Cmd: &room.CmdData{
-			Uid:  ac.username,
-			Data: random.RandBytes(10),
+			Uid: ac.username,
 		},
 	}
 

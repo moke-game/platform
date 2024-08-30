@@ -31,7 +31,6 @@ type RecMsg struct {
 type Room struct {
 	logger     *zap.Logger
 	roomId     string
-	mapId      int32
 	playId     int32
 	players    *player.Players
 	frames     *Frames
