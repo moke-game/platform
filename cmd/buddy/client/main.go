@@ -36,14 +36,14 @@ func main() {
 		Use:   "shell",
 		Short: "Run an interactive grpc client",
 		Run: func(cmd *cobra.Command, args []string) {
-			ishell := ishell.New()
+			shell := ishell.New()
 			buddyClient, err := client.CreateBuddyClient(options.host)
 			if err != nil {
 				cmd.Println(err)
 				return
 			}
-			ishell.AddCmd(buddyClient)
-			ishell.Run()
+			shell.AddCmd(buddyClient)
+			shell.Run()
 		},
 	}
 
