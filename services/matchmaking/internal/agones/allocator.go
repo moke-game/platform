@@ -75,45 +75,45 @@ func (a *Allocator) AllocateBattle() (string, error) {
 	return a.allocate(req)
 }
 
-// world use list feature
-func (a *Allocator) makeWorldRequest(uids ...string) (*allocation.AllocationRequest, error) {
-	if len(uids) <= 0 {
-		return nil, fmt.Errorf("uids is empty")
-	}
-	matchLabels := map[string]string{
-		"agones.dev/fleet": World,
-	}
-	listSelect := map[string]*allocation.ListSelector{
-		"players": {
-			//ContainsValue: target,
-			MinAvailable: int64(len(uids)),
-		},
-	}
-	selectors := []*allocation.GameServerSelector{
-		{
-			MatchLabels:     matchLabels,
-			GameServerState: allocation.GameServerSelector_ALLOCATED,
-			Lists:           listSelect,
-		},
-		{
-			MatchLabels:     matchLabels,
-			GameServerState: allocation.GameServerSelector_READY,
-		},
-	}
-
-	return &allocation.AllocationRequest{
-		Namespace: namespace,
-		Metadata: &allocation.MetaPatch{
-			Labels: map[string]string{"agones.dev/sdk-player-add": uids[0]},
-		},
-		GameServerSelectors: selectors,
-		Lists: map[string]*allocation.ListAction{
-			"players": {
-				AddValues: uids,
-			},
-		},
-	}, nil
-}
+//// world use list feature
+//func (a *Allocator) makeWorldRequest(uids ...string) (*allocation.AllocationRequest, error) {
+//	if len(uids) <= 0 {
+//		return nil, fmt.Errorf("uids is empty")
+//	}
+//	matchLabels := map[string]string{
+//		"agones.dev/fleet": World,
+//	}
+//	listSelect := map[string]*allocation.ListSelector{
+//		"players": {
+//			//ContainsValue: target,
+//			MinAvailable: int64(len(uids)),
+//		},
+//	}
+//	selectors := []*allocation.GameServerSelector{
+//		{
+//			MatchLabels:     matchLabels,
+//			GameServerState: allocation.GameServerSelector_ALLOCATED,
+//			Lists:           listSelect,
+//		},
+//		{
+//			MatchLabels:     matchLabels,
+//			GameServerState: allocation.GameServerSelector_READY,
+//		},
+//	}
+//
+//	return &allocation.AllocationRequest{
+//		Namespace: namespace,
+//		Metadata: &allocation.MetaPatch{
+//			Labels: map[string]string{"agones.dev/sdk-player-add": uids[0]},
+//		},
+//		GameServerSelectors: selectors,
+//		Lists: map[string]*allocation.ListAction{
+//			"players": {
+//				AddValues: uids,
+//			},
+//		},
+//	}, nil
+//}
 
 // battle use counter feature
 func (a *Allocator) makeBattleRequest() (*allocation.AllocationRequest, error) {
