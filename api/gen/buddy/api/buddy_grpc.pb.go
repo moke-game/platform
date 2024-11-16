@@ -56,28 +56,32 @@ type BuddyServiceClient interface {
 	// 回复好友请求
 	ReplyAddBuddy(ctx context.Context, in *ReplyAddBuddyRequest, opts ...grpc.CallOption) (*ReplyAddBuddyResponse, error)
 	// WatchBuddies returns a stream on which changes to the current user's
-	//buddies and blocked list  and recent met will be sent.
+	// buddies and blocked list  and recent met will be sent.
 	// 监听好友列表变化
 	WatchBuddies(ctx context.Context, in *Nothing, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BuddyChanges], error)
 	// Remark remark buddy nickname
 	// 备注好友昵称
 	Remark(ctx context.Context, in *RemarkRequest, opts ...grpc.CallOption) (*Nothing, error)
-	//Refuse buddy request
+	// Refuse buddy request
 	// 拒绝好友请求
 	RefuseBuddy(ctx context.Context, in *RefuseBuddyRequest, opts ...grpc.CallOption) (*Nothing, error)
-	//---------------------------------------------Blocked List Start------------------------------------
+	// ---------------------------------------------Blocked List Start------------------------------------
 	// GetBlockedUsers returns the current user's blocked users.
 	// 获取黑名单列表
 	GetBlockedProfiles(ctx context.Context, in *Nothing, opts ...grpc.CallOption) (*ProfileIds, error)
-	//AddBlockedUsers is called to add users to self's buddy list or blocked list
+	// AddBlockedUsers is called to add users to self's buddy list or blocked list
 	// 添加黑名单
 	AddBlockedProfiles(ctx context.Context, in *ProfileIds, opts ...grpc.CallOption) (*Nothing, error)
-	//RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
+	// RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
 	// 移除黑名单
 	RemoveBlockedProfiles(ctx context.Context, in *ProfileIds, opts ...grpc.CallOption) (*Nothing, error)
-	//  IsBlocked is called to check if a user is blocked
+	//	IsBlocked is called to check if a user is blocked
+	//
 	// 检查是否在黑名单
 	IsBlocked(ctx context.Context, in *IsBlockedRequest, opts ...grpc.CallOption) (*IsBlockedResponse, error)
+	// ---------------------------------------------Blocked List End---------------------------------------
+	// DeleteAccount is called to delete a self buddy account data
+	// 删除好友关系数据
 	DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountResponse, error)
 }
 
@@ -238,28 +242,32 @@ type BuddyServiceServer interface {
 	// 回复好友请求
 	ReplyAddBuddy(context.Context, *ReplyAddBuddyRequest) (*ReplyAddBuddyResponse, error)
 	// WatchBuddies returns a stream on which changes to the current user's
-	//buddies and blocked list  and recent met will be sent.
+	// buddies and blocked list  and recent met will be sent.
 	// 监听好友列表变化
 	WatchBuddies(*Nothing, grpc.ServerStreamingServer[BuddyChanges]) error
 	// Remark remark buddy nickname
 	// 备注好友昵称
 	Remark(context.Context, *RemarkRequest) (*Nothing, error)
-	//Refuse buddy request
+	// Refuse buddy request
 	// 拒绝好友请求
 	RefuseBuddy(context.Context, *RefuseBuddyRequest) (*Nothing, error)
-	//---------------------------------------------Blocked List Start------------------------------------
+	// ---------------------------------------------Blocked List Start------------------------------------
 	// GetBlockedUsers returns the current user's blocked users.
 	// 获取黑名单列表
 	GetBlockedProfiles(context.Context, *Nothing) (*ProfileIds, error)
-	//AddBlockedUsers is called to add users to self's buddy list or blocked list
+	// AddBlockedUsers is called to add users to self's buddy list or blocked list
 	// 添加黑名单
 	AddBlockedProfiles(context.Context, *ProfileIds) (*Nothing, error)
-	//RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
+	// RemoveBlockedUsers is called to remove users to self's buddy list or blocked list
 	// 移除黑名单
 	RemoveBlockedProfiles(context.Context, *ProfileIds) (*Nothing, error)
-	//  IsBlocked is called to check if a user is blocked
+	//	IsBlocked is called to check if a user is blocked
+	//
 	// 检查是否在黑名单
 	IsBlocked(context.Context, *IsBlockedRequest) (*IsBlockedResponse, error)
+	// ---------------------------------------------Blocked List End---------------------------------------
+	// DeleteAccount is called to delete a self buddy account data
+	// 删除好友关系数据
 	DeleteAccount(context.Context, *DeleteAccountRequest) (*DeleteAccountResponse, error)
 }
 
