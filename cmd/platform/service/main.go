@@ -1,8 +1,6 @@
 package main
 
 import (
-	agones "github.com/gstones/moke-kit/3rd/agones/pkg/module"
-	awsConfig "github.com/gstones/moke-kit/3rd/cloud/pkg/module"
 	"github.com/gstones/moke-kit/fxmain"
 	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"github.com/gstones/moke-kit/orm/pkg/ofx"
@@ -24,8 +22,6 @@ func main() {
 		// infrastructure
 		mfx.NatsModule,
 		ofx.RedisCacheModule,
-		agones.AgonesAllocateClientModule,
-		awsConfig.AWSConfigModule,
 
 		mail.MailModule,
 		analytics.AnalyticsModule,

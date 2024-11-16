@@ -77,7 +77,7 @@ func (a *Agones) CheckAndDeleteReserve(uid string) bool {
 }
 
 func (a *Agones) DeletePlayer(uid string) error {
-	if err := a.agones.Alpha().DeleteListValue("players", uid); err != nil {
+	if err := a.agones.CounterList().DeleteListValue("players", uid); err != nil {
 		return err
 	}
 	return nil
@@ -112,7 +112,7 @@ func (a *Agones) updateWorldPlayers(gs *sdk.GameServer) {
 
 	a.playerReserves.Range(func(key, value interface{}) bool {
 		if time.Now().Unix()-value.(int64) > int64(WorldReserveTimeout) {
-			if err := a.agones.Alpha().DeleteListValue("players", key.(string)); err != nil {
+			if err := a.agones.CounterList().DeleteListValue("players", key.(string)); err != nil {
 				a.logger.Error("delete player failed", zap.Error(err))
 			}
 			a.logger.Info("delete player", zap.String("uid", key.(string)))

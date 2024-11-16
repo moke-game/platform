@@ -22,7 +22,7 @@
 
 ## 运行：
 
-* 你可以运行`cmd/platform/main.go`来启动所有服务， 你也可以参考`cmd/platform/main.go`来自定义组装服务。
+* 你可以运行`cmd/platform/service/main.go`来启动所有服务， 你也可以参考`cmd/platform/service/main.go`来自定义组装服务。
 * 你可以运行`cmd/{service-name}/service/main.go`来启动单个服务,例如：`cmd/auth/service/main.go` 来启动auth服务
 
 ## 容器化

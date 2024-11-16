@@ -34,7 +34,7 @@ const (
 type MailServiceClient interface {
 	// Watch watch mail changes,
 	Watch(ctx context.Context, in *WatchMailRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchMailResponse], error)
-	//UpdateMail update mail status
+	// UpdateMail update mail status
 	UpdateMail(ctx context.Context, in *UpdateMailRequest, opts ...grpc.CallOption) (*UpdateMailResponse, error)
 }
 
@@ -83,7 +83,7 @@ func (c *mailServiceClient) UpdateMail(ctx context.Context, in *UpdateMailReques
 type MailServiceServer interface {
 	// Watch watch mail changes,
 	Watch(*WatchMailRequest, grpc.ServerStreamingServer[WatchMailResponse]) error
-	//UpdateMail update mail status
+	// UpdateMail update mail status
 	UpdateMail(context.Context, *UpdateMailRequest) (*UpdateMailResponse, error)
 }
 
