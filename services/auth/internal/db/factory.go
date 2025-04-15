@@ -1,13 +1,15 @@
 package db
 
 import (
+	"context"
 	"errors"
 	"strconv"
+
+	"go.uber.org/zap"
 
 	"github.com/gstones/moke-kit/orm/nerrors"
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 	"github.com/gstones/moke-kit/orm/nosql/key"
-	"go.uber.org/zap"
 
 	"github.com/moke-game/platform/services/auth/internal/db/model"
 )
@@ -38,7 +40,7 @@ const uidStart = 10000
 func (db *Database) generateId() (string, error) {
 	if k, err := model.NewUidKey(db.appName); err != nil {
 		return "", err
-	} else if uid, err := db.coll.Incr(k, "uid", 1); err != nil {
+	} else if uid, err := db.coll.Incr(context.Background(), k, "uid", 1); err != nil {
 		if errors.Is(err, nerrors.ErrNotFound) {
 			return strconv.FormatInt(uidStart, 10), nil
 		}
@@ -53,8 +55,8 @@ func (db *Database) Delete(id string) (err error) {
 	if index, err = model.NewAuthKey(id); err != nil {
 		return
 	}
-	db.cache.DeleteCache(index)
-	if err = db.coll.Delete(index); errors.Is(err, nerrors.ErrNotFound) {
+	db.cache.DeleteCache(context.Background(), index)
+	if err = db.coll.Delete(context.Background(), index); errors.Is(err, nerrors.ErrNotFound) {
 		return nil
 	}
 	return
