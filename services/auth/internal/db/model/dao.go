@@ -1,6 +1,8 @@
 package model
 
 import (
+	"context"
+
 	"github.com/gstones/moke-kit/orm/nosql"
 	"github.com/gstones/moke-kit/orm/nosql/diface"
 )
@@ -16,7 +18,7 @@ func (d *Dao) Init(id string, doc diface.ICollection, cache diface.ICache) error
 		return e
 	}
 	d.initData()
-	d.DocumentBase.InitWithCache(&d.Data, d.clear, doc, key, cache)
+	d.DocumentBase.InitWithCache(context.Background(), &d.Data, d.clear, doc, key, cache)
 	return nil
 }
 

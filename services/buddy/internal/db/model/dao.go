@@ -1,6 +1,8 @@
 package model
 
 import (
+	"context"
+
 	"github.com/gstones/moke-kit/orm/nerrors"
 	"github.com/gstones/moke-kit/orm/nosql"
 	"github.com/gstones/moke-kit/orm/nosql/diface"
@@ -22,7 +24,7 @@ func (b *Dao) Init(id string, ros diface.ICollection, cache diface.ICache) error
 		return e
 	}
 	b.Data = data.NewBuddyQueue(id)
-	b.DocumentBase.InitWithCache(&b.Data, b.clear, ros, k, cache)
+	b.DocumentBase.InitWithCache(context.Background(), &b.Data, b.clear, ros, k, cache)
 	return nil
 }
 
