@@ -135,8 +135,8 @@ github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1 h1:KcFzXwzM/kGhIRHvc8jdix
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1/go.mod h1:qOchhhIlmRcqk/O9uCo/puJlyo07YINaIqdZfZG3Jkc=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3 h1:5ZPtiqj0JL5oKWmcsq4VMaAW5ukBEgSGXEN89zeH1Jo=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3/go.mod h1:ndYquD05frm2vACXE1nsccT4oJzjhw2arTS2cpUD1PI=
-github.com/gstones/moke-kit v1.0.5-0.20250414082140-188a916dfc79 h1:NUvomLn7xoM8Po3jucdPt/BKWLH8lSNzqV5r/a7mrBE=
-github.com/gstones/moke-kit v1.0.5-0.20250414082140-188a916dfc79/go.mod h1:/3Hb2nwh0z0CAd4GeAPdiVIAfQ+BBEXxKd9zuEYa50w=
+github.com/gstones/moke-kit v1.0.5-0.20250414125136-0f0537f47883 h1:spAnuLc/C7AIaMxbdUb2NGfJM87RxzPCjm1dGg56on4=
+github.com/gstones/moke-kit v1.0.5-0.20250414125136-0f0537f47883/go.mod h1:jJsse+hpKKiP3t0i3lutXQjq3tmobqe59mVDUvysjvQ=
 github.com/gstones/zinx v1.2.7-0.20240617071724-88bd884d8d08 h1:YjrnGjuIRVs2t0MjMs4DFQox9GH/4jlOELMRVD5d+xg=
 github.com/gstones/zinx v1.2.7-0.20240617071724-88bd884d8d08/go.mod h1:tgm/iZBMyKKZj4totfeu4+PMzSLb4JH8pnGdcG3ql+8=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=

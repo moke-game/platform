@@ -12,7 +12,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
-	github.com/gstones/moke-kit v1.0.5-0.20250414082140-188a916dfc79
+	github.com/gstones/moke-kit v1.0.5-0.20250414125136-0f0537f47883
 	github.com/gstones/zinx v1.2.7-0.20240617071724-88bd884d8d08
 	github.com/json-iterator/go v1.1.12
 	github.com/pkg/errors v0.9.1
