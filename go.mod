@@ -7,9 +7,10 @@ require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.34.0
 	github.com/ThinkingDataAnalytics/go-sdk/v2 v2.2.0
 	github.com/abiosoft/ishell v2.0.0+incompatible
+	github.com/alicebob/miniredis/v2 v2.38.0
 	github.com/aws/aws-sdk-go-v2/service/globalaccelerator v1.30.2
 	github.com/duke-git/lancet/v2 v2.3.5
-	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0
 	github.com/gstones/moke-kit v1.0.5-0.20260811094419-bcdfe55515cd
@@ -38,7 +39,6 @@ require (
 	github.com/ThreeDotsLabs/watermill v1.4.6 // indirect
 	github.com/ThreeDotsLabs/watermill-nats/v2 v2.1.3 // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
-	github.com/alicebob/miniredis/v2 v2.38.0 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.36.3 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.29.14 // indirect
