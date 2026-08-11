@@ -10,6 +10,9 @@ import (
 func main() {
 	fxmain.Main(
 		ofx.RedisCacheModule,
-		module.AuthModule,
+		// AuthAllModule = AuthService (WithoutAuth) + AuthMiddleware.
+		// Middleware satisfies kit binder prod checks (#224+) while login RPCs
+		// remain reachable via utility.WithoutAuth on the auth service.
+		module.AuthAllModule,
 	)
 }

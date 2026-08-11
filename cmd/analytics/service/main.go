@@ -3,11 +3,15 @@ package main
 import (
 	"github.com/gstones/moke-kit/fxmain"
 
-	"github.com/moke-game/platform/services/analytics/pkg/module"
+	analytics "github.com/moke-game/platform/services/analytics/pkg/module"
+	auth "github.com/moke-game/platform/services/auth/pkg/module"
 )
 
 func main() {
 	fxmain.Main(
-		module.AnalyticsModule,
+		analytics.AnalyticsModule,
+		// Analytics embeds WithoutAuth; pass-through middleware satisfies kit
+		// binder prod checks (#224+) without calling ValidateToken.
+		auth.PrivateServiceAuthModule,
 	)
 }
