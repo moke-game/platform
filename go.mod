@@ -38,6 +38,7 @@ require (
 	github.com/ThreeDotsLabs/watermill v1.4.6 // indirect
 	github.com/ThreeDotsLabs/watermill-nats/v2 v2.1.3 // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
+	github.com/alicebob/miniredis/v2 v2.38.0 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.36.3 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.29.14 // indirect
@@ -119,6 +120,7 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/xtaci/kcp-go v5.4.20+incompatible // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
+	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.70.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.43.0 // indirect
