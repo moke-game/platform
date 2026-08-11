@@ -35,6 +35,9 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 
 ### Fail-closed (prod)
 
-`AuthMiddlewareModule` / `AuthAllModule` run a startup check: if `DEPLOYMENT` is prod and any **public** gRPC service is registered without `AuthMiddleware`, the process refuses to start.
+`AuthMiddlewareModule` / `AuthAllModule` run a startup check: if `DEPLOYMENT` is prod and any **public** gRPC or gateway service is registered without `AuthMiddleware`, the process refuses to start.
 
-With moke-kit ≥ #221, missing middleware also fails closed **per request** in production.
+**Limitation:** the guard is an `fx.Invoke` inside those auth modules. A main that forgets to import them will not run the guard. Mitigation until kit binder check lands ([#224](https://github.com/GStones/moke-kit/pull/224)):
+
+- moke-kit ≥ #221 fails closed **per request** in production when middleware is nil
+- every public-facing `cmd/*/service` should import `AuthMiddlewareModule` or `AuthAllModule`

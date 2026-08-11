@@ -25,6 +25,10 @@ func (utilityWithoutAuth) AuthFuncOverride(ctx context.Context, _ string) (conte
 
 func (privateSvc) RegisterWithGrpcServer(siface.IGrpcServer) error { return nil }
 
+type gatewaySvc struct{}
+
+func (gatewaySvc) RegisterWithGatewayServer(siface.IGatewayServer) error { return nil }
+
 type stubAuth struct{}
 
 func (stubAuth) Auth(ctx context.Context) (context.Context, error) { return ctx, nil }
@@ -39,6 +43,7 @@ func TestCheckProdPublicAuthFailClosed(t *testing.T) {
 		deploy  string
 		auth    sfx.AuthMiddlewareParams
 		grpc    sfx.GrpcServiceParams
+		gateway sfx.GatewayServiceParams
 		wantErr bool
 	}{
 		{
@@ -72,6 +77,18 @@ func TestCheckProdPublicAuthFailClosed(t *testing.T) {
 			}},
 			wantErr: true,
 		},
+		{
+			name:    "prod gateway without middleware fails",
+			deploy:  "prod",
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
+			wantErr: true,
+		},
+		{
+			name:    "prod gateway with middleware ok",
+			deploy:  "prod",
+			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: stubAuth{}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
+		},
 	}
 
 	for _, tc := range cases {
@@ -82,6 +99,7 @@ func TestCheckProdPublicAuthFailClosed(t *testing.T) {
 				mfx.AppParams{Deployment: tc.deploy},
 				tc.auth,
 				tc.grpc,
+				tc.gateway,
 			)
 			if tc.wantErr && err == nil {
 				t.Fatal("expected error, got nil")
