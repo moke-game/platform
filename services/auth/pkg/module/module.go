@@ -8,8 +8,8 @@ import (
 )
 
 // AuthModule provides the Auth gRPC service (Authenticate / ValidateToken / …).
-// Use this for the dedicated auth microservice (cmd/auth). The auth service itself
-// embeds utility.WithoutAuth so login flows remain reachable without a prior token.
+// Prefer AuthAllModule for cmd/auth so kit binder prod checks (#224+) see middleware.
+// The auth service embeds utility.WithoutAuth so login flows remain reachable.
 var AuthModule = fx.Module("auth",
 	afx.SettingsModule,
 	internal.ServiceModule,
@@ -41,12 +41,21 @@ var SupabaseMiddlewareModule = fx.Module("supabase_middleware",
 )
 
 // AuthAllModule provides auth service + client + middleware for aggregate/monolith
-// processes (cmd/platform, local game aggregate). Equivalent to AuthModule plus
+// processes (cmd/platform, cmd/auth, local game). Equivalent to AuthModule plus
 // AuthMiddlewareModule without duplicating settings providers.
+// AuthService embeds utility.WithoutAuth so Authenticate/ValidateToken stay public.
 var AuthAllModule = fx.Module("auth_all",
 	afx.SettingsModule,
 	internal.ServiceModule,
 	afx.AuthClientModule,
 	afx.AuthCheckModule,
+	afx.ProdAuthGuardModule,
+)
+
+// PrivateServiceAuthModule provides a pass-through AuthMiddleware for processes
+// that only host utility.WithoutAuth services (e.g. analytics). Satisfies kit
+// binder prod checks (#224+) without requiring a real AuthService client.
+var PrivateServiceAuthModule = fx.Module("private_service_auth",
+	afx.PassThroughAuthModule,
 	afx.ProdAuthGuardModule,
 )

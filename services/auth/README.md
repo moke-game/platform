@@ -16,10 +16,11 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 
 | Module | Provides | When to use |
 |--------|----------|-------------|
-| `AuthModule` | Auth gRPC service + settings | Dedicated auth microservice (`cmd/auth`) |
+| `AuthModule` | Auth gRPC service + settings | Rare; prefer `AuthAllModule` for `cmd/auth` |
 | `AuthClientModule` | `AuthServiceClient` | Call ValidateToken / Authenticate without hosting auth |
 | `AuthMiddlewareModule` | Client + `AuthCheckModule` (`AuthMiddleware`) + prod guard | Any process hosting **public** gRPC/HTTP |
-| `AuthAllModule` | Service + client + middleware + prod guard | Aggregate/monolith (`cmd/platform`, local game) |
+| `AuthAllModule` | Service + client + middleware + prod guard | Aggregate/monolith (`cmd/platform`, local game) and dedicated `cmd/auth` |
+| `PrivateServiceAuthModule` | Pass-through `AuthMiddleware` + prod guard | Private-only processes (`cmd/analytics`) for kit #224+ binder |
 | `SupabaseMiddlewareModule` | Alternate JWT middleware | Supabase auth path |
 
 | Surface | Rule |
@@ -35,9 +36,10 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 
 ### Fail-closed (prod)
 
-`AuthMiddlewareModule` / `AuthAllModule` run a startup check: if `DEPLOYMENT` is prod and any **public** gRPC or gateway service is registered without `AuthMiddleware`, the process refuses to start.
+`AuthMiddlewareModule` / `AuthAllModule` / `PrivateServiceAuthModule` run a startup check: if `DEPLOYMENT` is prod and any **public** gRPC or gateway service is registered without `AuthMiddleware`, the process refuses to start.
 
-**Limitation:** the guard is an `fx.Invoke` inside those auth modules. A main that forgets to import them will not run the guard. Mitigation until kit binder check lands ([#224](https://github.com/GStones/moke-kit/pull/224)):
+**Limitation:** the platform guard is an `fx.Invoke` inside those auth modules. A main that forgets them will not run the guard. Mitigations:
 
 - moke-kit ≥ #221 fails closed **per request** in production when middleware is nil
-- every public-facing `cmd/*/service` should import `AuthMiddlewareModule` or `AuthAllModule`
+- kit [#224](https://github.com/GStones/moke-kit/pull/224) binder fails closed at startup when grpc/gateway lack middleware (on kit main; bump when ready)
+- `cmd/auth` → `AuthAllModule`; private-only `cmd/analytics` → `PrivateServiceAuthModule`
