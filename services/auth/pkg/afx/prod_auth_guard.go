@@ -15,15 +15,28 @@ type authFuncOverrider interface {
 	AuthFuncOverride(ctx context.Context, fullMethodName string) (context.Context, error)
 }
 
+func hasPublicGrpc(grpc sfx.GrpcServiceParams) bool {
+	for _, svc := range grpc.GrpcServices {
+		if _, private := svc.(authFuncOverrider); !private {
+			return true
+		}
+	}
+	return false
+}
+
 // CheckProdPublicAuthFailClosed fails process startup in production when any
-// public gRPC or gateway service is registered without AuthMiddleware.
+// public gRPC or gateway service is registered without real AuthMiddleware.
 //
 // Private services that embed utility.WithoutAuth are exempt; they are expected
 // to stay on internal networks only.
 //
-// Note: this Invoke is wired into AuthMiddlewareModule / AuthAllModule. If a
-// main forgets those modules entirely, this check does not run — rely on
-// moke-kit #221 request-path fail-closed, or kit #224 binder startup check.
+// Pass-through middleware (PrivateServiceAuthModule) is only allowed when every
+// registered gRPC service is private and no gateway is present.
+//
+// Note: this Invoke is wired into AuthMiddlewareModule / AuthAllModule /
+// PrivateServiceAuthModule. If a main forgets those modules entirely, this check
+// does not run — rely on moke-kit #221 request-path fail-closed, or kit #224
+// binder startup check.
 func CheckProdPublicAuthFailClosed(
 	app mfx.AppParams,
 	auth sfx.AuthMiddlewareParams,
@@ -33,19 +46,34 @@ func CheckProdPublicAuthFailClosed(
 	if !utility.ParseDeployments(app.Deployment).IsProd() {
 		return nil
 	}
+
+	publicGrpc := hasPublicGrpc(grpc)
+	hasGateway := len(gateway.GatewayServices) > 0
+
+	if _, passThrough := auth.AuthMiddleware.(*passThroughAuthor); passThrough {
+		if publicGrpc || hasGateway {
+			return fmt.Errorf(
+				"prod: PrivateServiceAuthModule (pass-through) cannot be used with public gRPC or gateway services",
+			)
+		}
+		return nil
+	}
+
 	if auth.AuthMiddleware != nil {
 		return nil
 	}
-	for _, svc := range grpc.GrpcServices {
-		if _, private := svc.(authFuncOverrider); private {
-			continue
+	if publicGrpc {
+		for _, svc := range grpc.GrpcServices {
+			if _, private := svc.(authFuncOverrider); private {
+				continue
+			}
+			return fmt.Errorf(
+				"prod: public gRPC service %T registered without AuthMiddleware (fail-closed)",
+				svc,
+			)
 		}
-		return fmt.Errorf(
-			"prod: public gRPC service %T registered without AuthMiddleware (fail-closed)",
-			svc,
-		)
 	}
-	if len(gateway.GatewayServices) > 0 {
+	if hasGateway {
 		return fmt.Errorf(
 			"prod: gateway service registered without AuthMiddleware (fail-closed)",
 		)

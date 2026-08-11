@@ -89,6 +89,26 @@ func TestCheckProdPublicAuthFailClosed(t *testing.T) {
 			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: stubAuth{}},
 			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
 		},
+		{
+			name:   "prod pass-through with private-only ok",
+			deploy: "prod",
+			auth:   sfx.AuthMiddlewareParams{AuthMiddleware: &passThroughAuthor{}},
+			grpc:   sfx.GrpcServiceParams{GrpcServices: []siface.IGrpcService{privateSvc{}}},
+		},
+		{
+			name:    "prod pass-through with public fails",
+			deploy:  "prod",
+			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: &passThroughAuthor{}},
+			grpc:    sfx.GrpcServiceParams{GrpcServices: []siface.IGrpcService{publicSvc{}}},
+			wantErr: true,
+		},
+		{
+			name:    "prod pass-through with gateway fails",
+			deploy:  "prod",
+			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: &passThroughAuthor{}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
+			wantErr: true,
+		},
 	}
 
 	for _, tc := range cases {

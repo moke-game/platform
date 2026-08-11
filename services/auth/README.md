@@ -20,7 +20,7 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 | `AuthClientModule` | `AuthServiceClient` | Call ValidateToken / Authenticate without hosting auth |
 | `AuthMiddlewareModule` | Client + `AuthCheckModule` (`AuthMiddleware`) + prod guard | Any process hosting **public** gRPC/HTTP |
 | `AuthAllModule` | Service + client + middleware + prod guard | Aggregate/monolith (`cmd/platform`, local game) and dedicated `cmd/auth` |
-| `PrivateServiceAuthModule` | Pass-through `AuthMiddleware` + prod guard | Private-only processes (`cmd/analytics`) for kit #224+ binder |
+| `PrivateServiceAuthModule` | Pass-through `AuthMiddleware` + prod guard | Private-only processes (`cmd/analytics`) for kit #224+ binder. **Never** combine with public/gateway modules — prod guard rejects that. |
 | `SupabaseMiddlewareModule` | Alternate JWT middleware | Supabase auth path |
 
 | Surface | Rule |
