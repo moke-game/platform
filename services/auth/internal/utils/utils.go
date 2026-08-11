@@ -23,19 +23,19 @@ var (
 	ErrSignedString       = errors.New("ErrSignedString")
 )
 
-// CreatJwt 生成一个JwtToken，包含uid
+// CreatJwt 生成一个JwtToken，包含uid。
+// duration <= 0 means no expiry claim (omit exp).
 func CreatJwt(uid string, tp TokenType, key string, data []byte, duration time.Duration) (string, error) {
-	exp := int64(0)
-	if duration > 0 {
-		exp = time.Now().Add(duration).Unix()
-	}
-
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	claims := jwt.MapClaims{
 		"uid":  uid,
 		"type": tp,
-		"exp":  exp,
 		"data": data,
-	})
+	}
+	if duration > 0 {
+		claims["exp"] = time.Now().Add(duration).Unix()
+	}
+
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := at.SignedString([]byte(key))
 	if err != nil {
 		return "", ErrSignedString
