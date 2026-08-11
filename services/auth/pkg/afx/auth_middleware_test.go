@@ -15,8 +15,9 @@ import (
 )
 
 type mockAuthClient struct {
-	uid string
-	err error
+	uid           string
+	err           error
+	lastAccessTok string
 }
 
 func (m *mockAuthClient) Authenticate(context.Context, *pb.AuthenticateRequest, ...grpc.CallOption) (*pb.AuthenticateResponse, error) {
@@ -26,6 +27,7 @@ func (m *mockAuthClient) RefreshToken(context.Context, *pb.RefreshTokenRequest, 
 	return nil, status.Error(codes.Unimplemented, "RefreshToken")
 }
 func (m *mockAuthClient) ValidateToken(_ context.Context, in *pb.ValidateTokenRequest, _ ...grpc.CallOption) (*pb.ValidateTokenResponse, error) {
+	m.lastAccessTok = in.GetAccessToken()
 	if m.err != nil {
 		return nil, m.err
 	}
@@ -48,10 +50,10 @@ type mockStream struct {
 	method string
 }
 
-func (m *mockStream) Method() string                  { return m.method }
-func (m *mockStream) SetHeader(metadata.MD) error     { return nil }
-func (m *mockStream) SendHeader(metadata.MD) error    { return nil }
-func (m *mockStream) SetTrailer(metadata.MD) error    { return nil }
+func (m *mockStream) Method() string               { return m.method }
+func (m *mockStream) SetHeader(metadata.MD) error  { return nil }
+func (m *mockStream) SendHeader(metadata.MD) error { return nil }
+func (m *mockStream) SetTrailer(metadata.MD) error { return nil }
 
 func ctxWithMethodAndAuth(method, bearer string) context.Context {
 	ctx := grpc.NewContextWithServerTransportStream(context.Background(), &mockStream{method: method})
@@ -59,6 +61,19 @@ func ctxWithMethodAndAuth(method, bearer string) context.Context {
 		ctx = metadata.NewIncomingContext(ctx, metadata.Pairs("authorization", "bearer "+bearer))
 	}
 	return ctx
+}
+
+func ctxWithMethodAndRawAuth(method, authorization string) context.Context {
+	ctx := grpc.NewContextWithServerTransportStream(context.Background(), &mockStream{method: method})
+	if authorization != "" {
+		ctx = metadata.NewIncomingContext(ctx, metadata.Pairs("authorization", authorization))
+	}
+	return ctx
+}
+
+func uidFrom(ctx context.Context) (string, bool) {
+	uid, ok := ctx.Value(utility.UIDContextKey).(string)
+	return uid, ok && uid != ""
 }
 
 func TestAuthorAuth(t *testing.T) {
@@ -70,33 +85,90 @@ func TestAuthorAuth(t *testing.T) {
 		unAuthMethods: map[string]struct{}{},
 	}
 
-	t.Run("missing bearer fails", func(t *testing.T) {
+	t.Run("missing bearer fails closed", func(t *testing.T) {
 		t.Parallel()
-		_, err := author.Auth(ctxWithMethodAndAuth(method, ""))
+		ctx, err := author.Auth(ctxWithMethodAndAuth(method, ""))
 		if err == nil {
 			t.Fatal("expected error")
 		}
+		if status.Code(err) != codes.Unauthenticated {
+			t.Fatalf("code=%v want Unauthenticated", status.Code(err))
+		}
+		if _, ok := uidFrom(ctx); ok {
+			t.Fatal("uid must not be set on failure")
+		}
 	})
 
-	t.Run("validate failure fails", func(t *testing.T) {
+	t.Run("malformed authorization fails closed", func(t *testing.T) {
 		t.Parallel()
+		ctx, err := author.Auth(ctxWithMethodAndRawAuth(method, "not-a-scheme-token"))
+		if err == nil {
+			t.Fatal("expected error")
+		}
+		if status.Code(err) != codes.Unauthenticated {
+			t.Fatalf("code=%v want Unauthenticated", status.Code(err))
+		}
+		if _, ok := uidFrom(ctx); ok {
+			t.Fatal("uid must not be set on failure")
+		}
+	})
+
+	t.Run("validate failure fails closed", func(t *testing.T) {
+		t.Parallel()
+		mock := &mockAuthClient{err: status.Error(codes.Unauthenticated, "bad token")}
 		a := &Author{
-			client:        &mockAuthClient{err: errors.New("bad token")},
+			client:        mock,
 			unAuthMethods: map[string]struct{}{},
 		}
-		_, err := a.Auth(ctxWithMethodAndAuth(method, "tok"))
+		ctx, err := a.Auth(ctxWithMethodAndAuth(method, "tok-xyz"))
 		if err == nil {
 			t.Fatal("expected error")
 		}
+		if status.Code(err) != codes.Unauthenticated {
+			t.Fatalf("code=%v want Unauthenticated", status.Code(err))
+		}
+		if mock.lastAccessTok != "tok-xyz" {
+			t.Fatalf("token forwarded=%q want tok-xyz", mock.lastAccessTok)
+		}
+		if _, ok := uidFrom(ctx); ok {
+			t.Fatal("uid must not be set on validate failure")
+		}
 	})
 
-	t.Run("success sets uid", func(t *testing.T) {
+	t.Run("validate plain error still fails and forwards token", func(t *testing.T) {
 		t.Parallel()
-		ctx, err := author.Auth(ctxWithMethodAndAuth(method, "tok"))
+		mock := &mockAuthClient{err: errors.New("bad token")}
+		a := &Author{
+			client:        mock,
+			unAuthMethods: map[string]struct{}{},
+		}
+		ctx, err := a.Auth(ctxWithMethodAndAuth(method, "tok-plain"))
+		if err == nil {
+			t.Fatal("expected error")
+		}
+		if mock.lastAccessTok != "tok-plain" {
+			t.Fatalf("token forwarded=%q want tok-plain", mock.lastAccessTok)
+		}
+		if _, ok := uidFrom(ctx); ok {
+			t.Fatal("uid must not be set on failure")
+		}
+	})
+
+	t.Run("success sets uid and forwards token", func(t *testing.T) {
+		t.Parallel()
+		mock := &mockAuthClient{uid: "uid-1"}
+		a := &Author{
+			client:        mock,
+			unAuthMethods: map[string]struct{}{},
+		}
+		ctx, err := a.Auth(ctxWithMethodAndAuth(method, "tok-ok"))
 		if err != nil {
 			t.Fatalf("unexpected err: %v", err)
 		}
-		uid, ok := ctx.Value(utility.UIDContextKey).(string)
+		if mock.lastAccessTok != "tok-ok" {
+			t.Fatalf("token forwarded=%q want tok-ok", mock.lastAccessTok)
+		}
+		uid, ok := uidFrom(ctx)
 		if !ok || uid != "uid-1" {
 			t.Fatalf("uid=%q ok=%v", uid, ok)
 		}
@@ -115,6 +187,9 @@ func TestAuthorAuth(t *testing.T) {
 		}
 		if v, _ := ctx.Value(utility.WithOutTag).(bool); !v {
 			t.Fatal("expected WithOutTag")
+		}
+		if _, ok := uidFrom(ctx); ok {
+			t.Fatal("uid must not be set on unauth bypass")
 		}
 	})
 }
