@@ -25,9 +25,15 @@ func (utilityWithoutAuth) AuthFuncOverride(ctx context.Context, _ string) (conte
 
 func (privateSvc) RegisterWithGrpcServer(siface.IGrpcServer) error { return nil }
 
-type gatewaySvc struct{}
+type publicGatewaySvc struct{}
 
-func (gatewaySvc) RegisterWithGatewayServer(siface.IGatewayServer) error { return nil }
+func (publicGatewaySvc) RegisterWithGatewayServer(siface.IGatewayServer) error { return nil }
+
+type privateGatewaySvc struct {
+	utilityWithoutAuth
+}
+
+func (privateGatewaySvc) RegisterWithGatewayServer(siface.IGatewayServer) error { return nil }
 
 type stubAuth struct{}
 
@@ -78,22 +84,34 @@ func TestCheckProdPublicAuthFailClosed(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "prod gateway without middleware fails",
+			name:    "prod public gateway without middleware fails",
 			deploy:  "prod",
-			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{publicGatewaySvc{}}},
 			wantErr: true,
 		},
 		{
-			name:    "prod gateway with middleware ok",
+			name:    "prod private gateway without middleware ok",
 			deploy:  "prod",
-			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: stubAuth{}},
-			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{privateGatewaySvc{}}},
 		},
 		{
-			name:   "prod pass-through with private-only ok",
+			name:    "prod public gateway with middleware ok",
+			deploy:  "prod",
+			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: stubAuth{}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{publicGatewaySvc{}}},
+		},
+		{
+			name:   "prod pass-through with private grpc ok",
 			deploy: "prod",
 			auth:   sfx.AuthMiddlewareParams{AuthMiddleware: &passThroughAuthor{}},
 			grpc:   sfx.GrpcServiceParams{GrpcServices: []siface.IGrpcService{privateSvc{}}},
+		},
+		{
+			name:    "prod pass-through with private gateway ok (analytics)",
+			deploy:  "prod",
+			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: &passThroughAuthor{}},
+			grpc:    sfx.GrpcServiceParams{GrpcServices: []siface.IGrpcService{privateSvc{}}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{privateGatewaySvc{}}},
 		},
 		{
 			name:    "prod pass-through with public fails",
@@ -103,10 +121,10 @@ func TestCheckProdPublicAuthFailClosed(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "prod pass-through with gateway fails",
+			name:    "prod pass-through with public gateway fails",
 			deploy:  "prod",
 			auth:    sfx.AuthMiddlewareParams{AuthMiddleware: &passThroughAuthor{}},
-			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{gatewaySvc{}}},
+			gateway: sfx.GatewayServiceParams{GatewayServices: []siface.IGatewayService{publicGatewaySvc{}}},
 			wantErr: true,
 		},
 	}

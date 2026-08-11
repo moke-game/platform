@@ -24,14 +24,23 @@ func hasPublicGrpc(grpc sfx.GrpcServiceParams) bool {
 	return false
 }
 
+func hasPublicGateway(gateway sfx.GatewayServiceParams) bool {
+	for _, svc := range gateway.GatewayServices {
+		if _, private := svc.(authFuncOverrider); !private {
+			return true
+		}
+	}
+	return false
+}
+
 // CheckProdPublicAuthFailClosed fails process startup in production when any
 // public gRPC or gateway service is registered without real AuthMiddleware.
 //
-// Private services that embed utility.WithoutAuth are exempt; they are expected
-// to stay on internal networks only.
+// Private services that embed utility.WithoutAuth are exempt (gRPC and gateway);
+// they are expected to stay on internal networks only.
 //
 // Pass-through middleware (PrivateServiceAuthModule) is only allowed when every
-// registered gRPC service is private and no gateway is present.
+// registered gRPC/gateway service is private (implements AuthFuncOverride).
 //
 // Note: this Invoke is wired into AuthMiddlewareModule / AuthAllModule /
 // PrivateServiceAuthModule. If a main forgets those modules entirely, this check
@@ -48,10 +57,10 @@ func CheckProdPublicAuthFailClosed(
 	}
 
 	publicGrpc := hasPublicGrpc(grpc)
-	hasGateway := len(gateway.GatewayServices) > 0
+	publicGateway := hasPublicGateway(gateway)
 
 	if _, passThrough := auth.AuthMiddleware.(*passThroughAuthor); passThrough {
-		if publicGrpc || hasGateway {
+		if publicGrpc || publicGateway {
 			return fmt.Errorf(
 				"prod: PrivateServiceAuthModule (pass-through) cannot be used with public gRPC or gateway services",
 			)
@@ -73,10 +82,16 @@ func CheckProdPublicAuthFailClosed(
 			)
 		}
 	}
-	if hasGateway {
-		return fmt.Errorf(
-			"prod: gateway service registered without AuthMiddleware (fail-closed)",
-		)
+	if publicGateway {
+		for _, svc := range gateway.GatewayServices {
+			if _, private := svc.(authFuncOverrider); private {
+				continue
+			}
+			return fmt.Errorf(
+				"prod: public gateway service %T registered without AuthMiddleware (fail-closed)",
+				svc,
+			)
+		}
 	}
 	return nil
 }
