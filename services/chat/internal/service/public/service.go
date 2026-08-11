@@ -93,7 +93,8 @@ func (s *Service) Chat(server pb.ChatService_ChatServer) error {
 		s.db,
 	)
 	chatter.Init()
-	go chatter.Update()
-	<-server.Context().Done()
+	// Run Update on this goroutine so Destroy (deferred inside Update) finishes
+	// before the RPC handler returns.
+	chatter.Update()
 	return nil
 }
