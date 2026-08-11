@@ -89,6 +89,16 @@ func (c *Chatter) handleMsg(msg *pb.ChatRequest) {
 }
 
 func (c *Chatter) Destroy() {
+	// Terminal teardown: best-effort Unsubscribe, then always drop the map.
+	// (unSubscribe retains entries on failure so the client can retry.)
+	for topic, sub := range c.subscripts {
+		if sub == nil {
+			continue
+		}
+		if err := sub.Unsubscribe(); err != nil {
+			c.logger.Error("failed to unsubscribe on destroy", zap.String("topic", topic), zap.Error(err))
+		}
+	}
 	c.subscripts = nil
 }
 
