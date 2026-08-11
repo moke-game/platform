@@ -89,6 +89,14 @@ func (c *Chatter) handleMsg(msg *pb.ChatRequest) {
 }
 
 func (c *Chatter) Destroy() {
+	for topic, sub := range c.subscripts {
+		if sub != nil {
+			if err := sub.Unsubscribe(); err != nil {
+				c.logger.Error("failed to unsubscribe on destroy", zap.String("topic", topic), zap.Error(err))
+			}
+		}
+		delete(c.subscripts, topic)
+	}
 	c.subscripts = nil
 }
 
