@@ -20,7 +20,8 @@ type AuthSettingsResult struct {
 	AuthStoreName  string `name:"AuthStoreName" envconfig:"AUTH_STORE_NAME" default:"auth"`
 	AuthUrl        string `name:"AuthUrl" envconfig:"AUTH_URL" default:"localhost:8081"`
 	JwtTokenSecret string `name:"JwtTokenSecret" default:"" envconfig:"JWT_TOKEN_SECRET"`
-	// JwtTokenExpire (hours)
+	// JwtTokenExpire token lifetime in hours.
+	// <=0 omits JWT exp and stores the redis auth token with no TTL (non-expiring).
 	JwtTokenExpire int32 `name:"JwtTokenExpire" default:"12" envconfig:"JWT_TOKEN_EXPIRE"`
 }
 
