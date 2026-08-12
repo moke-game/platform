@@ -1,0 +1,96 @@
+package utils
+
+import (
+	"testing"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+)
+
+func TestCreatAndParseJwt(t *testing.T) {
+	t.Parallel()
+	const key = "test-secret"
+	tok, err := CreatJwt("uid-1", TokenTypeAccess, key, []byte("payload"), time.Hour)
+	if err != nil {
+		t.Fatalf("CreatJwt: %v", err)
+	}
+	uid, data, err := ParseToken(tok, TokenTypeAccess, key)
+	if err != nil {
+		t.Fatalf("ParseToken: %v", err)
+	}
+	if uid != "uid-1" {
+		t.Fatalf("uid=%q", uid)
+	}
+	if string(data) != "payload" {
+		t.Fatalf("data=%q", data)
+	}
+}
+
+func TestCreatJwtNoExpiry(t *testing.T) {
+	t.Parallel()
+	const key = "test-secret"
+	tok, err := CreatJwt("uid-1", TokenTypeAccess, key, nil, 0)
+	if err != nil {
+		t.Fatalf("CreatJwt: %v", err)
+	}
+	uid, _, err := ParseToken(tok, TokenTypeAccess, key)
+	if err != nil {
+		t.Fatalf("ParseToken no-exp: %v", err)
+	}
+	if uid != "uid-1" {
+		t.Fatalf("uid=%q", uid)
+	}
+	parsed, err := jwt.Parse(tok, func(token *jwt.Token) (interface{}, error) {
+		return []byte(key), nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	claims := parsed.Claims.(jwt.MapClaims)
+	if _, ok := claims["exp"]; ok {
+		t.Fatalf("exp should be omitted when duration<=0, got %v", claims["exp"])
+	}
+}
+
+func TestParseTokenExpired(t *testing.T) {
+	t.Parallel()
+	const key = "test-secret"
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"uid":  "uid-1",
+		"type": float64(TokenTypeAccess),
+		"exp":  time.Now().Add(-time.Hour).Unix(),
+	})
+	tok, err := at.SignedString([]byte(key))
+	if err != nil {
+		t.Fatalf("SignedString: %v", err)
+	}
+	_, _, err = ParseToken(tok, TokenTypeAccess, key)
+	if err != ErrTokenExpired {
+		t.Fatalf("err=%v want ErrTokenExpired", err)
+	}
+}
+
+func TestParseTokenWrongType(t *testing.T) {
+	t.Parallel()
+	const key = "test-secret"
+	tok, err := CreatJwt("uid-1", TokenTypeAccess, key, nil, time.Hour)
+	if err != nil {
+		t.Fatalf("CreatJwt: %v", err)
+	}
+	_, _, err = ParseToken(tok, TokenTypeRefresh, key)
+	if err != ErrTokenHandle {
+		t.Fatalf("err=%v want ErrTokenHandle", err)
+	}
+}
+
+func TestParseTokenBadSignature(t *testing.T) {
+	t.Parallel()
+	tok, err := CreatJwt("uid-1", TokenTypeAccess, "key-a", nil, time.Hour)
+	if err != nil {
+		t.Fatalf("CreatJwt: %v", err)
+	}
+	_, _, err = ParseToken(tok, TokenTypeAccess, "key-b")
+	if err != ErrTokenHandle {
+		t.Fatalf("err=%v want ErrTokenHandle", err)
+	}
+}

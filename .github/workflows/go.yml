@@ -1,23 +1,42 @@
 name: Go
 on: [pull_request]
 jobs:
-
   test:
     permissions:
       contents: read
+      pull-requests: read
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 50 # Need git history for testing.
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
 
-    - uses: actions/setup-go@v4
-      with:
-        go-version-file: "go.mod"
+      - name: Test
+        run: go test -v -race -coverpkg=./... -coverprofile=coverage.txt ./...
 
-    - name: Test
-      run: go test -v -race -coverpkg=./... -coverprofile=coverage.txt ./...
+      - name: Vet
+        run: go vet ./...
 
-    - uses: codecov/codecov-action@v3
+      - name: govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./...
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.12.2
+          only-new-issues: true
+
+      - name: Set up buf
+        uses: bufbuild/buf-setup-action@v1
+
+      - name: buf breaking
+        uses: bufbuild/buf-breaking-action@v1
+        with:
+          against: "https://github.com/${{ github.repository }}.git#branch=main"
+
+      - uses: codecov/codecov-action@v3

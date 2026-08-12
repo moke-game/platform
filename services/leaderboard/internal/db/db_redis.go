@@ -198,5 +198,4 @@ func (db *Database) GetLeaderboardAmount(id string) (int64, error) {
 	} else {
 		return amount, nil
 	}
-	return 0, nil
 }
