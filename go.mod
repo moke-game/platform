@@ -13,7 +13,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0
-	github.com/gstones/moke-kit v1.0.5-0.20260812022140-acb9f313d7fd
+	github.com/gstones/moke-kit v1.0.5-0.20260812061322-0bee2b36f992
 	github.com/gstones/zinx v1.2.7-0.20240617071724-88bd884d8d08
 	github.com/json-iterator/go v1.1.12
 	github.com/pkg/errors v0.9.1
@@ -94,8 +94,8 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
-	github.com/nats-io/nats.go v1.41.1 // indirect
-	github.com/nats-io/nkeys v0.4.10 // indirect
+	github.com/nats-io/nats.go v1.41.2 // indirect
+	github.com/nats-io/nkeys v0.4.11 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/paulmach/orb v0.11.1 // indirect
