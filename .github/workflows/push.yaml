@@ -17,9 +17,9 @@ jobs:
         with:
           against: "https://github.com/${{ github.repository }}.git#branch=main,ref=HEAD~1"
 
-      # BSR push requires a valid BUF_TOKEN secret. Keep non-blocking until rotated.
+      # Skip when BUF_TOKEN is unset; fail hard when present but invalid.
       - name: Push module to BSR
-        continue-on-error: true
+        if: ${{ secrets.BUF_TOKEN != '' }}
         uses: bufbuild/buf-push-action@v1
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}
