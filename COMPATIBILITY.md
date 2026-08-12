@@ -3,7 +3,7 @@
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
 | platform (this repo) | `v1.0.5-0.20260812061322-0bee2b36f992` ([#231](https://github.com/GStones/moke-kit/pull/231)) | DocumentBase/NATS tests + create-game smoke; includes #224 binder + #228 StopServing/CI |
-| game | platform `main` at/after [#30](https://github.com/moke-game/platform/pull/30) (`75791fb9…`) | [game#26](https://github.com/moke-game/game/pull/26) |
+| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27) |
 
 Auth startup fail-closed:
 
@@ -35,6 +35,8 @@ Merged:
 - game modules/Watch/kit#228: https://github.com/moke-game/game/pull/24
 - game pin #28 merge: https://github.com/moke-game/game/pull/25
 - game compress: https://github.com/moke-game/game/pull/26
+- game kit#231 pin: https://github.com/moke-game/game/pull/27
+- platform kit#231 tip: https://github.com/moke-game/platform/pull/31
 
 Tracking plans:
 
