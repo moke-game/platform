@@ -1,8 +1,9 @@
 package analyfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type AnalyticsSettingParams struct {
@@ -40,14 +41,4 @@ type AnalyticsSettingsResult struct {
 	TDPath string `name:"TDPath" envconfig:"TD_PATH" default:"./logs/td"`
 }
 
-func (g *AnalyticsSettingsResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
-
-var SettingsModule = fx.Provide(
-	func() (out AnalyticsSettingsResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var SettingsModule = platformfx.ProvideFromEnv[AnalyticsSettingsResult]()

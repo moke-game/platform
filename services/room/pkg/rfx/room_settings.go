@@ -3,7 +3,7 @@ package rfx
 import (
 	"go.uber.org/fx"
 
-	"github.com/gstones/moke-kit/utility"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type RoomSettingParams struct {
@@ -22,14 +22,4 @@ type RoomSettingsResult struct {
 	RoomPlayerMax int32  `name:"RoomPlayerMax" envconfig:"ROOM_PLAYER_MAX" default:"100"`
 }
 
-func (g *RoomSettingsResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
-
-var SettingsModule = fx.Provide(
-	func() (out RoomSettingsResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var SettingsModule = platformfx.ProvideFromEnv[RoomSettingsResult]()

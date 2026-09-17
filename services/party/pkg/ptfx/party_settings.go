@@ -1,8 +1,9 @@
 package ptfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type PartySettingParams struct {
@@ -17,14 +18,4 @@ type PartySettingResult struct {
 	PartyUrl string `name:"PartyUrl" envconfig:"PARTY_URL" default:"localhost:8081"`
 }
 
-func (l *PartySettingResult) LoadFromEnv() (err error) {
-	err = utility.Load(l)
-	return
-}
-
-var PartySettingsModule = fx.Provide(
-	func() (out PartySettingResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var PartySettingsModule = platformfx.ProvideFromEnv[PartySettingResult]()

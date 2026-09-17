@@ -18,12 +18,11 @@ import (
 )
 
 type Service struct {
-	logger         *zap.Logger
-	db             *db.Database
-	redisCli       *redis.Client
-	mongoCli       *mongo.Client
-	mq             miface.MessageQueue
-	authMiddleware siface.IAuthMiddleware
+	logger   *zap.Logger
+	db       *db.Database
+	redisCli *redis.Client
+	mongoCli *mongo.Client
+	mq       miface.MessageQueue
 }
 
 func (s *Service) RegisterWithGrpcServer(server siface.IGrpcServer) error {
@@ -38,15 +37,13 @@ func NewService(
 	redisCache diface.ICache,
 	mongoCli *mongo.Client,
 	mq miface.MessageQueue,
-	authMiddleware siface.IAuthMiddleware,
 ) (result *Service, err error) {
 	result = &Service{
-		logger:         l,
-		db:             db.OpenDatabase(l, coll, redisCache),
-		redisCli:       client,
-		mongoCli:       mongoCli,
-		mq:             mq,
-		authMiddleware: authMiddleware,
+		logger:   l,
+		db:       db.OpenDatabase(l, coll, redisCache),
+		redisCli: client,
+		mongoCli: mongoCli,
+		mq:       mq,
 	}
 	return
 }
@@ -60,7 +57,6 @@ var Module = fx.Provide(
 		rcParams ofx.RedisCacheParams,
 		dbParams ofx.MongoParams,
 		mqParams mfx.MessageQueueParams,
-		authMiddlewareParams sfx.AuthMiddlewareParams,
 	) (out sfx.GrpcServiceResult, err error) {
 		if coll, e := dbProvider.DriverProvider.OpenDbDriver(pSetting.ProfileStoreName); e != nil {
 			err = e
@@ -72,7 +68,6 @@ var Module = fx.Provide(
 				rcParams.RedisCache,
 				dbParams.MongoClient,
 				mqParams.MessageQueue,
-				authMiddlewareParams.AuthMiddleware,
 			); e != nil {
 				err = e
 			} else {

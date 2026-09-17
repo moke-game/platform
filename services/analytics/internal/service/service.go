@@ -4,8 +4,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/gstones/moke-kit/mq/miface"
-	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
 	"github.com/gstones/moke-kit/utility"
@@ -23,7 +21,6 @@ import (
 type Service struct {
 	utility.WithoutAuth
 	logger    *zap.Logger
-	mq        miface.MessageQueue
 	processes map[pb.DeliveryType]bi.DataProcessor
 	hostName  string
 	url       string
@@ -37,7 +34,6 @@ func (s *Service) RegisterWithGatewayServer(server siface.IGatewayServer) error 
 
 func NewService(
 	l *zap.Logger,
-	mq miface.MessageQueue,
 	settings analyfx.AnalyticsSettingParams,
 ) (result *Service, err error) {
 	processors := make(map[pb.DeliveryType]bi.DataProcessor)
@@ -68,7 +64,6 @@ func NewService(
 
 	result = &Service{
 		logger:    l,
-		mq:        mq,
 		hostName:  hostname,
 		processes: processors,
 		url:       settings.AnalyticsUrl,
@@ -84,10 +79,9 @@ func (s *Service) RegisterWithGrpcServer(server siface.IGrpcServer) error {
 var ServiceModule = fx.Provide(
 	func(
 		l *zap.Logger,
-		mq mfx.MessageQueueParams,
 		settings analyfx.AnalyticsSettingParams,
 	) (out sfx.GrpcServiceResult, gw sfx.GatewayServiceResult, err error) {
-		if svc, e := NewService(l, mq.MessageQueue, settings); e != nil {
+		if svc, e := NewService(l, settings); e != nil {
 			err = e
 		} else {
 			out.GrpcService = svc

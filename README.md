@@ -163,10 +163,33 @@ graph TD
 
 工程目录结构参考[project-layout](https://github.com/golang-standards/project-layout)
 
-## 运行：
+## 组装（LEGO）
 
-* 你可以运行`cmd/platform/service/main.go`来启动所有服务， 你也可以参考`cmd/platform/service/main.go`来自定义组装服务。
-* 你可以运行`cmd/{service-name}/service/main.go`来启动单个服务,例如：`cmd/auth/service/main.go` 来启动auth服务
+`fxmain.Main(...)` 自带：进程设置、日志、gRPC/gateway 绑定、Mongo、Redis 客户端、MQ 路由。
+
+按需再加积木：
+
+| 需要 | 模块 | 典型进程 |
+|------|------|----------|
+| `nats://` 发布/订阅 | `mfx.NatsModule` | mail / profile / knapsack / chat / party / buddy |
+| 文档 `ICache` | `ofx.RedisCacheModule` | auth / profile / knapsack / buddy |
+| 对外 gRPC | `auth.AuthMiddlewareModule` | 除 auth / analytics / room 外的公共服务 |
+| Auth 服务本身 | `auth.AuthAllModule` | `cmd/auth`、`cmd/platform` |
+| 仅内部 WithoutAuth | `auth.PrivateServiceAuthModule` | `cmd/analytics` |
+
+```go
+fxmain.Main(
+    mfx.NatsModule,
+    ofx.RedisCacheModule,
+    auth.AuthMiddlewareModule,
+    profile.ProfileModule,
+)
+```
+
+- 聚合进程：`cmd/platform/service/main.go`
+- 单服务：`cmd/{name}/service/main.go`
+- 认证矩阵：`services/auth/README.md`
+- 共享 dial/settings：`pkg/platformfx`
 
 ## 容器化
 
@@ -206,7 +229,6 @@ docker buildx build -t {appname}.registry.com:latest --build-arg APP_NAME={appna
 
 ## 服务类型：
 
-每个服务包含两种类型的服务：
-
-* private service: 不会校验JWT token, 会走mTLS认证，适用于内部服务调用例如：gm, admin，或者其他内部服务调用。
-* public service: 会校验JWT token, 会走mTLS认证 适用于其他外部服务调用。
+* **public**（profile / knapsack / mail / chat / leaderboard / party / buddy / matchmaking）：校验 JWT；进程必须导入 `AuthMiddlewareModule`（或 `AuthAllModule`）。
+* **private**（`*PrivateService`）：嵌入 `utility.WithoutAuth`，仅内网 / mTLS。
+* **特例**：auth 登录接口、analytics 为 WithoutAuth；room 是 zinx，不走这套 gRPC 中间件。

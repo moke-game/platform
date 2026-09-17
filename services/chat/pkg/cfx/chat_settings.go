@@ -1,8 +1,9 @@
 package cfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type ChatSettingParams struct {
@@ -19,14 +20,4 @@ type ChatSettingResult struct {
 	ChatInterval int    `name:"ChatInterval" envconfig:"WORLD_CHAT_INTERVAL" default:"2"`
 }
 
-func (l *ChatSettingResult) LoadFromEnv() (err error) {
-	err = utility.Load(l)
-	return
-}
-
-var ChatSettingsModule = fx.Provide(
-	func() (out ChatSettingResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var ChatSettingsModule = platformfx.ProvideFromEnv[ChatSettingResult]()

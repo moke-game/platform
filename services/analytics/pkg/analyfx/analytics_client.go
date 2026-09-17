@@ -1,12 +1,11 @@
 package analyfx
 
 import (
+	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"go.uber.org/fx"
 
-	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
-
 	pb "github.com/moke-game/platform/api/gen/analytics/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 	"github.com/moke-game/platform/services/analytics/pkg/global"
 )
 
@@ -23,38 +22,17 @@ type AnalyticsClientResult struct {
 }
 
 func NewAnalyticsClient(host string, sSetting sfx.SecuritySettingsParams) (pb.AnalyticsServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return pb.NewAnalyticsServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return pb.NewAnalyticsServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, sSetting, pb.NewAnalyticsServiceClient)
 }
 
-var AnalyticsClientModule = fx.Invoke(
+var AnalyticsClientModule = fx.Provide(
 	func(
 		setting AnalyticsSettingParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out AnalyticsClientResult, err error) {
-		if cli, e := NewAnalyticsClient(setting.AnalyticsUrl, sSetting); e != nil {
-			err = e
-		} else {
-			out.AnalyticsClient = cli
-			// set global analytics client
-			global.SetAnalyticsClient(cli)
+		out.AnalyticsClient, err = NewAnalyticsClient(setting.AnalyticsUrl, sSetting)
+		if err == nil {
+			global.SetAnalyticsClient(out.AnalyticsClient)
 		}
 		return
 	},

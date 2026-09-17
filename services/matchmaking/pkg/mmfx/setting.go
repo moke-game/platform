@@ -1,8 +1,9 @@
 package mmfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type MatchmakingSettingParams struct {
@@ -43,14 +44,7 @@ type MatchmakingSettingResult struct {
 	OMFuncPort int32 `name:"funcPort" envconfig:"OM_FUNC_PORT" default:"8081"`
 }
 
-// LoadFromEnv load from env
-func (g *MatchmakingSettingResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
+var MatchmakingSettingsModule = platformfx.ProvideFromEnv[MatchmakingSettingResult]()
 
-var MatchmakingSettingModule = fx.Provide(
-	func() (out MatchmakingSettingResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	})
+// MatchmakingSettingModule is a compatibility alias.
+var MatchmakingSettingModule = MatchmakingSettingsModule

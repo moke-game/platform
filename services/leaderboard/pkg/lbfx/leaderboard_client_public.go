@@ -2,10 +2,10 @@ package lbfx
 
 import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
 	"go.uber.org/fx"
 
 	leaderboard "github.com/moke-game/platform/api/gen/leaderboard/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type LeaderboardClientParams struct {
@@ -21,25 +21,7 @@ type LeaderboardClientResult struct {
 }
 
 func CreateLeaderboardClient(host string, sSetting sfx.SecuritySettingsParams) (leaderboard.LeaderboardServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return leaderboard.NewLeaderboardServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return leaderboard.NewLeaderboardServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, sSetting, leaderboard.NewLeaderboardServiceClient)
 }
 
 var LeaderboardClientModule = fx.Provide(
@@ -47,11 +29,7 @@ var LeaderboardClientModule = fx.Provide(
 		setting LeaderboardSettingParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out LeaderboardClientResult, err error) {
-		if cli, e := CreateLeaderboardClient(setting.Url, sSetting); e != nil {
-			err = e
-		} else {
-			out.Client = cli
-		}
+		out.Client, err = CreateLeaderboardClient(setting.Url, sSetting)
 		return
 	},
 )

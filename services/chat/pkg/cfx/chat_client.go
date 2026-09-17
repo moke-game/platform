@@ -1,12 +1,11 @@
 package cfx
 
 import (
+	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"go.uber.org/fx"
 
-	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
-
 	pb "github.com/moke-game/platform/api/gen/chat/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type ChatClientParams struct {
@@ -22,25 +21,7 @@ type ChatClientResult struct {
 }
 
 func NewChatClient(host string, sSetting sfx.SecuritySettingsParams) (pb.ChatServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return pb.NewChatServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return pb.NewChatServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, sSetting, pb.NewChatServiceClient)
 }
 
 var ChatClientModule = fx.Provide(
@@ -48,11 +29,7 @@ var ChatClientModule = fx.Provide(
 		setting ChatSettingParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out ChatClientResult, err error) {
-		if cli, e := NewChatClient(setting.ChatUrl, sSetting); e != nil {
-			err = e
-		} else {
-			out.ChatClient = cli
-		}
+		out.ChatClient, err = NewChatClient(setting.ChatUrl, sSetting)
 		return
 	},
 )

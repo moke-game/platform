@@ -2,7 +2,7 @@
 
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
-| platform (this repo) | `v1.0.5-0.20260917090450-382af69044bc` ([#236](https://github.com/GStones/moke-kit/pull/236)) | thin `fxmain.Core` + quality rename (`WithoutTag`); Go 1.27 / grpc 1.83.2; GORM opt-in; MQ is NATS+local |
+| platform (this repo) | `v1.0.5-0.20260917090450-382af69044bc` ([#236](https://github.com/GStones/moke-kit/pull/236)) | `fxmain.Main` batteries-included; add `NatsModule` / `RedisCacheModule` only when used; `WithoutTag`; Go 1.27 / grpc 1.83.2 |
 | game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); bump after this kit #236 pin |
 
 Auth startup fail-closed:

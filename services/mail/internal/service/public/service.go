@@ -58,20 +58,19 @@ func NewService(
 var ServiceModule = fx.Provide(
 	func(
 		l *zap.Logger,
-		s mfx2.AppParams,
+		app mfx2.AppParams,
 		ms mailfx.MailSettingParams,
 		mqParams mfx.MessageQueueParams,
 		redisParams ofx.RedisParams,
-		aParams mfx2.AppParams,
 	) (out sfx.GrpcServiceResult, err error) {
 		if svc, e := NewService(
 			l,
-			s.Deployment,
+			app.Deployment,
 			redisParams.Redis,
 			ms.MailUrl,
 			ms.MailNumMax,
 			mqParams.MessageQueue,
-			aParams,
+			app,
 		); e != nil {
 			err = e
 			return

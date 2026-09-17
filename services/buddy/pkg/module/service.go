@@ -7,21 +7,23 @@ import (
 	"github.com/moke-game/platform/services/buddy/pkg/bfx"
 )
 
+var settings = bfx.BuddySettingsModule
+
 // BuddyModule Provides buddy service
 var BuddyModule = fx.Module("buddy",
+	settings,
 	service.Module,
-	bfx.BuddySettingsModule,
 )
 
 // BuddyClientModule Provides buddy client for grpc
 var BuddyClientModule = fx.Module("buddy_client",
+	settings,
 	bfx.BuddyClientModule,
-	bfx.BuddySettingsModule,
 )
 
 // BuddyAllModule  Provides client, service for buddy
 var BuddyAllModule = fx.Module("buddy_all",
+	settings,
 	service.Module,
 	bfx.BuddyClientModule,
-	bfx.BuddySettingsModule,
 )

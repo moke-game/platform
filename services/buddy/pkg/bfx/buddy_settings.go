@@ -1,8 +1,9 @@
 package bfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type BuddySettingsParams struct {
@@ -25,14 +26,4 @@ type BuddySettingsResult struct {
 	Name            string `name:"Name" envconfig:"NAME" default:"buddy"`
 }
 
-func (g *BuddySettingsResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
-
-var BuddySettingsModule = fx.Provide(
-	func() (out BuddySettingsResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var BuddySettingsModule = platformfx.ProvideFromEnv[BuddySettingsResult]()

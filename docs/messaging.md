@@ -1,7 +1,7 @@
 # Messaging topic naming
 
 Platform services publish/subscribe through moke-kit MQ helpers. Always wrap logical
-names with `common.NatsHeader.CreateTopic(...)` (or `LocalHeader` for in-process).
+names with `common.NatsHeader.CreateTopic(...)`. Platform services use `nats://` only.
 
 ## Conventions
 

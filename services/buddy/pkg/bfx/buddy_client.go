@@ -2,10 +2,10 @@ package bfx
 
 import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
 	"go.uber.org/fx"
 
 	pb "github.com/moke-game/platform/api/gen/buddy/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type BuddyClientParams struct {
@@ -21,25 +21,7 @@ type BuddyClientResult struct {
 }
 
 func NewBuddyClient(host string, sSetting sfx.SecuritySettingsParams) (pb.BuddyServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return pb.NewBuddyServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return pb.NewBuddyServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, sSetting, pb.NewBuddyServiceClient)
 }
 
 var BuddyClientModule = fx.Provide(
@@ -47,11 +29,7 @@ var BuddyClientModule = fx.Provide(
 		setting BuddySettingsParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out BuddyClientResult, err error) {
-		if cli, e := NewBuddyClient(setting.BuddyUrl, sSetting); e != nil {
-			err = e
-		} else {
-			out.BuddyClient = cli
-		}
+		out.BuddyClient, err = NewBuddyClient(setting.BuddyUrl, sSetting)
 		return
 	},
 )

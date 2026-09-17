@@ -11,7 +11,6 @@ import (
 
 	pb "github.com/moke-game/platform/api/gen/chat/api"
 	"github.com/moke-game/platform/services/chat/internal/service/db"
-	"github.com/moke-game/platform/services/chat/pkg/cfx"
 )
 
 type Service struct {
@@ -45,7 +44,6 @@ func (s *Service) RegisterWithGrpcServer(server siface.IGrpcServer) error {
 var ChatService = fx.Provide(
 	func(
 		l *zap.Logger,
-		setting cfx.ChatSettingParams,
 		aParams mfx2.AppParams,
 		redisParams ofx.RedisParams,
 	) (out sfx.GrpcServiceResult, err error) {
