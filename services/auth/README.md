@@ -41,5 +41,6 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 **Limitation:** the platform guard is an `fx.Invoke` inside those auth modules. A main that forgets them will not run the guard. Mitigations:
 
 - moke-kit ≥ #221 fails closed **per request** in production when middleware is nil
-- kit [#224](https://github.com/GStones/moke-kit/pull/224) binder fails closed at startup when grpc/gateway lack middleware (on kit main; bump when ready)
+- kit [#224](https://github.com/GStones/moke-kit/pull/224) binder fails closed at startup when grpc/gateway lack middleware
+- kit [#236](https://github.com/GStones/moke-kit/pull/236) keeps `fxmain.Main` batteries-included; use `WithoutTag` (renamed from `WithOutTag`)
 - `cmd/auth` → `AuthAllModule`; private-only `cmd/analytics` → `PrivateServiceAuthModule`

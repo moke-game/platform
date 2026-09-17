@@ -25,7 +25,7 @@ type SupabaseAuthor struct {
 func (d *SupabaseAuthor) Auth(ctx context.Context) (context.Context, error) {
 	method, _ := grpc.Method(ctx)
 	if _, ok := d.unAuthMethods[method]; ok {
-		return context.WithValue(ctx, utility.WithOutTag, true), nil
+		return context.WithValue(ctx, utility.WithoutTag, true), nil
 	} else if token, err := auth.AuthFromMD(ctx, string(utility.TokenContextKey)); err != nil {
 		return ctx, err
 	} else if resp, err := d.client.Auth.WithToken(token).GetUser(); err != nil {

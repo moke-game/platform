@@ -185,8 +185,8 @@ func TestAuthorAuth(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected err: %v", err)
 		}
-		if v, _ := ctx.Value(utility.WithOutTag).(bool); !v {
-			t.Fatal("expected WithOutTag")
+		if v, _ := ctx.Value(utility.WithoutTag).(bool); !v {
+			t.Fatal("expected WithoutTag")
 		}
 		if _, ok := uidFrom(ctx); ok {
 			t.Fatal("uid must not be set on unauth bypass")
