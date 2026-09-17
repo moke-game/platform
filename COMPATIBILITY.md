@@ -40,7 +40,7 @@ Merged:
 - game compress: https://github.com/moke-game/game/pull/26
 - game kit#231 pin: https://github.com/moke-game/game/pull/27
 - platform kit#231 tip: https://github.com/moke-game/platform/pull/31
-- platform kit#236 tip: this PR
+- platform kit#236 tip: https://github.com/moke-game/platform/pull/35
 
 Tracking plans:
 
