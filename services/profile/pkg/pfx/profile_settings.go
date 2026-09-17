@@ -1,8 +1,9 @@
 package pfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type ProfileSettingParams struct {
@@ -19,14 +20,4 @@ type ProfileSettingsResult struct {
 	ProfileUrl       string `name:"ProfileUrl" envconfig:"PROFILE_URL" default:"localhost:8081"`
 }
 
-func (g *ProfileSettingsResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
-
-var SettingsModule = fx.Provide(
-	func() (out ProfileSettingsResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var SettingsModule = platformfx.ProvideFromEnv[ProfileSettingsResult]()

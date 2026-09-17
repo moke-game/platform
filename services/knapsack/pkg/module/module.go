@@ -8,28 +8,30 @@ import (
 	"github.com/moke-game/platform/services/knapsack/pkg/kfx"
 )
 
+var settings = kfx.SettingsModule
+
 // KnapsackModule Provides knapsack service
 var KnapsackModule = fx.Module("knapsack",
-	kfx.SettingsModule,
+	settings,
 	public.Module,
 	private.Module,
 )
 
 // KnapsackPrivateModule Provides knapsack private service
 var KnapsackPrivateModule = fx.Module("knapsack_private",
-	kfx.SettingsModule,
+	settings,
 	private.Module,
 )
 
 // KnapsackClientModule Provides knapsack client for grpc
 var KnapsackClientModule = fx.Module("knapsack_client",
-	kfx.SettingsModule,
+	settings,
 	kfx.KnapsackClientModule,
 )
 
 // KnapsackAllModule Provides client, service for knapsack
 var KnapsackAllModule = fx.Module("knapsack_all",
-	kfx.SettingsModule,
+	settings,
 	public.Module,
 	private.Module,
 	kfx.KnapsackClientModule,

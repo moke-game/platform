@@ -8,28 +8,30 @@ import (
 	"github.com/moke-game/platform/services/profile/pkg/pfx"
 )
 
+var settings = pfx.SettingsModule
+
 // ProfileModule Provides profile service
 var ProfileModule = fx.Module("profile",
-	pfx.SettingsModule,
+	settings,
 	public.Module,
 	private.Module,
 )
 
 // ProfilePrivateModule Provides profile private service
 var ProfilePrivateModule = fx.Module("profile_private",
-	pfx.SettingsModule,
+	settings,
 	private.Module,
 )
 
 // ProfileClientModule Provides profile client for grpc
 var ProfileClientModule = fx.Module("profile_client",
-	pfx.SettingsModule,
+	settings,
 	pfx.ProfileClientModule,
 )
 
 // ProfileAllModule Provides client, service for profile
 var ProfileAllModule = fx.Module("profile_all",
-	pfx.SettingsModule,
+	settings,
 	public.Module,
 	private.Module,
 	pfx.ProfileClientModule,

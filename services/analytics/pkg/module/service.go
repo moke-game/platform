@@ -7,21 +7,23 @@ import (
 	"github.com/moke-game/platform/services/analytics/pkg/analyfx"
 )
 
+var settings = analyfx.SettingsModule
+
 // AnalyticsModule provides service for analytics
 var AnalyticsModule = fx.Module("analytics",
+	settings,
 	service.ServiceModule,
-	analyfx.SettingsModule,
 )
 
 // AnalyticsClientModule provides client for analytics
 var AnalyticsClientModule = fx.Module("analytics-client",
+	settings,
 	analyfx.AnalyticsClientModule,
-	analyfx.SettingsModule,
 )
 
-// AnalyticsAllModule provides client, service and middleware for analytics
+// AnalyticsAllModule provides client and service for analytics
 var AnalyticsAllModule = fx.Module("analytics-all",
+	settings,
 	service.ServiceModule,
 	analyfx.AnalyticsClientModule,
-	analyfx.SettingsModule,
 )

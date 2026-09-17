@@ -1,6 +1,6 @@
 module github.com/moke-game/platform
 
-go 1.25.12
+go 1.27.0
 
 require (
 	agones.dev/agones v1.48.0
@@ -13,7 +13,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0
-	github.com/gstones/moke-kit v1.0.5-0.20260812061322-0bee2b36f992
+	github.com/gstones/moke-kit v1.0.5-0.20260917090450-382af69044bc
 	github.com/gstones/zinx v1.2.7-0.20240617071724-88bd884d8d08
 	github.com/json-iterator/go v1.1.12
 	github.com/pkg/errors v0.9.1
@@ -29,7 +29,7 @@ require (
 	go.uber.org/fx v1.23.0
 	go.uber.org/zap v1.27.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20260526163538-3dc84a4a5aaa
-	google.golang.org/grpc v1.83.0
+	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.11
 	open-match.dev/open-match v1.8.1
 )
@@ -133,12 +133,12 @@ require (
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/dig v1.18.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.54.0 // indirect
+	golang.org/x/crypto v0.55.0 // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
-	golang.org/x/net v0.57.0 // indirect
+	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.40.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260803160001-6ac0973c030d // indirect
 	gopkg.in/fsnotify.v1 v1.4.7 // indirect

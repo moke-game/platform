@@ -1,7 +1,7 @@
 # Messaging topic naming
 
 Platform services publish/subscribe through moke-kit MQ helpers. Always wrap logical
-names with `common.NatsHeader.CreateTopic(...)` (or `LocalHeader` for in-process).
+names with `common.NatsHeader.CreateTopic(...)`. Platform services use `nats://` only.
 
 ## Conventions
 
@@ -16,6 +16,8 @@ names with `common.NatsHeader.CreateTopic(...)` (or `LocalHeader` for in-process
 ## Rules
 
 1. **Never** publish raw logical strings to NATS — always `NatsHeader.CreateTopic`.
+   Kit ≥ [#236](https://github.com/GStones/moke-kit/pull/236) only routes `nats://` and `local://`;
+   `kafka://` and `nsq://` fail as unsupported.
 2. Prefer dedicated `topics.go` / `changes` helpers over inlined `fmt.Sprintf` in handlers.
 3. Subscription lifecycle (kit #221+ cancelable `Subscription`):
    - **Context-scoped stream watchers** (mail/profile/… that only wait on `ctx.Done()`):

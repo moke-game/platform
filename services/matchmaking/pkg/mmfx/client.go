@@ -2,10 +2,10 @@ package mmfx
 
 import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
 	"go.uber.org/fx"
 
 	matchmaking "github.com/moke-game/platform/api/gen/matchmaking/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type ClientParams struct {
@@ -21,25 +21,7 @@ type ClientResult struct {
 }
 
 func NewClient(host string, setting sfx.SecuritySettingsParams) (matchmaking.MatchServiceClient, error) {
-	if setting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			setting.ClientCert,
-			setting.ClientKey,
-			setting.ServerName,
-			setting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return matchmaking.NewMatchServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return matchmaking.NewMatchServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, setting, matchmaking.NewMatchServiceClient)
 }
 
 var ClientModule = fx.Provide(
@@ -47,10 +29,7 @@ var ClientModule = fx.Provide(
 		setting MatchmakingSettingParams,
 		security sfx.SecuritySettingsParams,
 	) (out ClientResult, err error) {
-		if client, e := NewClient(setting.URL, security); e != nil {
-			err = e
-		} else {
-			out.Client = client
-		}
+		out.Client, err = NewClient(setting.URL, security)
 		return
-	})
+	},
+)

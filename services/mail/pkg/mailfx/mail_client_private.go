@@ -1,12 +1,11 @@
 package mailfx
 
 import (
+	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"go.uber.org/fx"
 
-	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
-
 	pb "github.com/moke-game/platform/api/gen/mail/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type MailClientPrivateParams struct {
@@ -20,33 +19,7 @@ type MailClientPrivateResult struct {
 }
 
 func NewMailPrivateClient(target string, sSetting sfx.SecuritySettingsParams) (pb.MailPrivateServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if c, e := tools.DialWithSecurity(
-			target,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); e != nil {
-			return nil, e
-		} else {
-			return pb.NewMailPrivateServiceClient(c), nil
-		}
-	} else {
-		if c, e := tools.DialInsecure(target); e != nil {
-			return nil, e
-		} else {
-			return pb.NewMailPrivateServiceClient(c), nil
-		}
-	}
-}
-
-func (g *MailClientPrivateResult) Execute(
-	a MailSettingParams,
-	sSetting sfx.SecuritySettingsParams,
-) (err error) {
-	g.MailClient, err = NewMailPrivateClient(a.MailUrl, sSetting)
-	return
+	return platformfx.NewClient(target, sSetting, pb.NewMailPrivateServiceClient)
 }
 
 var MailClientPrivateModule = fx.Provide(
@@ -54,7 +27,7 @@ var MailClientPrivateModule = fx.Provide(
 		a MailSettingParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out MailClientPrivateResult, err error) {
-		err = out.Execute(a, sSetting)
+		out.MailClient, err = NewMailPrivateClient(a.MailUrl, sSetting)
 		return
 	},
 )

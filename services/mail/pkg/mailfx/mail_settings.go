@@ -1,8 +1,9 @@
 package mailfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type MailSettingParams struct {
@@ -26,14 +27,4 @@ type MailSettingsResult struct {
 	MailEncryptionKey string `name:"MailEncryptionKey" envconfig:"MAIL_ENCRYPTION_KEY" default:"CTeGahnbQWfAr5hW"`
 }
 
-func (msl *MailSettingsResult) LoadFromEnv() (err error) {
-	err = utility.Load(msl)
-	return
-}
-
-var MailSettingsModule = fx.Provide(
-	func() (out MailSettingsResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var MailSettingsModule = platformfx.ProvideFromEnv[MailSettingsResult]()

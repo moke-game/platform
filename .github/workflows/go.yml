@@ -28,7 +28,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.12.2
+          version: v2.13.2
           only-new-issues: true
 
       - name: Set up buf

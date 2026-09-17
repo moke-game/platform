@@ -11,9 +11,9 @@ import (
 
 func main() {
 	fxmain.Main(
+		mfx.NatsModule,
 		ofx.RedisCacheModule,
 		module.KnapsackModule,
-		mfx.NatsModule,
 		auth.AuthMiddlewareModule,
 	)
 }

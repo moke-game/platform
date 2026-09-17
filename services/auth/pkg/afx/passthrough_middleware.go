@@ -14,7 +14,7 @@ import (
 type passThroughAuthor struct{}
 
 func (p *passThroughAuthor) Auth(ctx context.Context) (context.Context, error) {
-	return context.WithValue(ctx, utility.WithOutTag, true), nil
+	return context.WithValue(ctx, utility.WithoutTag, true), nil
 }
 
 func (p *passThroughAuthor) AddUnAuthMethod(string) {}

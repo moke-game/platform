@@ -10,8 +10,6 @@ import (
 func main() {
 	fxmain.Main(
 		analytics.AnalyticsModule,
-		// Analytics embeds WithoutAuth; pass-through middleware satisfies kit
-		// binder prod checks (#224+) without calling ValidateToken.
-		auth.PrivateServiceAuthModule,
+		auth.PrivateServiceAuthModule, // pass-through; analytics is WithoutAuth-only
 	)
 }

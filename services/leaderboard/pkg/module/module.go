@@ -8,32 +8,34 @@ import (
 	"github.com/moke-game/platform/services/leaderboard/pkg/lbfx"
 )
 
+var settings = lbfx.LeaderboardSettingsModule
+
 var LeaderboardModule = fx.Module("leaderboard",
-	lbfx.LeaderboardSettingModule,
+	settings,
 	public.Module,
 	private.Module,
 )
 
 var LeaderboardClientPublic = fx.Module("leaderboardClientPublic",
+	settings,
 	lbfx.LeaderboardClientModule,
-	lbfx.LeaderboardSettingModule,
 )
 
 var LeaderboardClientPrivate = fx.Module("leaderboardClientPrivate",
+	settings,
 	lbfx.LeaderboardClientPrivateModule,
-	lbfx.LeaderboardSettingModule,
 )
 
 var LeaderboardClientAll = fx.Module("leaderboardClientAll",
-	lbfx.LeaderboardClientPrivateModule,
+	settings,
 	lbfx.LeaderboardClientModule,
-	lbfx.LeaderboardSettingModule,
+	lbfx.LeaderboardClientPrivateModule,
 )
 
 var LeaderboardAll = fx.Module("leaderboardAll",
+	settings,
 	public.Module,
 	private.Module,
 	lbfx.LeaderboardClientModule,
 	lbfx.LeaderboardClientPrivateModule,
-	lbfx.LeaderboardSettingModule,
 )

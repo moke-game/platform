@@ -6,8 +6,6 @@ import (
 
 	"github.com/gstones/moke-kit/3rd/agones/aiface"
 	"github.com/gstones/moke-kit/3rd/agones/pkg/agonesfx"
-	"github.com/gstones/moke-kit/mq/miface"
-	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"github.com/gstones/moke-kit/server/siface"
 	"github.com/gstones/zinx/ziface"
@@ -30,7 +28,6 @@ type Service struct {
 	agones  *Agones
 
 	setting rfx.RoomSettingParams
-	mq      miface.MessageQueue
 }
 
 func (s *Service) RegisterWithServer(server siface.IZinxServer) {
@@ -120,7 +117,6 @@ func (s *Service) initJoin(request ziface.IRequest) error {
 }
 func NewService(
 	l *zap.Logger,
-	mq miface.MessageQueue,
 	agones aiface.IAgones,
 	setting rfx.RoomSettingParams,
 ) (result *Service, err error) {
@@ -135,7 +131,6 @@ func NewService(
 		roomMgr: rm,
 		agones:  ag,
 		setting: setting,
-		mq:      mq,
 	}
 	return
 }
@@ -145,11 +140,9 @@ var Module = fx.Provide(
 		l *zap.Logger,
 		agParams agonesfx.SDKParams,
 		setting rfx.RoomSettingParams,
-		mqParams mfx.MessageQueueParams,
 	) (out sfx.ZinxServiceResult, err error) {
 		if svc, e := NewService(
 			l,
-			mqParams.MessageQueue,
 			agParams.SDK,
 			setting,
 		); e != nil {

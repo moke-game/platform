@@ -7,17 +7,19 @@ import (
 	"github.com/moke-game/platform/services/auth/pkg/afx"
 )
 
+var settings = afx.SettingsModule
+
 // AuthModule provides the Auth gRPC service (Authenticate / ValidateToken / …).
 // Prefer AuthAllModule for cmd/auth so kit binder prod checks (#224+) see middleware.
 // The auth service embeds utility.WithoutAuth so login flows remain reachable.
 var AuthModule = fx.Module("auth",
-	afx.SettingsModule,
+	settings,
 	internal.ServiceModule,
 )
 
 // AuthClientModule provides an AuthServiceClient for calling AuthService.
 var AuthClientModule = fx.Module("auth_client",
-	afx.SettingsModule,
+	settings,
 	afx.AuthClientModule,
 )
 
@@ -26,7 +28,7 @@ var AuthClientModule = fx.Module("auth_client",
 // Private *PrivateService handlers should embed utility.WithoutAuth and stay
 // on internal networks only.
 var AuthMiddlewareModule = fx.Module("auth_middleware",
-	afx.SettingsModule,
+	settings,
 	afx.AuthClientModule,
 	afx.AuthCheckModule,
 	afx.ProdAuthGuardModule,
@@ -45,7 +47,7 @@ var SupabaseMiddlewareModule = fx.Module("supabase_middleware",
 // AuthMiddlewareModule without duplicating settings providers.
 // AuthService embeds utility.WithoutAuth so Authenticate/ValidateToken stay public.
 var AuthAllModule = fx.Module("auth_all",
-	afx.SettingsModule,
+	settings,
 	internal.ServiceModule,
 	afx.AuthClientModule,
 	afx.AuthCheckModule,

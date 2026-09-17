@@ -18,16 +18,15 @@ import (
 )
 
 func main() {
+	// fxmain.Main already includes settings, logging, server, Mongo, Redis clients, MQ router.
 	fxmain.Main(
-		// infrastructure
-		mfx.NatsModule,
-		ofx.RedisCacheModule,
-
-		mail.MailModule,
+		mfx.NatsModule,        // nats:// publish/subscribe
+		ofx.RedisCacheModule,  // ICache for auth/profile/knapsack/buddy
+		auth.AuthAllModule,    // auth service + public middleware
 		analytics.AnalyticsModule,
-		auth.AuthAllModule,
 		profile.ProfileModule,
 		knapsack.KnapsackModule,
+		mail.MailModule,
 		party.PartyModule,
 		buddy.BuddyModule,
 		leaderboard.LeaderboardModule,

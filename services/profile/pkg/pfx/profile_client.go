@@ -1,12 +1,11 @@
 package pfx
 
 import (
+	"github.com/gstones/moke-kit/server/pkg/sfx"
 	"go.uber.org/fx"
 
 	pb "github.com/moke-game/platform/api/gen/profile/api"
-
-	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type ProfileClientParams struct {
@@ -27,25 +26,11 @@ func NewProfileClient(
 	host string,
 	sSetting sfx.SecuritySettingsParams,
 ) (pb.ProfileServiceClient, pb.ProfilePrivateServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, nil, err
-		} else {
-			return pb.NewProfileServiceClient(conn), pb.NewProfilePrivateServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, nil, err
-		} else {
-			return pb.NewProfileServiceClient(conn), pb.NewProfilePrivateServiceClient(conn), nil
-		}
+	conn, err := platformfx.Dial(host, sSetting)
+	if err != nil {
+		return nil, nil, err
 	}
+	return pb.NewProfileServiceClient(conn), pb.NewProfilePrivateServiceClient(conn), nil
 }
 
 var ProfileClientModule = fx.Provide(
@@ -53,12 +38,7 @@ var ProfileClientModule = fx.Provide(
 		setting ProfileSettingParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out ProfileClientResult, err error) {
-		if cli, pCli, e := NewProfileClient(setting.ProfileUrl, sSetting); e != nil {
-			err = e
-		} else {
-			out.ProfileClient = cli
-			out.ProfilePrivateClient = pCli
-		}
+		out.ProfileClient, out.ProfilePrivateClient, err = NewProfileClient(setting.ProfileUrl, sSetting)
 		return
 	},
 )

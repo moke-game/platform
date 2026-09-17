@@ -2,8 +2,8 @@
 
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
-| platform (this repo) | `v1.0.5-0.20260812061322-0bee2b36f992` ([#231](https://github.com/GStones/moke-kit/pull/231)) | DocumentBase/NATS tests + create-game smoke; includes #224 binder + #228 StopServing/CI |
-| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27) |
+| platform (this repo) | `v1.0.5-0.20260917090450-382af69044bc` ([#236](https://github.com/GStones/moke-kit/pull/236)) | `fxmain.Main` batteries-included; add `NatsModule` / `RedisCacheModule` only when used; `WithoutTag`; Go 1.27 / grpc 1.83.2 |
+| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); bump after this kit #236 pin |
 
 Auth startup fail-closed:
 
@@ -22,6 +22,9 @@ Merged:
 - kit create-game thin/modules: https://github.com/GStones/moke-kit/pull/229
 - kit AUTH_URL defaults: https://github.com/GStones/moke-kit/pull/230
 - kit smoke/DocumentBase/NATS: https://github.com/GStones/moke-kit/pull/231
+- kit quality/API tidy: https://github.com/GStones/moke-kit/commit/74776fd5fd57cef565705284bc0dda904aa1d2d6
+- kit Go 1.27 + grpc 1.83.2: https://github.com/GStones/moke-kit/commit/c03b3a60cad1be648f29a594deba244f93c04320
+- kit thin Core / GORM opt-in / NATS+local: https://github.com/GStones/moke-kit/pull/236
 - platform P0: https://github.com/moke-game/platform/pull/24
 - platform P1: https://github.com/moke-game/platform/pull/25
 - platform jwt/v5 + CAS/chat tests: https://github.com/moke-game/platform/pull/27
@@ -37,6 +40,7 @@ Merged:
 - game compress: https://github.com/moke-game/game/pull/26
 - game kit#231 pin: https://github.com/moke-game/game/pull/27
 - platform kit#231 tip: https://github.com/moke-game/platform/pull/31
+- platform kit#236 tip: https://github.com/moke-game/platform/pull/35
 
 Tracking plans:
 

@@ -1,8 +1,9 @@
 package kfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type KnapsackSettingParams struct {
@@ -19,14 +20,4 @@ type KnapsackSettingsResult struct {
 	KnapsackUrl       string `name:"KnapsackUrl" envconfig:"KNAPSACK_URL" default:"localhost:8081"`
 }
 
-func (g *KnapsackSettingsResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
-
-var SettingsModule = fx.Provide(
-	func() (out KnapsackSettingsResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	},
-)
+var SettingsModule = platformfx.ProvideFromEnv[KnapsackSettingsResult]()

@@ -1,8 +1,9 @@
 package lbfx
 
 import (
-	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
+
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type LeaderboardSettingParams struct {
@@ -28,13 +29,7 @@ type LeaderboardSettingResult struct {
 	StarRank int32 `name:"leaderboardStarRank" envconfig:"LEADERBOARD_STAR_RANK" default:"3"`
 }
 
-func (g *LeaderboardSettingResult) LoadFromEnv() (err error) {
-	err = utility.Load(g)
-	return
-}
+var LeaderboardSettingsModule = platformfx.ProvideFromEnv[LeaderboardSettingResult]()
 
-var LeaderboardSettingModule = fx.Provide(
-	func() (out LeaderboardSettingResult, err error) {
-		err = out.LoadFromEnv()
-		return
-	})
+// LeaderboardSettingModule is a compatibility alias.
+var LeaderboardSettingModule = LeaderboardSettingsModule

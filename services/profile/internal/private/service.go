@@ -58,9 +58,7 @@ var Module = fx.Provide(
 	func(
 		l *zap.Logger,
 		pSetting pfx.ProfileSettingParams,
-		dbProvider ofx.DocumentStoreParams,
 		redisParams ofx.RedisParams,
-		rcParams ofx.RedisCacheParams,
 		mongoParams ofx.MongoParams,
 		mqParams mfx.MessageQueueParams,
 	) (out sfx.GrpcServiceResult, err error) {

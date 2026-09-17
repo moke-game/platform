@@ -9,15 +9,16 @@ import (
 	"github.com/moke-game/platform/services/matchmaking/pkg/mmfx"
 )
 
+var settings = mmfx.MatchmakingSettingsModule
+
 var MatchmakingModule = fx.Module("matchmaking",
+	settings,
 	agones.AgonesAllocateClientModule,
 	awsConfig.AWSConfigModule,
-
-	mmfx.MatchmakingSettingModule,
 	internal.Module,
 )
 
 var MatchmakingClientModule = fx.Module("matchmaking_client",
+	settings,
 	mmfx.ClientModule,
-	mmfx.MatchmakingSettingModule,
 )

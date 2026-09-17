@@ -2,10 +2,10 @@ package kfx
 
 import (
 	"github.com/gstones/moke-kit/server/pkg/sfx"
-	"github.com/gstones/moke-kit/server/tools"
 	"go.uber.org/fx"
 
 	pb "github.com/moke-game/platform/api/gen/knapsack/api"
+	"github.com/moke-game/platform/pkg/platformfx"
 )
 
 type KnapsackClientParams struct {
@@ -23,47 +23,11 @@ type KnapsackClientResult struct {
 }
 
 func NewKnapsackClient(host string, sSetting sfx.SecuritySettingsParams) (pb.KnapsackServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return pb.NewKnapsackServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return pb.NewKnapsackServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, sSetting, pb.NewKnapsackServiceClient)
 }
 
 func NewKnapsackPrivateClient(host string, sSetting sfx.SecuritySettingsParams) (pb.KnapsackPrivateServiceClient, error) {
-	if sSetting.MTLSEnable {
-		if conn, err := tools.DialWithSecurity(
-			host,
-			sSetting.ClientCert,
-			sSetting.ClientKey,
-			sSetting.ServerName,
-			sSetting.ServerCaCert,
-		); err != nil {
-			return nil, err
-		} else {
-			return pb.NewKnapsackPrivateServiceClient(conn), nil
-		}
-	} else {
-		if conn, err := tools.DialInsecure(host); err != nil {
-			return nil, err
-		} else {
-			return pb.NewKnapsackPrivateServiceClient(conn), nil
-		}
-	}
+	return platformfx.NewClient(host, sSetting, pb.NewKnapsackPrivateServiceClient)
 }
 
 var KnapsackClientModule = fx.Provide(
@@ -71,16 +35,13 @@ var KnapsackClientModule = fx.Provide(
 		setting KnapsackSettingParams,
 		sSetting sfx.SecuritySettingsParams,
 	) (out KnapsackClientResult, err error) {
-		if cli, e := NewKnapsackClient(setting.KnapsackUrl, sSetting); e != nil {
+		conn, e := platformfx.Dial(setting.KnapsackUrl, sSetting)
+		if e != nil {
 			err = e
-		} else {
-			out.KnapsackClient = cli
+			return
 		}
-		if cli, e := NewKnapsackPrivateClient(setting.KnapsackUrl, sSetting); e != nil {
-			err = e
-		} else {
-			out.KnapsackPrivateClient = cli
-		}
+		out.KnapsackClient = pb.NewKnapsackServiceClient(conn)
+		out.KnapsackPrivateClient = pb.NewKnapsackPrivateServiceClient(conn)
 		return
 	},
 )
