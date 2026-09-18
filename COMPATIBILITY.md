@@ -2,8 +2,8 @@
 
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
-| platform (this repo) | `v1.0.5-0.20260917090450-382af69044bc` ([#236](https://github.com/GStones/moke-kit/pull/236)) | `fxmain.Main` batteries-included; add `NatsModule` / `RedisCacheModule` only when used; `WithoutTag`; Go 1.27 / grpc 1.83.2 |
-| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); bump after this kit #236 pin |
+| platform (this repo) | `v1.0.5-0.20260917090450-382af69044bc` ([#236](https://github.com/GStones/moke-kit/pull/236)) | [#35](https://github.com/moke-game/platform/pull/35) on `main` (`a52357c…`); `fxmain.Main` + `pkg/platformfx`; Go 1.27 / grpc 1.83.2 |
+| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); still needs kit #236 / platform #35 pin |
 
 Auth startup fail-closed:
 
@@ -40,7 +40,7 @@ Merged:
 - game compress: https://github.com/moke-game/game/pull/26
 - game kit#231 pin: https://github.com/moke-game/game/pull/27
 - platform kit#231 tip: https://github.com/moke-game/platform/pull/31
-- platform kit#236 tip: https://github.com/moke-game/platform/pull/35
+- platform kit#236 + assembly slim: https://github.com/moke-game/platform/pull/35
 
 Tracking plans:
 
