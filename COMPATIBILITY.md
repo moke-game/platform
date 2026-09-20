@@ -2,8 +2,8 @@
 
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
-| platform (this repo) | `v1.0.5-0.20260918072054-388d523a53ef` ([#238](https://github.com/GStones/moke-kit/pull/238)) | kit #236 assembly + #238 module bump; Go 1.27 / grpc 1.83.2 / gorm 1.25.12 |
-| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); still needs kit #238 / this platform pin |
+| platform (this repo) | `v1.0.5-0.20260918072054-388d523a53ef` ([#238](https://github.com/GStones/moke-kit/pull/238)) | [#37](https://github.com/moke-game/platform/pull/37); kit #236 assembly + #238 module bump; Go 1.27 / grpc 1.83.2 / gorm 1.25.12 |
+| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); still needs kit #238 / platform #37 pin |
 
 Auth startup fail-closed:
 
@@ -42,6 +42,7 @@ Merged:
 - game kit#231 pin: https://github.com/moke-game/game/pull/27
 - platform kit#231 tip: https://github.com/moke-game/platform/pull/31
 - platform kit#236 + assembly slim: https://github.com/moke-game/platform/pull/35
+- platform kit#238 + module bump: https://github.com/moke-game/platform/pull/37
 
 Tracking plans:
 
