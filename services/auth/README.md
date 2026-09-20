@@ -21,7 +21,10 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 | `AuthMiddlewareModule` | Client + `AuthCheckModule` (`AuthMiddleware`) + prod guard | Any process hosting **public** gRPC/HTTP |
 | `AuthAllModule` | Service + client + middleware + prod guard | Aggregate/monolith (`cmd/platform`, local game) and dedicated `cmd/auth` |
 | `PrivateServiceAuthModule` | Pass-through `AuthMiddleware` + prod guard | Private-only processes (`cmd/analytics`) for kit #224+ binder. Prod guard rejects combining with **public** gRPC/gateway (no `WithoutAuth`). Private gateway (e.g. analytics) is OK. |
+| `App` | Cache + `AuthAllModule` | Dedicated `cmd/auth` one-liner: `fxmain.Main(module.App)` |
 | `SupabaseMiddlewareModule` | Alternate JWT middleware | Supabase auth path |
+
+AI / multi-service assemble: `assembly.Main("auth")`, `assembly.Main("profile", "knapsack")`, `assembly.Main("platform")`. See root README.
 
 | Surface | Rule |
 |---------|------|
@@ -43,4 +46,4 @@ token认证服务器，提供用户认证服务。[为什么需要token认证?](
 - moke-kit ≥ #221 fails closed **per request** in production when middleware is nil
 - kit [#224](https://github.com/GStones/moke-kit/pull/224) binder fails closed at startup when grpc/gateway lack middleware
 - kit [#236](https://github.com/GStones/moke-kit/pull/236) keeps `fxmain.Main` batteries-included; use `WithoutTag` (renamed from `WithOutTag`)
-- `cmd/auth` → `AuthAllModule`; private-only `cmd/analytics` → `PrivateServiceAuthModule`
+- `cmd/auth` → `module.App` (`AuthAllModule`); private-only `cmd/analytics` → `module.App` (`PrivateServiceAuthModule`)

@@ -163,31 +163,46 @@ graph TD
 
 工程目录结构参考[project-layout](https://github.com/golang-standards/project-layout)
 
-## 组装（LEGO）
+## 组装（AI / LEGO）
 
 `fxmain.Main(...)` 自带：进程设置、日志、gRPC/gateway 绑定、Mongo、Redis 客户端、MQ 路由。
 
-按需再加积木：
-
-| 需要 | 模块 | 典型进程 |
-|------|------|----------|
-| `nats://` 发布/订阅 | `mfx.NatsModule` | mail / profile / knapsack / chat / party / buddy |
-| 文档 `ICache` | `ofx.RedisCacheModule` | auth / profile / knapsack / buddy |
-| 对外 gRPC | `auth.AuthMiddlewareModule` | 除 auth / analytics / room 外的公共服务 |
-| Auth 服务本身 | `auth.AuthAllModule` | `cmd/auth`、`cmd/platform` |
-| 仅内部 WithoutAuth | `auth.PrivateServiceAuthModule` | `cmd/analytics` |
+用一句话拼进程（`pkg/assembly` 会补齐 NATS / cache / JWT）：
 
 ```go
-fxmain.Main(
-    mfx.NatsModule,
-    ofx.RedisCacheModule,
-    auth.AuthMiddlewareModule,
-    profile.ProfileModule,
-)
+assembly.Main("profile")
+assembly.Main("profile", "knapsack", "chat")
+assembly.Main("platform")
+assembly.Main("认证", "玩家", "背包")
+assembly.Main("auth.mw", "profile.client", "knapsack.client")
 ```
 
-- 聚合进程：`cmd/platform/service/main.go`
-- 单服务：`cmd/{name}/service/main.go`
+单服务进程用 `module.App`（只链本服务 + 依赖，镜像更小）：
+
+```go
+fxmain.Main(profile.App) // == nats + cache + JWT + profile
+```
+
+或按积木手拼：
+
+```go
+fxmain.Main(assembly.NATS, assembly.Cache, assembly.AuthMW, assembly.Profile)
+```
+
+| 名字 | 自动带上 | 说明 |
+|------|----------|------|
+| `auth` | cache + AuthAll | 登录仍 WithoutAuth |
+| `analytics` | PrivateServiceAuth | 仅内部 WithoutAuth |
+| `profile` / `knapsack` / `buddy` | nats + cache + JWT | 文档 ICache |
+| `chat` / `mail` / `party` | nats + JWT | 发布/订阅 |
+| `leaderboard` / `matchmaking` | JWT | 无 NATS/cache |
+| `room` | Agones SDK | zinx，不走 gRPC 中间件 |
+| `platform` | cache + nats + AuthAll + 上表服务 | 不含 room |
+
+中文别名：`认证` `玩家` `背包` `聊天` `邮件` `组队` `好友` `排行` `匹配` `房间` `统计` `中台`。
+
+- 聚合：`cmd/platform` → `assembly.Main("platform")`
+- 单服务：`cmd/{name}` → `fxmain.Main(module.App)`
 - 认证矩阵：`services/auth/README.md`
 - 共享 dial/settings：`pkg/platformfx`
 

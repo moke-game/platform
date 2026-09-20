@@ -2,14 +2,14 @@
 
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
-| platform (this repo) | `v1.0.5-0.20260918072054-388d523a53ef` ([#238](https://github.com/GStones/moke-kit/pull/238)) | [#37](https://github.com/moke-game/platform/pull/37); kit #236 assembly + #238 module bump; Go 1.27 / grpc 1.83.2 / gorm 1.25.12 |
+| platform (this repo) | `v1.0.5-0.20260918072054-388d523a53ef` ([#238](https://github.com/GStones/moke-kit/pull/238)) | [#37](https://github.com/moke-game/platform/pull/37) + `pkg/assembly` (`assembly.Main("profile")` / `module.App`); Go 1.27 / grpc 1.83.2 / gorm 1.25.12 |
 | game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); still needs kit #238 / platform #37 pin |
 
 Auth startup fail-closed:
 
 - Platform `ProdAuthGuardModule` (inside `AuthMiddlewareModule` / `AuthAllModule` / `PrivateServiceAuthModule`) covers public gRPC + gateway when those modules are imported.
 - Kit binder (`ValidateSecurityConfig`, #224) fails closed when grpc/gateway lack middleware or prod CORS allowlist is empty.
-- `cmd/auth` uses `AuthAllModule`; private-only `cmd/analytics` uses `PrivateServiceAuthModule`.
+- `cmd/auth` uses `module.App` (`AuthAllModule` + cache); private-only `cmd/analytics` uses `module.App` (`PrivateServiceAuthModule`). Compose several services with `assembly.Main("profile", "knapsack")`.
 - `JwtTokenExpire<=0` omits JWT `exp` and Redis TTL only outside prod; prod requires `JWT_TOKEN_EXPIRE > 0`.
 
 Messaging topic conventions: [docs/messaging.md](docs/messaging.md).

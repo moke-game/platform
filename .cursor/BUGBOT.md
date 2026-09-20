@@ -2,6 +2,7 @@
 
 ## Auth assembly
 - Flag missing `AuthCheckModule` / AuthMiddleware on public services.
+- `module.App` / `assembly.Main("…")` must keep the README recipe (public → AuthMW or AuthAll; analytics-only → PrivateServiceAuth).
 - Flag pass-through / `PrivateServiceAuthModule` used on public (internet-facing) gRPC or gateway.
 - Flag AuthMiddleware that does not set `UIDContextKey` on successful ValidateToken.
 - Flag fail-open production guards (public ports without auth when prod fail-closed is required).

@@ -3,13 +3,9 @@ package main
 import (
 	"github.com/gstones/moke-kit/fxmain"
 
-	auth "github.com/moke-game/platform/services/auth/pkg/module"
 	"github.com/moke-game/platform/services/leaderboard/pkg/module"
 )
 
 func main() {
-	fxmain.Main(
-		module.LeaderboardModule,
-		auth.AuthMiddlewareModule,
-	)
+	fxmain.Main(module.App)
 }

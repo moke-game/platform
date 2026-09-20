@@ -1,8 +1,11 @@
 package module
 
 import (
+	"github.com/gstones/moke-kit/mq/pkg/mfx"
+	"github.com/gstones/moke-kit/orm/pkg/ofx"
 	"go.uber.org/fx"
 
+	auth "github.com/moke-game/platform/services/auth/pkg/module"
 	"github.com/moke-game/platform/services/profile/internal/private"
 	"github.com/moke-game/platform/services/profile/internal/public"
 	"github.com/moke-game/platform/services/profile/pkg/pfx"
@@ -35,4 +38,12 @@ var ProfileAllModule = fx.Module("profile_all",
 	public.Module,
 	private.Module,
 	pfx.ProfileClientModule,
+)
+
+// App is the standalone profile process. Keep infra in sync with assembly recipe "profile".
+var App = fx.Module("profile_app",
+	mfx.NatsModule,
+	ofx.RedisCacheModule,
+	auth.AuthMiddlewareModule,
+	ProfileModule,
 )

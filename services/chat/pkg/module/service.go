@@ -1,8 +1,10 @@
 package module
 
 import (
+	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"go.uber.org/fx"
 
+	auth "github.com/moke-game/platform/services/auth/pkg/module"
 	"github.com/moke-game/platform/services/chat/internal/service/private"
 	"github.com/moke-game/platform/services/chat/internal/service/public"
 	"github.com/moke-game/platform/services/chat/pkg/cfx"
@@ -36,4 +38,11 @@ var ChatAllModule = fx.Module("chat_all",
 	private.ChatService,
 	cfx.ChatClientModule,
 	cfx.ChatPrivateClientModule,
+)
+
+// App is the standalone chat process. Keep infra in sync with assembly recipe "chat".
+var App = fx.Module("chat_app",
+	mfx.NatsModule,
+	auth.AuthMiddlewareModule,
+	ChatModule,
 )
