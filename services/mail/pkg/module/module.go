@@ -1,8 +1,10 @@
 package module
 
 import (
+	"github.com/gstones/moke-kit/mq/pkg/mfx"
 	"go.uber.org/fx"
 
+	auth "github.com/moke-game/platform/services/auth/pkg/module"
 	"github.com/moke-game/platform/services/mail/internal/service/private"
 	"github.com/moke-game/platform/services/mail/internal/service/public"
 	"github.com/moke-game/platform/services/mail/pkg/mailfx"
@@ -43,4 +45,11 @@ var MailAllModule = fx.Module("mail_all",
 	private.Module,
 	mailfx.MailClientModule,
 	mailfx.MailClientPrivateModule,
+)
+
+// App is the standalone mail process. Keep infra in sync with assembly recipe "mail".
+var App = fx.Module("mail_app",
+	mfx.NatsModule,
+	auth.AuthMiddlewareModule,
+	MailModule,
 )

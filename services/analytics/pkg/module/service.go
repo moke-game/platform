@@ -5,6 +5,7 @@ import (
 
 	"github.com/moke-game/platform/services/analytics/internal/service"
 	"github.com/moke-game/platform/services/analytics/pkg/analyfx"
+	auth "github.com/moke-game/platform/services/auth/pkg/module"
 )
 
 var settings = analyfx.SettingsModule
@@ -26,4 +27,11 @@ var AnalyticsAllModule = fx.Module("analytics-all",
 	settings,
 	service.ServiceModule,
 	analyfx.AnalyticsClientModule,
+)
+
+// App is the standalone analytics process (WithoutAuth + pass-through guard).
+// Keep infra in sync with assembly recipe "analytics".
+var App = fx.Module("analytics_app",
+	auth.PrivateServiceAuthModule,
+	AnalyticsModule,
 )

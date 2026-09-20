@@ -1,6 +1,7 @@
 package module
 
 import (
+	agones "github.com/gstones/moke-kit/3rd/agones/pkg/module"
 	"github.com/gstones/moke-kit/fxmain/pkg/mfx"
 	"github.com/gstones/moke-kit/utility"
 	"go.uber.org/fx"
@@ -29,4 +30,11 @@ var globalModule = fx.Invoke(
 	) {
 		common.DeploymentGlobal = utility.ParseDeployments(aParams.Deployment)
 	},
+)
+
+// App is the standalone room process (zinx; no gRPC AuthMiddleware).
+// Keep infra in sync with assembly recipe "room".
+var App = fx.Module("room_app",
+	agones.AgonesSDKModule,
+	RoomModule,
 )

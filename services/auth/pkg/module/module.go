@@ -1,6 +1,7 @@
 package module
 
 import (
+	"github.com/gstones/moke-kit/orm/pkg/ofx"
 	"go.uber.org/fx"
 
 	"github.com/moke-game/platform/services/auth/internal"
@@ -60,4 +61,11 @@ var AuthAllModule = fx.Module("auth_all",
 var PrivateServiceAuthModule = fx.Module("private_service_auth",
 	afx.PassThroughAuthModule,
 	afx.ProdAuthGuardModule,
+)
+
+// App is the standalone auth process (cache + service + public middleware).
+// Login stays WithoutAuth. Keep infra in sync with assembly recipe "auth".
+var App = fx.Module("auth_app",
+	ofx.RedisCacheModule,
+	AuthAllModule,
 )
