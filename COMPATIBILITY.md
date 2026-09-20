@@ -43,6 +43,7 @@ Merged:
 - platform kit#231 tip: https://github.com/moke-game/platform/pull/31
 - platform kit#236 + assembly slim: https://github.com/moke-game/platform/pull/35
 - platform kit#238 + module bump: https://github.com/moke-game/platform/pull/37
+- platform assembly Main/App: https://github.com/moke-game/platform/pull/39
 
 Tracking plans:
 
