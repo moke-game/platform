@@ -2,8 +2,8 @@
 
 | Consumer | Minimum moke-kit | Notes |
 |----------|------------------|-------|
-| platform (this repo) | `v1.0.5-0.20260917090450-382af69044bc` ([#236](https://github.com/GStones/moke-kit/pull/236)) | [#35](https://github.com/moke-game/platform/pull/35) on `main` (`a52357c…`); `fxmain.Main` + `pkg/platformfx`; Go 1.27 / grpc 1.83.2 |
-| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); still needs kit #236 / platform #35 pin |
+| platform (this repo) | `v1.0.5-0.20260918072054-388d523a53ef` ([#238](https://github.com/GStones/moke-kit/pull/238)) | kit #236 assembly + #238 module bump; Go 1.27 / grpc 1.83.2 / gorm 1.25.12 |
+| game | platform `main` at/after [#31](https://github.com/moke-game/platform/pull/31) (`338ce51d…`) | [game#27](https://github.com/moke-game/game/pull/27); still needs kit #238 / this platform pin |
 
 Auth startup fail-closed:
 
@@ -25,6 +25,7 @@ Merged:
 - kit quality/API tidy: https://github.com/GStones/moke-kit/commit/74776fd5fd57cef565705284bc0dda904aa1d2d6
 - kit Go 1.27 + grpc 1.83.2: https://github.com/GStones/moke-kit/commit/c03b3a60cad1be648f29a594deba244f93c04320
 - kit thin Core / GORM opt-in / NATS+local: https://github.com/GStones/moke-kit/pull/236
+- kit module bump (agones 1.60 / otel 1.46 / grpc pin): https://github.com/GStones/moke-kit/pull/238
 - platform P0: https://github.com/moke-game/platform/pull/24
 - platform P1: https://github.com/moke-game/platform/pull/25
 - platform jwt/v5 + CAS/chat tests: https://github.com/moke-game/platform/pull/27
